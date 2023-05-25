@@ -1,15 +1,26 @@
 using System;
-using Astur.Tools;
-using Microsoft.CSharp;
-using System.CodeDom.Compiler;
+using Sakura.Tools;
+using System.Reflection;
+using System.Collections.Generic;
 
-namespace Astur.Tools {
+namespace Sakura.Tools {
     public class Program {
+        public static List<Sakura.BuildTools.BuildInfo> targets;
         public static void Main(string[] args) {
             ArgumentParser parser = new ArgumentParser();
             Options options = parser.accept<Options>(args);
             
-            Console.WriteLine(options.action);
+            switch(options.type) {
+                case "build":
+                    targets = BuildTargetAssembler.generateAssembliesFromTargets();
+
+                    if(options.name == null) {
+                        Console.WriteLine("Building all...");
+                    } else {
+                        Console.WriteLine("Building " + options.name + "...");
+                    }
+                    break;
+            }
         }
     }
 }

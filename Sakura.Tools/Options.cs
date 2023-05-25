@@ -1,5 +1,6 @@
-namespace Astur.Tools {
+namespace Sakura.Tools {
     public class Options {
-        public string action;
+        public string type;
+        public string name;
     }
 }

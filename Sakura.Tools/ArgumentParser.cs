@@ -1,7 +1,7 @@
 using System;
 using System.Reflection;
 
-namespace Astur.Tools {
+namespace Sakura.Tools {
     public class ArgumentParser {
         public T accept<T>(string[] args) {
             Type typeParameterType = typeof(T);
