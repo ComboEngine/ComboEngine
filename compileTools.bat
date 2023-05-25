@@ -1,6 +1,6 @@
 @echo off
 mkdir Binary
 cd Binary
-mkdir Astur.Tools
+mkdir Sakura.Tools
 cd ..\
-mcs Astur.Tools\*.cs -out:Binary\Astur.Tools\Astur.Tools.exe
+mcs Sakura.Tools\*.cs -out:Binary\Sakura.Tools\Sakura.Tools.exe
