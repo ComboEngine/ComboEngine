@@ -40,8 +40,8 @@ namespace Sakura.Tools {
             return cr.CompiledAssembly;
         }
 
-        public static List<Sakura.BuildTools.BuildInfo> generateAssembliesFromTargets() {
-            List<Sakura.BuildTools.BuildInfo> assemblies = new List<Sakura.BuildTools.BuildInfo>();
+        public static Dictionary<string,Sakura.BuildTools.BuildTarget> generateAssembliesFromTargets() {
+            Dictionary<String,Sakura.BuildTools.BuildTarget> assemblies = new Dictionary<String,Sakura.BuildTools.BuildTarget>();
             foreach(string path in Directory.GetFiles("./", "*.cs", SearchOption.AllDirectories)) {
                 if(path.EndsWith("Target.cs")) {
                     Assembly assembly = buildAssembly(path);
@@ -49,8 +49,9 @@ namespace Sakura.Tools {
                         if(clazz.IsSubclassOf(typeof(Sakura.BuildTools.BuildTarget)))
                         {
                             object instance = Activator.CreateInstance(clazz);
-                            Sakura.BuildTools.BuildInfo info = (Sakura.BuildTools.BuildInfo)clazz.GetMethod("build").Invoke(instance,new object[] {});
-                            assemblies.Add(info);
+                            Sakura.BuildTools.BuildTarget target = (Sakura.BuildTools.BuildTarget)instance;
+                            clazz.GetMethod("Build").Invoke(instance,new object[] {});
+                            assemblies[path] = target;
                         }
                     }
                 }
