@@ -10,10 +10,13 @@ namespace Sakura.Tools {
         public static void createPremake5Scripts(Dictionary<string,BuildTarget> targets) {
             foreach(KeyValuePair<string, BuildTarget> entry in targets)
             {
+
                 String xmlPath = Path.GetDirectoryName(entry.Key) + "\\" + entry.Value.GetName() + ".vcxproj";
                 XmlDocument doc = new XmlDocument();
                 XmlDeclaration declaration = doc.CreateXmlDeclaration("1.0", "utf-8", null);
                 doc.AppendChild(declaration);
+
+            
 
                 XmlElement projectElement = doc.CreateElement("Project");
                 projectElement.SetAttribute("DefaultTargets", "Build");
@@ -82,6 +85,14 @@ namespace Sakura.Tools {
                 charSet1Element.InnerText = "Unicode";
                 propGroup2Element.AppendChild(charSet1Element);
 
+                XmlElement outDir1 = doc.CreateElement("OutDir");
+                XmlElement intDir1 = doc.CreateElement("IntDir");
+                outDir1.InnerText = "Binary";
+                intDir1.InnerText = "Binary\\int";
+
+                propGroup2Element.AppendChild(outDir1);
+                propGroup2Element.AppendChild(intDir1);
+
                 XmlElement propGroup3Element = doc.CreateElement("PropertyGroup");
                 propGroup3Element.SetAttribute("Condition", "'$(Configuration)|$(Platform)'=='Release|x64'");
                 propGroup3Element.SetAttribute("Label", "Configuration");
@@ -98,6 +109,15 @@ namespace Sakura.Tools {
                 XmlElement charSet2Element = doc.CreateElement("CharacterSet");
                 charSet2Element.InnerText = "Unicode";
                 propGroup3Element.AppendChild(charSet2Element);
+
+
+                XmlElement outDir2 = doc.CreateElement("OutDir");
+                XmlElement intDir2 = doc.CreateElement("IntDir");
+                outDir2.InnerText = "Binary";
+                intDir2.InnerText = "Binary\\int";
+
+                propGroup3Element.AppendChild(outDir2);
+                propGroup3Element.AppendChild(intDir2);
 
                 XmlElement import2Element = doc.CreateElement("Import");
                 import2Element.SetAttribute("Project", "$(VCTargetsPath)\\Microsoft.Cpp.props");
