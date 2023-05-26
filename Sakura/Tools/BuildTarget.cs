@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System;
+using System.IO;
 
 namespace Sakura.BuildTools {
     public class BuildTarget {
@@ -26,11 +27,11 @@ namespace Sakura.BuildTools {
         }
 
         public void AddIncludeDirectory(string directory) {
-            this.includeDirectories.Add(directory);
+            this.includeDirectories.Add(Path.GetFullPath(directory));
         }
 
         public void AddLibraryDirectory(string directory) {
-            this.libraryDirectories.Add(directory);
+            this.libraryDirectories.Add(Path.GetFullPath(directory));
         }
 
         public void LinkLibrary(string library) {

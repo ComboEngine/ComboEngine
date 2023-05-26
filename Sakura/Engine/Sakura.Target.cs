@@ -6,6 +6,7 @@ public class SakuraEngine : BuildTarget {
         this.SetName("Sakura.Engine");
         this.AddSourceFolder("Source");
         this.AddIncludeDirectory("Include");
+        this.AddIncludeDirectory("Source");
         this.AddLibraryDirectory("Library");
 
 
