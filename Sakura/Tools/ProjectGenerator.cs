@@ -93,6 +93,10 @@ namespace Sakura.Tools {
                 propGroup2Element.AppendChild(outDir1);
                 propGroup2Element.AppendChild(intDir1);
 
+                XmlElement includeDir1 = doc.CreateElement("AdditionalIncludeDirectories");
+                includeDir1.InnerText = string.Join(";", entry.Value.GetIncludeDirectories());
+                propGroup2Element.AppendChild(includeDir1);
+
                 XmlElement propGroup3Element = doc.CreateElement("PropertyGroup");
                 propGroup3Element.SetAttribute("Condition", "'$(Configuration)|$(Platform)'=='Release|x64'");
                 propGroup3Element.SetAttribute("Label", "Configuration");
@@ -118,6 +122,10 @@ namespace Sakura.Tools {
 
                 propGroup3Element.AppendChild(outDir2);
                 propGroup3Element.AppendChild(intDir2);
+
+                XmlElement includeDir2 = doc.CreateElement("AdditionalIncludeDirectories");
+                includeDir2.InnerText = string.Join(";", entry.Value.GetIncludeDirectories());
+                propGroup3Element.AppendChild(includeDir2);
 
                 XmlElement import2Element = doc.CreateElement("Import");
                 import2Element.SetAttribute("Project", "$(VCTargetsPath)\\Microsoft.Cpp.props");
