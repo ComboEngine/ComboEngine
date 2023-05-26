@@ -65,7 +65,7 @@ namespace Sakura.Tools {
                 propGroup1Element.AppendChild(keywordElement);
 
                 XmlElement rootNamespaceElement = doc.CreateElement("RootNamespace");
-                rootNamespaceElement.InnerText = "SomeProjName";
+                rootNamespaceElement.InnerText = entry.Value.GetName();
                 propGroup1Element.AppendChild(rootNamespaceElement);
 
                 XmlElement import1Element = doc.CreateElement("Import");
@@ -169,6 +169,10 @@ namespace Sakura.Tools {
                 linkIncremental1Element.InnerText = "true";
                 propGroup5Element.AppendChild(linkIncremental1Element);
 
+                XmlElement libraryPath = doc.CreateElement("LibraryPath");
+                libraryPath.InnerText = string.Join(";",entry.Value.GetLibraryDirectories()) + ";$(LibraryPath)";
+                propGroup5Element.AppendChild(libraryPath);
+
                 XmlElement propGroup6Element = doc.CreateElement("PropertyGroup");
                 propGroup6Element.SetAttribute("Condition", "'$(Configuration)|$(Platform)'=='Release|x64'");
                 projectElement.AppendChild(propGroup6Element);
@@ -227,6 +231,10 @@ namespace Sakura.Tools {
                 genDebugInfo1Element.InnerText = "true";
                 link1Element.AppendChild(genDebugInfo1Element);
 
+                XmlElement linkLibraries1 = doc.CreateElement("AdditionalDependencies");
+                linkLibraries1.InnerText = string.Join(";",entry.Value.GetLinkedLibraries()) + ";%(AdditionalDependencies)";
+                link1Element.AppendChild(linkLibraries1);
+
                 XmlElement itemDefGroup2Element = doc.CreateElement("ItemDefinitionGroup");
                 itemDefGroup2Element.SetAttribute("Condition", "'$(Configuration)|$(Platform)'=='Release|x64'");
                 projectElement.AppendChild(itemDefGroup2Element);
@@ -273,6 +281,10 @@ namespace Sakura.Tools {
                 XmlElement genDebugInfo2Element = doc.CreateElement("GenerateDebugInformation");
                 genDebugInfo2Element.InnerText = "true";
                 link2Element.AppendChild(genDebugInfo2Element);
+
+                XmlElement linkLibraries2 = doc.CreateElement("AdditionalDependencies");
+                linkLibraries2.InnerText = string.Join(";",entry.Value.GetLinkedLibraries()) + ";%(AdditionalDependencies)";
+                link2Element.AppendChild(linkLibraries2);
 
                 XmlElement sourceIncludeGroup = doc.CreateElement("ItemGroup");
                 foreach(string path in Directory.GetFiles(Path.GetDirectoryName(entry.Key) + "\\" + entry.Value.GetSourceFolder(), "*.*", SearchOption.AllDirectories)) {
