@@ -4,10 +4,7 @@
 #include <vector>
 #include <string>
 
-//Include windows headers
-#ifdef _WIN32
-#include <Platform/Windows/PlatformHeaders.h>
-#endif
+#include <Platform/PlatformHeaders.h>
 
 //Using std
 using namespace std;
