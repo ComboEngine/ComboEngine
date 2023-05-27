@@ -8,7 +8,8 @@ namespace Sakura.BuildTools {
         private string sourceFolder;
         public List<string> includeDirectories = new List<string>();
         public List<string> libraryDirectories = new List<string>();
-        private List<string> linkLibraries = new List<string>();
+        public List<string> linkLibraries = new List<string>();
+        public List<string> modules = new List<string>();
         private BuildType buildType = BuildType.Executable;
 
         public string GetName() {
@@ -51,6 +52,14 @@ namespace Sakura.BuildTools {
             return this.linkLibraries;
         }
 
+        public void AddModule(string module) {
+            this.modules.Add(module);
+        }
+
+        public List<string> GetModules() {
+            return this.modules;
+        }
+
         public void SetBuildType(BuildType type) {
             this.buildType = type;
         }
@@ -58,5 +67,6 @@ namespace Sakura.BuildTools {
         public BuildType GetBuildType() {
             return this.buildType;
         }
+
     }
 }

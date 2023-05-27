@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.CodeDom.Compiler;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 namespace Sakura.Tools {
@@ -66,6 +67,54 @@ namespace Sakura.Tools {
                             assemblies[path] = target;
                         }
                     }
+                }
+            }
+            for(int i = 0;i<assemblies.Count;i++) {
+                var entry = assemblies.ElementAt(i);
+                Sakura.BuildTools.BuildTarget entryValue = entry.Value;
+                if(entry.Value.GetModules().Count != 0) {
+                    foreach(string module in entry.Value.GetModules()) {
+                        //Find the module by name
+                        Sakura.BuildTools.BuildTarget target = null;
+                        for(int i1 = 0;i1<assemblies.Count;i1++) {
+                            var entry1 = assemblies.ElementAt(i1);
+                            if(entry1.Value.GetName().Equals(module)) {
+                                target = entry1.Value;
+                            }
+                        }
+                        if(target != null) {
+                            foreach(string str in target.modules) {
+                                entryValue.modules.Add(str);
+                            }
+                            assemblies[entry.Key] = entryValue;
+                        }
+                    }
+
+
+                    //Reprocess after adding new modules
+                    foreach(string module in entry.Value.GetModules()) {
+                        //Find the module by name
+                        Sakura.BuildTools.BuildTarget target = null;
+                        for(int i1 = 0;i1<assemblies.Count;i1++) {
+                            var entry1 = assemblies.ElementAt(i1);
+                            if(entry1.Value.GetName().Equals(module)) {
+                                target = entry1.Value;
+                            }
+                        }
+                        if(target != null) {
+                            foreach(string str in target.includeDirectories) {
+                                entryValue.includeDirectories.Add(str);
+                            }
+                            foreach(string str in target.libraryDirectories) {
+                                entryValue.libraryDirectories.Add(str);
+                            }
+                            foreach(string str in target.linkLibraries) {
+                                entryValue.linkLibraries.Add(str);
+                            }
+                            assemblies[entry.Key] = entryValue;
+                        }
+                    }
+                    
                 }
             }
             return assemblies;
