@@ -8,6 +8,7 @@ public class SakuraEngine : BuildTarget {
         this.AddIncludeDirectory("Include");
         this.AddIncludeDirectory("Source");
         this.AddLibraryDirectory("Library");
+        this.SetBuildType(BuildType.Library);
 
 
         this.LinkLibrary("OpenGL32.lib");

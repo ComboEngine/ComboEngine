@@ -77,9 +77,6 @@ namespace Sakura.Tools {
                 propGroup2Element.SetAttribute("Label", "Configuration");
                 projectElement.AppendChild(propGroup2Element);
 
-                XmlElement configType1Element = doc.CreateElement("ConfigurationType");
-                configType1Element.InnerText = "Application";
-                propGroup2Element.AppendChild(configType1Element);
 
                 XmlElement charSet1Element = doc.CreateElement("CharacterSet");
                 charSet1Element.InnerText = "Unicode";
@@ -93,18 +90,14 @@ namespace Sakura.Tools {
                 propGroup2Element.AppendChild(outDir1);
                 propGroup2Element.AppendChild(intDir1);
 
-                XmlElement includeDir1 = doc.CreateElement("AdditionalIncludeDirectories");
-                includeDir1.InnerText = string.Join(";", entry.Value.GetIncludeDirectories());
-                propGroup2Element.AppendChild(includeDir1);
+                XmlElement buildType1 = doc.CreateElement("ConfigurationType");
+                buildType1.InnerText = entry.Value.GetBuildType() == BuildType.Executable ? "Application" : "DynamicLibrary";
+                propGroup2Element.AppendChild(buildType1);
 
                 XmlElement propGroup3Element = doc.CreateElement("PropertyGroup");
                 propGroup3Element.SetAttribute("Condition", "'$(Configuration)|$(Platform)'=='Release|x64'");
                 propGroup3Element.SetAttribute("Label", "Configuration");
                 projectElement.AppendChild(propGroup3Element);
-
-                XmlElement configType2Element = doc.CreateElement("ConfigurationType");
-                configType2Element.InnerText = "Application";
-                propGroup3Element.AppendChild(configType2Element);
 
                 XmlElement wholeProgramOptElement = doc.CreateElement("WholeProgramOptimization");
                 wholeProgramOptElement.InnerText = "true";
@@ -123,9 +116,10 @@ namespace Sakura.Tools {
                 propGroup3Element.AppendChild(outDir2);
                 propGroup3Element.AppendChild(intDir2);
 
-                XmlElement includeDir2 = doc.CreateElement("AdditionalIncludeDirectories");
-                includeDir2.InnerText = string.Join(";", entry.Value.GetIncludeDirectories());
-                propGroup3Element.AppendChild(includeDir2);
+                XmlElement buildType2 = doc.CreateElement("ConfigurationType");
+                buildType2.InnerText = entry.Value.GetBuildType() == BuildType.Executable ? "Application" : "DynamicLibrary";
+                propGroup3Element.AppendChild(buildType2);
+
 
                 XmlElement import2Element = doc.CreateElement("Import");
                 import2Element.SetAttribute("Project", "$(VCTargetsPath)\\Microsoft.Cpp.props");

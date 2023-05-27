@@ -51,6 +51,18 @@ namespace Sakura.Tools {
                             object instance = Activator.CreateInstance(clazz);
                             Sakura.BuildTools.BuildTarget target = (Sakura.BuildTools.BuildTarget)instance;
                             clazz.GetMethod("Build").Invoke(instance,new object[] {});
+                            
+                            List<string> includeDirectories = new List<string>();
+                            List<string> libraryDirectories = new List<string>();
+                            foreach(string include in target.GetIncludeDirectories()) {
+                                includeDirectories.Add(Path.GetDirectoryName(Path.GetFullPath(path)) + "\\" + include);
+                            }
+                            foreach(string library in target.GetLibraryDirectories()) {
+                                libraryDirectories.Add(Path.GetDirectoryName(Path.GetFullPath(path)) + "\\" + library);
+                            }
+
+                            target.includeDirectories = includeDirectories;
+                            target.libraryDirectories = libraryDirectories;
                             assemblies[path] = target;
                         }
                     }
