@@ -39,7 +39,7 @@ sakura_ptr<Window> Window::Create(sakura_string title,int width,int height)
 	wc.hInstance = Platform::hInstance;	
 	wc.hIcon = LoadIcon(NULL, IDI_WINLOGO);	
 	wc.hCursor = LoadCursor(NULL, IDC_ARROW);	
-	wc.hbrBackground = (HBRUSH)(COLOR_WINDOW + 2);	
+	wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
 	wc.lpszMenuName = NULL;	
 	wc.lpszClassName = window->WndClassName;	
 	wc.hIconSm = LoadIcon(NULL, IDI_WINLOGO); 

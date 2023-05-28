@@ -12,7 +12,7 @@ void Platform::PreInit(HINSTANCE hInstance)
 
 void Platform::Init()
 {
-	Platform::window = Window::Create("Snus",1920, 1080);
+	Platform::window = Window::Create("Sakura",1920, 1080);
     ZeroMemory(&Platform::msg, sizeof(MSG));
 }
 
