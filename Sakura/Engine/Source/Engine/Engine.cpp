@@ -1,5 +1,6 @@
 #include "Engine.h"
 #include <Platform/Platform.h>
+#include <Renderer/GPU.h>
 
 
 //Engine entry point
@@ -8,6 +9,7 @@ int Engine::Main(sakura_array<sakura_string> args)
 	logger.Info("Initalizing Sakura Engine " + Engine::version.GetVersionString());
 
 	Platform::Init();
+	GPUContext::Instance = GPUContext::CreateContext();
 	
 
 	OnStart();
@@ -40,8 +42,13 @@ void Engine::OnUpdate()
 
 void Engine::OnDraw()
 {
+	GPUContext::Instance->D3D11DevCon->ClearRenderTargetView(GPUContext::Instance->RenderTargetView, D3DXCOLOR(1,0,1,1));
+
+	//Present the backbuffer to the screen
+	GPUContext::Instance->SwapChain->Present(0, 0);
 }
 
 void Engine::OnExit()
 {
+	GPUContext::Instance->Release();
 }
