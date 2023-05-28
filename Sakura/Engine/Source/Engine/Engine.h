@@ -1,16 +1,19 @@
 #pragma once
 #include "EngineHeaders.h"
 #include "EngineUtils.h"
+#include <Platform/Platform.h>
 #include <Utility/Version.h>
 
 class Engine {
 public:
 	static Logger logger;
 	static Version version;
+	static bool shouldExit;
 
 	//Engine entry point
 	static int Main(sakura_array<sakura_string> args);
 	static bool ShouldExit();
+	static void RequestExit();
 
 	static void OnStart();
 	static void OnUpdate();

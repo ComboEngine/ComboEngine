@@ -15,5 +15,6 @@ int main(int argc, char* argv[]) {
 	for (int i = 0; i < argc; i++) {
 		arguments.push_back(argv[i]);
 	}
+	Platform::PreInit(GetModuleHandle(NULL));
 	return Engine::Main(arguments);
 }

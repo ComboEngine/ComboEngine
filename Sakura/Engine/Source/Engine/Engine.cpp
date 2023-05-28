@@ -7,6 +7,9 @@ int Engine::Main(sakura_array<sakura_string> args)
 {
 	logger.Info("Initalizing Sakura Engine " + Engine::version.GetVersionString());
 
+	Platform::Init();
+	
+
 	OnStart();
 	while (!ShouldExit()) {
 		OnUpdate();
@@ -17,7 +20,13 @@ int Engine::Main(sakura_array<sakura_string> args)
 }
 
 bool Engine::ShouldExit() {
-	return false;
+	return Engine::shouldExit;
+}
+
+void Engine::RequestExit()
+{
+	//Exit from loop
+	Engine::shouldExit = true;
 }
 
 void Engine::OnStart()
@@ -26,6 +35,7 @@ void Engine::OnStart()
 
 void Engine::OnUpdate()
 {
+	Platform::OnUpdate();
 }
 
 void Engine::OnDraw()

@@ -2,3 +2,4 @@
 
 Logger Engine::logger = Logger();
 Version Engine::version = Version(1, 0, 0);
+bool Engine::shouldExit = false;

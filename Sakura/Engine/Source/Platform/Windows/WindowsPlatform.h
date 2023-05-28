@@ -1,5 +1,14 @@
 #pragma once
 
-class Platform {
+#include "WindowsWindow.h"
+#include "WindowsHeaders.h"
 
+class Platform {
+public:
+	static HINSTANCE hInstance;
+	static sakura_ptr<Window> window;
+	static MSG msg;
+	static void PreInit(HINSTANCE hInstance);
+	static void Init();
+	static void OnUpdate();
 };
