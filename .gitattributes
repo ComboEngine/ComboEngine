@@ -1,4 +1,5 @@
 *.h linguist-language=C++
+*.lua linguist-language=Lua
 Sakura/Engine/Include/DirectX/* linguist-vendored
 Sakura/Engine/Library/DirectX/* linguist-vendored
 Sakura/Engine/Include/Lua/* linguist-vendored
