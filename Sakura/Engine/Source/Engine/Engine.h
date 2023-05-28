@@ -3,6 +3,8 @@
 #include "EngineUtils.h"
 #include <Platform/Platform.h>
 #include <Utility/Version.h>
+#include <World/World.h>
+
 
 class Engine {
 public:
