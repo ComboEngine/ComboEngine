@@ -52,14 +52,18 @@ sakura_ptr<Window> Window::Create(sakura_string title,int width,int height)
 		return false;
 	}
 
+	RECT wr = { 0, 0, width,height };
+	AdjustWindowRect(&wr, WS_OVERLAPPEDWINDOW, FALSE);
+
 	window->Hwnd = CreateWindowExW(
 		NULL,	
 		window->WndClassName,	
 		titleLpcwstr,
 		WS_OVERLAPPEDWINDOW,	
-		CW_USEDEFAULT, CW_USEDEFAULT,	
-		width,	
-		height,	
+		300,
+		300,
+		wr.right - wr.left,
+		wr.bottom - wr.top,
 		NULL,	
 		NULL,	
 		Platform::hInstance,	
