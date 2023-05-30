@@ -10,7 +10,9 @@ namespace Sakura.Tools {
         public static void createPremake5Scripts(Dictionary<string,BuildTarget> targets) {
             foreach(KeyValuePair<string, BuildTarget> entry in targets)
             {
-
+                if(entry.Value.GetBuildType() == BuildType.Project) {
+                    continue;
+                }
                 String xmlPath = Path.GetDirectoryName(entry.Key) + "\\" + entry.Value.GetName() + ".vcxproj";
                 XmlDocument doc = new XmlDocument();
                 XmlDeclaration declaration = doc.CreateXmlDeclaration("1.0", "utf-8", null);

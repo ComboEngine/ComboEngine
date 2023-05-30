@@ -11,6 +11,7 @@
 
 class GPURenderPass;
 class GPUShader;
+class Material;
 class GPU {
 public:
 	static sakura_ptr<GPU> Instance;
@@ -26,6 +27,6 @@ public:
 
 	void Initalize();
 	sakura_ptr<Mesh> CreateMesh(Vertex vertices[], int vertexCount,DWORD indices[], int indicesSize);
-	void SubmitData(sakura_ptr<Mesh> mesh, sakura_ptr<GPUShader> shader);
+	void SubmitData(sakura_ptr<Mesh> mesh, sakura_ptr<Material> material);
 	void Release();
 };

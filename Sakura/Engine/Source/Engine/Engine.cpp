@@ -5,6 +5,7 @@
 #include <Graphics/GPUShader.h>
 #include <Renderer/Vertex.h>
 #include <Renderer/Material.h>
+#include <Assets/AssetManager.h>
 #include <fstream>
 
 
@@ -15,7 +16,7 @@ int Engine::Main(sakura_array<sakura_string> args)
 
 	Platform::Init();
 	GPU::Instance = GPU::Create();
-	
+
 	Scripting::Init();
 	World::Init();
 
@@ -50,41 +51,16 @@ int Engine::Main(sakura_array<sakura_string> args)
 	actor->Scripts.push_back(Scripting::Scripts[0]);
 	World::Actors.push_back(actor);
 
-
-	sakura_string shaderStr = "struct VOut\n" 
-                "{\n" 
-                "    float4 position : SV_POSITION;\n" 
-                "    float2 texCoord : TEXCOORD;\n" 
-				"	 float4 normal : NORMAL; \n" 
-                "};\n" 
-                "\n" 
-                "VOut VShader(float4 position : POSITION, float2 texCoord : TEXCOORD, float4 normal : NORMAL)\n" 
-                "{\n" 
-                "    VOut output;\n" 
-                "\n" 
-                "    output.position = position;\n" 
-                "    output.texCoord = texCoord;\n" 
-				"    output.normal = normal;\n"
-                "\n" 
-                "    return output;\n" 
-                "}\n" 
-                "\n" 
-                "\n" 
-                "\n" 
-                "float4 PShader(VOut data) : SV_TARGET\n" 
-                "{\n" 
-                "    return float4(data.texCoord.x,data.texCoord.y,1,1);\n" 
-				"}";
-
-	sakura_ptr<GPUShader> shader = GPUShader::Create(shaderStr);
+	sakura_ptr<Material> material = Material::Create();
 	sakura_ptr<Mesh> mesh = GPU::Instance->CreateMesh(vertices, sizeof(vertices),indices,sizeof(indices));
 
 
 	OnStart();
+	AssetManager::SaveAssetPack("Cache/AssetPack.sakura");
 	while (!ShouldExit()) {
 		OnUpdate();
 		OnDraw();
-		GPU::Instance->SubmitData(mesh, shader);
+		GPU::Instance->SubmitData(mesh, material);
 		GPU::Instance->RenderPass->End();
 	}
 	OnExit();

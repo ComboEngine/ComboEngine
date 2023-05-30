@@ -5,6 +5,7 @@ using System.IO;
 namespace Sakura.BuildTools {
     public enum BuildType {
         Library,
-        Executable
+        Executable,
+        Project
     }
 }

@@ -25,11 +25,18 @@ namespace Sakura.Tools {
 
                     if(options.name == null) {
                         Console.WriteLine("Building all...");
+
+                        foreach(KeyValuePair<string,Sakura.BuildTools.BuildTarget> entry in targets) {
+                            Console.WriteLine("Building " + entry.Value.GetName());
+                            Compiler.CompileElement(entry.Key,entry.Value);
+                        }
                     } else {
                         Sakura.BuildTools.BuildTarget finalTarget = null;
-                        foreach(Sakura.BuildTools.BuildTarget target in targets.Values.ToList()) {
-                            if(string.Equals(target.GetName(), options.name, StringComparison.OrdinalIgnoreCase)) {
-                                finalTarget = target;
+                        string path = null;
+                        foreach(KeyValuePair<string,Sakura.BuildTools.BuildTarget> entry in targets) {
+                            if(string.Equals(entry.Value.GetName(), options.name, StringComparison.OrdinalIgnoreCase)) {
+                                finalTarget = entry.Value;
+                                path = entry.Key;
                             }
                         }
 
@@ -46,6 +53,15 @@ namespace Sakura.Tools {
                     PremakeScriptBuilder.createPremake5Scripts(targets);
                     Console.WriteLine("Generated projects");
                     break;
+                case "setup":
+                    if(options.name != null) {
+                        SakuraProjectGenerator.Setup(options.name);
+                        Console.WriteLine("Generated project " + options.name);
+                    } else {
+                        Console.WriteLine("Name is required argument!");
+                    }
+                    break;
+
             }
         }
     }

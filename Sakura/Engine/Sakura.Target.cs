@@ -8,6 +8,7 @@ public class SakuraEngine : BuildTarget {
         this.AddSourceFolder("Source");
         this.AddIncludeDirectory("Source");
         this.SetBuildType(BuildType.Executable);
+        this.AddModule("Sakura.Lua");
 
         List<string> libraries = new List<string>();
         libraries.Add("DirectX");

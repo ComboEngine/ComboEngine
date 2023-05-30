@@ -116,11 +116,11 @@ sakura_ptr<Mesh> GPU::CreateMesh(Vertex vertices[], int vertexCount, DWORD indic
     return mesh;
 }
 
-void GPU::SubmitData(sakura_ptr<Mesh> mesh, sakura_ptr<GPUShader> shader)
+void GPU::SubmitData(sakura_ptr<Mesh> mesh, sakura_ptr<Material> material)
 {
     GPURenderData data;
     data.Mesh = mesh;
-    data.Shader = shader;
+    data.Material = material;
     this->RenderPass->RenderDataList.push_back(data);
 }
 

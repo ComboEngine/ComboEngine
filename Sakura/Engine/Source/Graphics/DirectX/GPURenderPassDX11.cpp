@@ -8,8 +8,8 @@ void GPURenderPass::Start()
 	for (GPURenderData data : this->RenderDataList) {
 		UINT stride = sizeof(Vertex);
 		UINT offset = 0;
-		GPU::Instance->Context->VSSetShader(data.Shader->VertexShader, 0, 0);
-		GPU::Instance->Context->PSSetShader(data.Shader->PixelShader, 0, 0);
+		GPU::Instance->Context->VSSetShader(data.Material->shader->VertexShader, 0, 0);
+		GPU::Instance->Context->PSSetShader(data.Material->shader->PixelShader, 0, 0);
 		GPU::Instance->Context->IASetIndexBuffer(data.Mesh->IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 		GPU::Instance->Context->IASetVertexBuffers(0, 1, &data.Mesh->VertexBuffer, &stride, &offset);
 		GPU::Instance->Context->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

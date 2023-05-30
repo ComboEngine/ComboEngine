@@ -5,12 +5,14 @@
 #include <Utility/Version.h>
 #include <World/World.h>
 
+class Material;
 
 class Engine {
 public:
 	static Logger logger;
 	static Version version;
 	static bool shouldExit;
+	static sakura_array<sakura_ptr<Material>> Materials;
 
 	//Engine entry point
 	static int Main(sakura_array<sakura_string> args);
