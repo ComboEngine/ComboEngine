@@ -5,7 +5,16 @@
 void GPURenderPass::Start()
 {
 	GPU::Instance->Context->ClearRenderTargetView(GPU::Instance->Backbuffer, this->Color.GetD3DXColor());
-
+	for (GPURenderData data : this->RenderDataList) {
+		UINT stride = sizeof(Vertex);
+		UINT offset = 0;
+		GPU::Instance->Context->VSSetShader(data.Shader->VertexShader, 0, 0);
+		GPU::Instance->Context->PSSetShader(data.Shader->PixelShader, 0, 0);
+		GPU::Instance->Context->IASetIndexBuffer(data.Mesh->IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+		GPU::Instance->Context->IASetVertexBuffers(0, 1, &data.Mesh->VertexBuffer, &stride, &offset);
+		GPU::Instance->Context->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		GPU::Instance->Context->DrawIndexed(data.Mesh->VertexCount, 0, 0);
+	}
 }
 
 void GPURenderPass::End()

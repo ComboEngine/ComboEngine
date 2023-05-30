@@ -2,8 +2,14 @@
 
 #include <xnamath.h>
 
-struct Vertex
+struct Vertex    //Overloaded Vertex Structure
 {
-    FLOAT X, Y, Z;      // position
-    D3DXCOLOR Color;    // color
+	Vertex() {}
+	Vertex(float x, float y, float z,
+		float u, float v, float nx, float ny,float nz)
+		: pos(x, y, z), texCoord(u, v), normal(nx,ny,nz,1) {}
+
+	XMFLOAT3 pos;
+	XMFLOAT2 texCoord;
+	XMFLOAT4 normal;
 };

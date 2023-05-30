@@ -22,10 +22,13 @@ void GPUShader::Initalize(sakura_string text)
 	D3D11_INPUT_ELEMENT_DESC ied[] =
 	{
 		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-		{"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"NORMAL", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 20, D3D11_INPUT_PER_VERTEX_DATA, 0}
 	};
 
-	GPU::Instance->Device->CreateInputLayout(ied, 2, this->VertexShaderBlob->GetBufferPointer(), this->PixelShaderBlob->GetBufferSize(), &this->Layout);
+
+
+	GPU::Instance->Device->CreateInputLayout(ied,3, this->VertexShaderBlob->GetBufferPointer(), this->VertexShaderBlob->GetBufferSize(), &this->Layout);
 	GPU::Instance->Context->IASetInputLayout(this->Layout);
 
 	GPU::Instance->Context->VSSetShader(0, 0, 0);

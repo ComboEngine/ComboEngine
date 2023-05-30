@@ -5,8 +5,12 @@
 #include <Engine/EngineHeaders.h>
 #include "GPURenderPassDX11.h"
 #include <Graphics/Mesh.h>
+#include "../GPURenderData.h"
 #include <Renderer/Vertex.h>
 
+
+class GPURenderPass;
+class GPUShader;
 class GPU {
 public:
 	static sakura_ptr<GPU> Instance;
@@ -21,6 +25,7 @@ public:
 	sakura_ptr<GPURenderPass> RenderPass;
 
 	void Initalize();
-	sakura_ptr<Mesh> CreateMesh(Vertex vertices[], int vertexCount);
+	sakura_ptr<Mesh> CreateMesh(Vertex vertices[], int vertexCount,DWORD indices[], int indicesSize);
+	void SubmitData(sakura_ptr<Mesh> mesh, sakura_ptr<GPUShader> shader);
 	void Release();
 };

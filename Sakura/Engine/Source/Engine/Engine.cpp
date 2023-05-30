@@ -34,10 +34,17 @@ int Engine::Main(sakura_array<sakura_string> args)
 
 	Vertex vertices[] =
 	{
-		{0.0f, 0.5f, 0.0f, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f)},
-		{0.5f, -0.5, 0.0f, D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f)},
-		{-0.5f, -0.5f, 0.0f, D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f)}
+		Vertex(-0.5f, -0.5f, 0.5f,1.0f,1.0f,1.0f,1.0f,1.0f),
+		Vertex(-0.5f,  0.5f, 0.5f,1.0f,0.0f,1.0f,1.0f,1.0f),
+		Vertex(0.5f,  0.5f, 0.5f,0.0f,0.0f,1.0f,1.0f,1.0f),
+		Vertex(0.5f, -0.5f, 0.5f,0.0f,1.0f,1.0f,1.0f,1.0f),
 	};
+
+	DWORD indices[] = {
+	0, 1, 2,
+	0, 2, 3,
+	};
+
 
 	sakura_ptr<Actor> actor = make_shared<Actor>();
 	actor->Scripts.push_back(Scripting::Scripts[0]);
@@ -45,42 +52,39 @@ int Engine::Main(sakura_array<sakura_string> args)
 
 
 	sakura_string shaderStr = "struct VOut\n" 
-		"{\n" 
-		"    float4 position : SV_POSITION;\n" 
-		"    float4 color : COLOR;\n" 
-		"};\n" 
-		"\n" 
-		"VOut VShader(float4 position : POSITION, float4 color : COLOR)\n" 
-		"{\n" 
-		"    VOut output;\n" 
-		"\n" 
-		"    output.position = position;\n" 
-		"    output.color = color;\n" 
-		"\n" 
-		"    return output;\n" 
-		"}\n" 
-		"\n" 
-		"\n" 
-		"float4 PShader(float4 position : SV_POSITION, float4 color : COLOR) : SV_TARGET\n" 
-		"{\n" 
-		"    return color;\n" 
-		"}";
+                "{\n" 
+                "    float4 position : SV_POSITION;\n" 
+                "    float2 texCoord : TEXCOORD;\n" 
+				"	 float4 normal : NORMAL; \n" 
+                "};\n" 
+                "\n" 
+                "VOut VShader(float4 position : POSITION, float2 texCoord : TEXCOORD, float4 normal : NORMAL)\n" 
+                "{\n" 
+                "    VOut output;\n" 
+                "\n" 
+                "    output.position = position;\n" 
+                "    output.texCoord = texCoord;\n" 
+				"    output.normal = normal;\n"
+                "\n" 
+                "    return output;\n" 
+                "}\n" 
+                "\n" 
+                "\n" 
+                "\n" 
+                "float4 PShader(VOut data) : SV_TARGET\n" 
+                "{\n" 
+                "    return float4(data.texCoord.x,data.texCoord.y,1,1);\n" 
+				"}";
 
 	sakura_ptr<GPUShader> shader = GPUShader::Create(shaderStr);
-	sakura_ptr<Mesh> mesh = GPU::Instance->CreateMesh(vertices, sizeof(vertices));
+	sakura_ptr<Mesh> mesh = GPU::Instance->CreateMesh(vertices, sizeof(vertices),indices,sizeof(indices));
 
 
 	OnStart();
 	while (!ShouldExit()) {
 		OnUpdate();
 		OnDraw();
-		UINT stride = sizeof(Vertex);
-		UINT offset = 0;
-		GPU::Instance->Context->VSSetShader(shader->VertexShader, 0, 0);
-		GPU::Instance->Context->PSSetShader(shader->PixelShader, 0, 0);
-		GPU::Instance->Context->IASetVertexBuffers(0, 1, &mesh->VertexBuffer, &stride, &offset);
-		GPU::Instance->Context->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		GPU::Instance->Context->Draw(mesh->VertexCount, 0);
+		GPU::Instance->SubmitData(mesh, shader);
 		GPU::Instance->RenderPass->End();
 	}
 	OnExit();
