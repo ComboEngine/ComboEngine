@@ -1,8 +1,8 @@
 @echo off
 
 rem Created by tecnessino
+cd Sakura
+cd Tools
 mkdir Binary
-cd Binary
-mkdir Sakura.Tools
-cd ..\
-mcs Sakura\Tools\**.cs -out:Binary\Sakura.Tools\Sakura.Tools.exe -r:Microsoft.Build.dll
+cd ..\..\
+mcs Sakura\Tools\**.cs -out:Sakura\Tools\Binary\Sakura.Tools.exe -r:Microsoft.Build.dll
