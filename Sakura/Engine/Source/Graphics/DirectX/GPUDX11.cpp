@@ -1,6 +1,7 @@
 #pragma once
 #include "GPUDX11.h"
 #include <Engine/Engine.h>
+#include "GPUImGuiDX11.h"
 
 sakura_ptr<GPU> GPU::Instance = NULL;
 
@@ -19,14 +20,14 @@ void GPU::Initalize()
     DXGI_SWAP_CHAIN_DESC scd;
     ZeroMemory(&scd, sizeof(DXGI_SWAP_CHAIN_DESC));
 
-    scd.BufferCount = 1;                                   // one back buffer
-    scd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;    // use 32-bit color
+    scd.BufferCount = 1;                                  
+    scd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;   
     scd.BufferDesc.Width = Platform::window->Width;
     scd.BufferDesc.Height = Platform::window->Height;
-    scd.OutputWindow = Platform::window->Hwnd;              // set the back buffer height
-    scd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;     // how swap chain is to be used                              // the window to be used
-    scd.SampleDesc.Count = 8;                              // how many multisamples
-    scd.Windowed = TRUE;                                   // windowed/full-screen mode
+    scd.OutputWindow = Platform::window->Hwnd;              
+    scd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;       
+    scd.SampleDesc.Count = 8;                            
+    scd.Windowed = TRUE;                                 
     scd.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
     //Create device and swapchain and check the card does support dx11
@@ -74,6 +75,8 @@ void GPU::Initalize()
     
     //Create RenderPass
     this->RenderPass = make_shared<GPURenderPass>();
+
+    GPUImGuiDX11::Create(this);
 }
 
 sakura_ptr<Mesh> GPU::CreateMesh(Vertex vertices[], int vertexCount, DWORD indices[], int indicesSize)
@@ -106,10 +109,7 @@ sakura_ptr<Mesh> GPU::CreateMesh(Vertex vertices[], int vertexCount, DWORD indic
     D3D11_SUBRESOURCE_DATA iinitData;
     iinitData.pSysMem = indices;
   
-
     this->Device->CreateBuffer(&indexBufferDesc, &iinitData, &mesh->IndexBuffer);
-
-
 
     mesh->VertexCount = vertexCount;
 

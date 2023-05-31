@@ -33,35 +33,19 @@ int Engine::Main(sakura_array<sakura_string> args)
 	*/
 
 
-	Vertex vertices[] =
-	{
-		Vertex(-0.5f, -0.5f, 0.5f,1.0f,1.0f,1.0f,1.0f,1.0f),
-		Vertex(-0.5f,  0.5f, 0.5f,1.0f,0.0f,1.0f,1.0f,1.0f),
-		Vertex(0.5f,  0.5f, 0.5f,0.0f,0.0f,1.0f,1.0f,1.0f),
-		Vertex(0.5f, -0.5f, 0.5f,0.0f,1.0f,1.0f,1.0f,1.0f),
-	};
-
-	DWORD indices[] = {
-	0, 1, 2,
-	0, 2, 3,
-	};
-
-
 	sakura_ptr<Actor> actor = make_shared<Actor>();
 	actor->Scripts.push_back(Scripting::Scripts[0]);
 	World::Actors.push_back(actor);
 
-	sakura_ptr<MaterialAsset> asset = AssetManager::GetAsset<MaterialAsset>("test.mat");
-
-	sakura_ptr<Mesh> mesh = GPU::Instance->CreateMesh(vertices, sizeof(vertices),indices,sizeof(indices));
+	sakura_ptr<MaterialAsset> materialasset = AssetManager::GetAsset<MaterialAsset>("test.mat");
+	sakura_ptr<MeshAsset> meshasset = AssetManager::GetAsset<MeshAsset>("test.mesh");
 
 
 	OnStart();
-	AssetManager::SaveAssetPack("Cache/AssetPack.sakura");
 	while (!ShouldExit()) {
 		OnUpdate();
 		OnDraw();
-		GPU::Instance->SubmitData(mesh, asset->Material);
+		GPU::Instance->SubmitData(meshasset->Mesh, materialasset->Material);
 		GPU::Instance->RenderPass->End();
 	}
 	OnExit();

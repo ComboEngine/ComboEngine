@@ -2,8 +2,6 @@
 #include <Engine/EngineHeaders.h>
 #include "Asset.h"
 #include <fstream>
-#include <Utility/JSON.h>
-#include <Utility/UUID.h>
 
 class AssetManager {
 public:
@@ -17,15 +15,7 @@ public:
 	}
 	template<class T> static sakura_ptr<T> GetAsset(sakura_string path) {
 		sakura_ptr<T> asset = make_shared<T>();
-
-		if (asset->type() == "Material") {
-			nlohmann::json j = nlohmann::json::parse(LoadBytes(path));
-
-			asset->name = j["name"];
-			asset->uuid = j["uuid"];
-			asset->Material = Material::Create();
-		}
-
+		asset->Init(LoadBytes(path));
 		return asset;
 	}
 };

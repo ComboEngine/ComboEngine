@@ -1,6 +1,7 @@
 #include "GPURenderPassDX11.h"
 
 #include "GPUDX11.h"
+#include "GPUImGuiDX11.h"
 
 void GPURenderPass::Start()
 {
@@ -15,9 +16,13 @@ void GPURenderPass::Start()
 		GPU::Instance->Context->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		GPU::Instance->Context->DrawIndexed(data.Mesh->VertexCount, 0, 0);
 	}
+	this->RenderDataList.clear();
+	if (RenderImGui) {
+		GPUImGuiDX11::Render();
+	}
 }
 
 void GPURenderPass::End()
 {
-	GPU::Instance->SwapChain->Present(0, 0);
+	GPU::Instance->SwapChain->Present(1, 0);
 }

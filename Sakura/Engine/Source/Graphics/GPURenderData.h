@@ -8,8 +8,7 @@ class GPUShader;
 class Material;
 
 
-class GPURenderData {
-public:
+struct GPURenderData {
 	sakura_ptr<Material> Material;
 	sakura_ptr<Mesh> Mesh;
 };

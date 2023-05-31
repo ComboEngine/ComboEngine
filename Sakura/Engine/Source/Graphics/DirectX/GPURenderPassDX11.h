@@ -7,6 +7,7 @@ class GPURenderPass {
 public:
 	Color32 Color = Color32(0,0,0,1);
 	sakura_array<GPURenderData> RenderDataList;
+	bool RenderImGui = true;
 	void Start();
 	void End();
 };
