@@ -1,5 +1,7 @@
 *.h linguist-language=C++
 *.lua linguist-language=Lua
-Sakura/Engine/Include/* linguist-vendored
-Sakura/Engine/Library/* linguist-vendored
-Sakura/Engine/Source/ImGui/* linguist-vendored
+*.lib linguist-vendored
+*.cs linguist-language=C#
+Sakura/Engine/Source/ImGui linguist-vendored
+Sakura/Engine/Library linguist-vendored
+Sakura/Engine/Include linguist-vendored
