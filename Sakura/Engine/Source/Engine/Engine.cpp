@@ -51,7 +51,8 @@ int Engine::Main(sakura_array<sakura_string> args)
 	actor->Scripts.push_back(Scripting::Scripts[0]);
 	World::Actors.push_back(actor);
 
-	sakura_ptr<Material> material = Material::Create();
+	sakura_ptr<MaterialAsset> asset = AssetManager::GetAsset<MaterialAsset>("test.mat");
+
 	sakura_ptr<Mesh> mesh = GPU::Instance->CreateMesh(vertices, sizeof(vertices),indices,sizeof(indices));
 
 
@@ -60,7 +61,7 @@ int Engine::Main(sakura_array<sakura_string> args)
 	while (!ShouldExit()) {
 		OnUpdate();
 		OnDraw();
-		GPU::Instance->SubmitData(mesh, material);
+		GPU::Instance->SubmitData(mesh, asset->Material);
 		GPU::Instance->RenderPass->End();
 	}
 	OnExit();

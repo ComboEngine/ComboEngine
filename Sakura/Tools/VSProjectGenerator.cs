@@ -181,6 +181,14 @@ namespace Sakura.Tools {
                 linkIncremental2Element.InnerText = "false";
                 propGroup6Element.AppendChild(linkIncremental2Element);
 
+                XmlElement libraryPath2 = doc.CreateElement("LibraryPath");
+                libraryPath2.InnerText = string.Join(";",entry.Value.GetLibraryDirectories()) + ";$(LibraryPath)";
+                propGroup6Element.AppendChild(libraryPath2);
+
+                XmlElement includePath2 = doc.CreateElement("IncludePath");
+                includePath2.InnerText = string.Join(";",entry.Value.GetIncludeDirectories()) + ";$(IncludePath)";
+                propGroup6Element.AppendChild(includePath2);
+
                 XmlElement itemDefGroup1Element = doc.CreateElement("ItemDefinitionGroup");
                 itemDefGroup1Element.SetAttribute("Condition", "'$(Configuration)|$(Platform)'=='Debug|x64'");
                 projectElement.AppendChild(itemDefGroup1Element);
