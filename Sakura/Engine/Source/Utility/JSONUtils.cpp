@@ -9,3 +9,13 @@ Color32 JSONUtils::ReadColorFromJson(nlohmann::json j)
     color.A = j["a"];
     return color;
 }
+
+nlohmann::json JSONUtils::WriteJsonFromColor(Color32 color)
+{
+    nlohmann::json j;
+    j["r"] = color.R;
+    j["g"] = color.G;
+    j["b"] = color.B;
+    j["a"] = color.A;
+    return j;
+}

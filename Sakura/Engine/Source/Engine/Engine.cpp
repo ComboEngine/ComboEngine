@@ -5,9 +5,16 @@
 #include <Graphics/GPUShader.h>
 #include <Renderer/Vertex.h>
 #include <Renderer/Material.h>
-#include <Assets/AssetManager.h>
 #include <fstream>
 
+
+/*
+* 	AssetManager::InitAssetManager();
+	sakura_ptr<MaterialAsset> materialasset = AssetManager::GetAsset<MaterialAsset>(AssetManager::GetUUIDByName("TestMaterial"));
+	sakura_ptr<MeshAsset> meshasset = AssetManager::GetAsset<MeshAsset>(AssetManager::GetUUIDByName("TestMesh"));
+
+	AssetManager::SaveAssetPack("test.sakura");
+	AssetManager::LoadAssetPack("test.sakura");*/
 
 //Engine entry point
 int Engine::Main(sakura_array<sakura_string> args)
@@ -16,37 +23,41 @@ int Engine::Main(sakura_array<sakura_string> args)
 
 	Platform::Init();
 	GPU::Instance = GPU::Create();
+	Engine::Color = GPUFramebuffer::Create();
 
 	Scripting::Init();
 	World::Init();
-
-	//Setup my little project :)
-	
-	/*Vertex v[] =
-	{
-		Vertex(0.0f, 0.5f, 0.5f),
-		Vertex(0.5f, -0.5f, 0.5f),
-		Vertex(-0.5f, -0.5f, 0.5f),
-	};
-	sakura_ptr<Material> material = Material::Create();
-	sakura_ptr<Mesh> mesh = Mesh::Create(v);
-	*/
-
 
 	sakura_ptr<Actor> actor = make_shared<Actor>();
 	actor->Scripts.push_back(Scripting::Scripts[0]);
 	World::Actors.push_back(actor);
 
-	sakura_ptr<MaterialAsset> materialasset = AssetManager::GetAsset<MaterialAsset>("test.mat");
-	sakura_ptr<MeshAsset> meshasset = AssetManager::GetAsset<MeshAsset>("test.mesh");
+	Vertex vertices[] =
+	{
+		Vertex(-0.5f, -0.5f, 0.5f,1.0f,1.0f,1.0f,1.0f,1.0f),
+		Vertex(-0.5f,  0.5f, 0.5f,1.0f,0.0f,1.0f,1.0f,1.0f),
+		Vertex(0.5f,  0.5f, 0.5f,0.0f,0.0f,1.0f,1.0f,1.0f),
+		Vertex(0.5f, -0.5f, 0.5f,0.0f,1.0f,1.0f,1.0f,1.0f),
+	};
 
+	DWORD indices[] = {
+	0, 1, 2,
+	0, 2, 3,
+	};
+
+	sakura_ptr<Mesh> mesh = GPU::Instance->CreateMesh(vertices, sizeof(vertices), indices, sizeof(indices));
+	sakura_ptr<Material> material = Material::Create();
+	material->Init();
 
 	OnStart();
 	while (!ShouldExit()) {
 		OnUpdate();
-		OnDraw();
-		GPU::Instance->SubmitData(meshasset->Mesh, materialasset->Material);
-		GPU::Instance->RenderPass->End();
+		//OnDraw();
+		GPU::Instance->SubmitData(mesh, material);
+		GPU::Instance->RenderPass->Render(false,Engine::Color);
+
+		GPU::Instance->RenderPass->Render();
+		GPU::Instance->RenderPass->SubmitToScreen(true);
 	}
 	OnExit();
 	return 0;
@@ -84,7 +95,8 @@ void Engine::OnUpdate()
 
 void Engine::OnDraw()
 {
-	GPU::Instance->RenderPass->Start();
+	GPU::Instance->RenderPass->Render();
+	GPU::Instance->RenderPass->SubmitToScreen(true);
 }
 
 void Engine::OnExit()

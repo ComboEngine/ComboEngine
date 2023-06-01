@@ -13,6 +13,7 @@ public class SakuraEngine : BuildTarget {
         List<string> libraries = new List<string>();
         libraries.Add("DirectX");
         libraries.Add("Lua");
+        libraries.Add("LZ4");
 
         foreach(string library in libraries) {
             this.AddIncludeDirectory("Include\\" + library);

@@ -6,6 +6,7 @@
 #include <World/World.h>
 
 class Material;
+class GPUFramebuffer;
 
 class Engine {
 public:
@@ -13,6 +14,8 @@ public:
 	static Version version;
 	static bool shouldExit;
 	static sakura_array<sakura_ptr<Material>> Materials;
+	static sakura_ptr<GPUFramebuffer> Color;
+	static sakura_ptr<GPUFramebuffer> Depth;
 
 	//Engine entry point
 	static int Main(sakura_array<sakura_string> args);

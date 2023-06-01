@@ -3,9 +3,16 @@
 #include "GPUDX11.h"
 #include "GPUImGuiDX11.h"
 
-void GPURenderPass::Start()
+void GPURenderPass::Render(bool RenderImGui,sakura_ptr<GPUFramebuffer> framebuffer)
 {
-	GPU::Instance->Context->ClearRenderTargetView(GPU::Instance->Backbuffer, this->Color.GetD3DXColor());
+	if (framebuffer == nullptr) {
+		GPU::Instance->Context->ClearRenderTargetView(GPU::Instance->Backbuffer, this->Color.GetD3DXColor());
+		GPU::Instance->Context->OMSetRenderTargets(1, &GPU::Instance->Backbuffer, NULL);
+	}
+	else {
+		GPU::Instance->Context->OMSetRenderTargets(1, &framebuffer->RenderTargetView, NULL);
+		GPU::Instance->Context->ClearRenderTargetView(framebuffer->RenderTargetView, this->Color.GetD3DXColor());
+	}
 	for (GPURenderData data : this->RenderDataList) {
 		UINT stride = sizeof(Vertex);
 		UINT offset = 0;
@@ -22,7 +29,7 @@ void GPURenderPass::Start()
 	}
 }
 
-void GPURenderPass::End()
+void GPURenderPass::SubmitToScreen(bool vSync)
 {
-	GPU::Instance->SwapChain->Present(1, 0);
+	GPU::Instance->SwapChain->Present(vSync ? 1 :0, 0);
 }

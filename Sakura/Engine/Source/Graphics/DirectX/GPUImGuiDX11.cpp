@@ -1,6 +1,7 @@
 #include "GPUImGuiDX11.h"
 
 #include <Platform/Platform.h>
+#include <Engine/Engine.h>
 
 void GPUImGuiDX11::Create(GPU* instance)
 {
@@ -31,6 +32,10 @@ void GPUImGuiDX11::Render()
     ImGui::NewFrame();
 
     ImGui::ShowDemoWindow();
+
+    ImGui::Begin("viewport");
+    ImGui::Image((void*)Engine::Color->ShaderResourceView, ImVec2(ImGui::GetWindowSize().x,ImGui::GetWindowSize().y-40));
+    ImGui::End();
 
     ImGui::Render();
     ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
