@@ -1,1 +1,3 @@
-
+Sakura/Engine/Include/** linguist-vendored
+Sakura/Engine/Library/** linguist-vendored
+Sakura/Engine/Source/ImGui/** linguist-vendored
