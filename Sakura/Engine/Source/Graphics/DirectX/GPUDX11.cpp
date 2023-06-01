@@ -35,6 +35,7 @@ void GPU::Initalize()
     D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, NULL, NULL, NULL, D3D11_SDK_VERSION, &scd, &SwapChain, &Device, &featureLevel, &Context);
     if (featureLevel != D3D_FEATURE_LEVEL_11_0) {
         Engine::logger.Info("Your card doesn't support D3D11");
+        MessageBoxW(Platform::window->Hwnd, L"Your card doesn't support D3D11", L"Sakura Engine",MB_ICONERROR);
         Engine::RequestExit();
     }
     else {
