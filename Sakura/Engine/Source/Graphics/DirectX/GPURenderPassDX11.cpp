@@ -8,10 +8,12 @@ void GPURenderPass::Render(bool RenderImGui,sakura_ptr<GPUFramebuffer> framebuff
 	if (framebuffer == nullptr) {
 		GPU::Instance->Context->ClearRenderTargetView(GPU::Instance->Backbuffer, this->Color.GetD3DXColor());
 		GPU::Instance->Context->OMSetRenderTargets(1, &GPU::Instance->Backbuffer, NULL);
+		GPU::Instance->Context->ClearDepthStencilView(GPU::Instance->DepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	}
 	else {
 		GPU::Instance->Context->OMSetRenderTargets(1, &framebuffer->RenderTargetView, NULL);
 		GPU::Instance->Context->ClearRenderTargetView(framebuffer->RenderTargetView, this->Color.GetD3DXColor());
+		GPU::Instance->Context->ClearDepthStencilView(GPU::Instance->DepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	}
 	for (GPURenderData data : this->RenderDataList) {
 		UINT stride = sizeof(Vertex);

@@ -22,6 +22,8 @@ public:
 	ID3D11DeviceContext* Context;
 	ID3D11RenderTargetView* Backbuffer;
 	ID3D11RasterizerState* Solid;
+	ID3D11DepthStencilView* DepthStencilView;
+	ID3D11Texture2D* DepthStencilBuffer;
 
 	sakura_ptr<GPURenderPass> RenderPass;
 

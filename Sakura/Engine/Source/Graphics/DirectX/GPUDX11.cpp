@@ -45,6 +45,21 @@ void GPU::Initalize()
     ID3D11Texture2D* BackBufferTexture;
     SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&BackBufferTexture);
 
+    D3D11_TEXTURE2D_DESC depthStencilDesc;
+    depthStencilDesc.Width = Platform::window->Width;
+    depthStencilDesc.Height = Platform::window->Height;
+    depthStencilDesc.MipLevels = 1;
+    depthStencilDesc.ArraySize = 1;
+    depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+    depthStencilDesc.SampleDesc.Count = 1;
+    depthStencilDesc.SampleDesc.Quality = 0;
+    depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
+    depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+    depthStencilDesc.CPUAccessFlags = 0;
+    depthStencilDesc.MiscFlags = 0;
+    Device->CreateTexture2D(&depthStencilDesc, NULL, &DepthStencilBuffer);
+    Device->CreateDepthStencilView(DepthStencilBuffer, NULL, &DepthStencilView);
+
     //Create render target view
     Device->CreateRenderTargetView(BackBufferTexture,NULL,&Backbuffer);
 
@@ -61,6 +76,8 @@ void GPU::Initalize()
     Viewport.TopLeftY = 0;
     Viewport.Width = Platform::window->Width;
     Viewport.Height = Platform::window->Height;
+    Viewport.MinDepth = 0.0f;
+    Viewport.MaxDepth = 1.0f;
 
     //Submit viewport to rasterizer
     Context->RSSetViewports(1, &Viewport);
