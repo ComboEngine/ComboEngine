@@ -6,6 +6,7 @@
 #include <Renderer/Vertex.h>
 #include <Renderer/Material.h>
 #include <fstream>
+#include <Graphics/GPU2D.h>
 
 
 /*
@@ -23,7 +24,7 @@ int Engine::Main(sakura_array<sakura_string> args)
 
 	Platform::Init();
 	GPU::Instance = GPU::Create();
-	Engine::Color = GPUFramebuffer::Create();
+	Engine::Color = GPUFramebuffer::Create(Platform::window->Width,Platform::window->Height);
 
 	Scripting::Init();
 	World::Init();
@@ -34,15 +35,40 @@ int Engine::Main(sakura_array<sakura_string> args)
 
 	Vertex vertices[] =
 	{
-		Vertex(-0.5f, -0.5f, 0.5f,1.0f,1.0f,1.0f,1.0f,1.0f),
-		Vertex(-0.5f,  0.5f, 0.5f,1.0f,0.0f,1.0f,1.0f,1.0f),
-		Vertex(0.5f,  0.5f, 0.5f,0.0f,0.0f,1.0f,1.0f,1.0f),
-		Vertex(0.5f, -0.5f, 0.5f,0.0f,1.0f,1.0f,1.0f,1.0f),
+		Vertex(-1.0f, -1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f,1.0f),
+		Vertex(-1.0f, +1.0f, -1.0f, 0.0f, 1.0f, 0.0f, 1.0f,1.0f),
+		Vertex(+1.0f, +1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f,1.0f),
+		Vertex(+1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 0.0f, 1.0f,1.0f),
+		Vertex(-1.0f, -1.0f, +1.0f, 0.0f, 1.0f, 1.0f, 1.0f,1.0f),
+		Vertex(-1.0f, +1.0f, +1.0f, 1.0f, 1.0f, 1.0f, 1.0f,1.0f),
+		Vertex(+1.0f, +1.0f, +1.0f, 1.0f, 0.0f, 1.0f, 1.0f,1.0f),
+		Vertex(+1.0f, -1.0f, +1.0f, 1.0f, 0.0f, 0.0f, 1.0f,1.0f),
 	};
 
 	DWORD indices[] = {
-	0, 1, 2,
-	0, 2, 3,
+		// front face
+		   0, 1, 2,
+		   0, 2, 3,
+
+		   // back face
+		   4, 6, 5,
+		   4, 7, 6,
+
+		   // left face
+		   4, 5, 1,
+		   4, 1, 0,
+
+		   // right face
+		   3, 2, 6,
+		   3, 6, 7,
+
+		   // top face
+		   1, 5, 6,
+		   1, 6, 2,
+
+		   // bottom face
+		   4, 0, 3,
+		   4, 3, 7
 	};
 
 	sakura_ptr<Mesh> mesh = GPU::Instance->CreateMesh(vertices, sizeof(vertices), indices, sizeof(indices));
@@ -52,11 +78,19 @@ int Engine::Main(sakura_array<sakura_string> args)
 	OnStart();
 	while (!ShouldExit()) {
 		OnUpdate();
-		//OnDraw();
 		GPU::Instance->SubmitData(mesh, material);
-		GPU::Instance->RenderPass->Render(false,Engine::Color);
 
-		GPU::Instance->RenderPass->Render();
+		GPU::Instance->RenderPass->Render(false,Engine::Color);
+		OnDraw();
+
+		GPU::Instance->RenderPass->Render(false);
+		GPU2D::RenderQuad(0, 0, Platform::window->Width, 40, Color32::From255Values(24, 24, 24, 255), GPU::Instance->RenderPass);
+		GPU2D::RenderQuad(0, 40, 200, 1080 - 40, Color32::From255Values(18, 18, 18, 255), GPU::Instance->RenderPass);
+		GPU2D::RenderQuad(1920 - 200, 40, 200, 1080 - 40, Color32::From255Values(18, 18, 18, 255), GPU::Instance->RenderPass);
+		GPU2D::RenderQuad(0, 1080 - 200, 1920, 1080, Color32::From255Values(18, 18, 18, 255), GPU::Instance->RenderPass);
+		GPU2D::RenderFramebuffer(200, 40, 1920 - 400, 1080 - 40 - 200, Engine::Color, GPU::Instance->RenderPass);
+		Engine::Color->RendererWidth = 1920 - 400;
+		Engine::Color->RendererHeight = 1080 - 40 - 200;
 		GPU::Instance->RenderPass->SubmitToScreen(true);
 	}
 	OnExit();
@@ -95,8 +129,11 @@ void Engine::OnUpdate()
 
 void Engine::OnDraw()
 {
-	GPU::Instance->RenderPass->Render();
-	GPU::Instance->RenderPass->SubmitToScreen(true);
+	for (sakura_ptr<Actor> actor : World::Actors) {
+		for (sakura_ptr<Script> script : actor->Scripts) {
+			script->Draw();
+		}
+	}
 }
 
 void Engine::OnExit()

@@ -16,6 +16,7 @@ private:
 public:
 	void Create(std::string path);
 	void Update();
+	void Draw();
 };
 
 

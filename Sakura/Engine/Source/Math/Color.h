@@ -15,4 +15,8 @@ public:
 	D3DXCOLOR GetD3DXColor() {
 		return D3DXCOLOR(R, G, B, A);
 	}
+
+	static Color32 From255Values(float R, float G, float B, float A) {
+		return Color32(R / 255.0F, G / 255.0F, B / 255.0F, A / 255.0F);
+	}
 };

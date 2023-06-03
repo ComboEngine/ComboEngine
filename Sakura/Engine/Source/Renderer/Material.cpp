@@ -17,7 +17,12 @@ sakura_ptr<Material> Material::Create()
 sakura_string Material::Compile()
 {
     std::ostringstream oss;
-    oss << "struct VOut\n"
+    oss << 
+        "cbuffer ConstantBuffer\n"
+        "{\n"
+        "    float4x4 WVP;\n"
+        "};\n"
+        "struct VOut\n"
         "{\n"
         "    float4 position : SV_POSITION;\n"
         "    float2 texCoord : TEXCOORD;\n"
@@ -28,7 +33,7 @@ sakura_string Material::Compile()
         "{\n"
         "    VOut output;\n"
         "\n"
-        "    output.position = position;\n"
+        "    output.position = mul(position,WVP);\n"
         "    output.texCoord = texCoord;\n"
         "    output.normal = normal;\n"
         "\n"
@@ -40,7 +45,8 @@ sakura_string Material::Compile()
         "float4 PShader(VOut data) : SV_TARGET {\n";
 
 
-    oss << "    return float4(" << albedo.R << ", " << albedo.G << ", " << albedo.B << ", " << albedo.A << ");\n";
+    //oss << "    return float4(" << albedo.R << ", " << albedo.G << ", " << albedo.B << ", " << albedo.A << ");\n";
+    oss << "    return float4(data.texCoord.x,data.texCoord.y,1,1);\n";
 
     oss << "}";
     return oss.str();

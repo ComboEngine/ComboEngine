@@ -1,19 +1,21 @@
 #include "GPUFramebufferDX11.h"
 
-sakura_ptr<GPUFramebuffer> GPUFramebuffer::Create()
+sakura_ptr<GPUFramebuffer> GPUFramebuffer::Create(float width,float height)
 {
 	sakura_ptr<GPUFramebuffer> framebuffer = make_shared<GPUFramebuffer>();
-	framebuffer->Init();
+	framebuffer->Init(width,height);
 	return framebuffer;
 }
 
-void GPUFramebuffer::Init()
+void GPUFramebuffer::Init(float width,float height)
 {
+    this->RendererWidth = width;
+    this->RendererHeight = height;
     D3D11_TEXTURE2D_DESC textureDesc;
     ZeroMemory(&textureDesc, sizeof(textureDesc));
 
-    textureDesc.Width = Platform::window->Width;
-    textureDesc.Height = Platform::window->Height;
+    textureDesc.Width = width;
+    textureDesc.Height = height;
     textureDesc.MipLevels = 1;
     textureDesc.ArraySize = 1;
     textureDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;

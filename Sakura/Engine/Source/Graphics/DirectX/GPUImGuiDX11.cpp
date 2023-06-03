@@ -34,6 +34,8 @@ void GPUImGuiDX11::Render()
     ImGui::ShowDemoWindow();
 
     ImGui::Begin("viewport");
+    Engine::Color->RendererWidth = ImGui::GetWindowSize().x;
+    Engine::Color->RendererHeight = ImGui::GetWindowSize().y - 40;
     ImGui::Image((void*)Engine::Color->ShaderResourceView, ImVec2(ImGui::GetWindowSize().x,ImGui::GetWindowSize().y-40));
     ImGui::End();
 

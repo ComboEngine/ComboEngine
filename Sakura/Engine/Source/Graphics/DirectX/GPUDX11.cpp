@@ -101,6 +101,10 @@ sakura_ptr<Mesh> GPU::CreateMesh(Vertex vertices[], int vertexCount, DWORD indic
 {
     sakura_ptr<Mesh> mesh = make_shared<Mesh>();
 
+    //stride = 8
+    //4 = stride / 2
+    mesh->VertexCount = indicesSize / 4;
+
     D3D11_BUFFER_DESC bd;
     ZeroMemory(&bd, sizeof(bd));
 
@@ -119,7 +123,7 @@ sakura_ptr<Mesh> GPU::CreateMesh(Vertex vertices[], int vertexCount, DWORD indic
     D3D11_BUFFER_DESC indexBufferDesc;
     ZeroMemory(&indexBufferDesc, sizeof(indexBufferDesc));
     indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-    indexBufferDesc.ByteWidth = sizeof(DWORD) * 2 * 8;
+    indexBufferDesc.ByteWidth = sizeof(DWORD) * mesh->VertexCount * 8;
     indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
     indexBufferDesc.CPUAccessFlags = 0;
     indexBufferDesc.MiscFlags = 0;
@@ -129,7 +133,15 @@ sakura_ptr<Mesh> GPU::CreateMesh(Vertex vertices[], int vertexCount, DWORD indic
   
     this->Device->CreateBuffer(&indexBufferDesc, &iinitData, &mesh->IndexBuffer);
 
-    mesh->VertexCount = vertexCount;
+    D3D11_BUFFER_DESC ConstantBufferDesc;
+    ZeroMemory(&ConstantBufferDesc, sizeof(D3D11_BUFFER_DESC));
+    ConstantBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+    ConstantBufferDesc.ByteWidth = sizeof(ConstantBufferPass)*16;
+    ConstantBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    ConstantBufferDesc.CPUAccessFlags = 0;
+    ConstantBufferDesc.MiscFlags = 0;
+
+    this->Device->CreateBuffer(&ConstantBufferDesc, NULL, &mesh->ConstantBuffer);
 
     return mesh;
 }
