@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "WindowsWindow.h"
 #include "WindowsPlatform.h"
 #include <Graphics/GPUImGui.h>
@@ -18,6 +19,34 @@ LRESULT CALLBACK WndProc(HWND hwnd,
 		case WM_DESTROY:	
 			PostQuitMessage(0);
 			return 0;
+		case WM_SIZE:
+			if (GPU::Instance != nullptr && GPU::Instance->SwapChain)
+			{
+				Platform::window->Width = LOWORD(lParam);
+				Platform::window->Height = HIWORD(lParam);
+				GPU::Instance->Backbuffer->Release();
+				GPU::Instance->SwapChain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0);
+
+				ID3D11Texture2D* pBuffer;
+				GPU::Instance->SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D),
+					(void**)&pBuffer);
+
+				GPU::Instance->Device->CreateRenderTargetView(pBuffer, NULL,
+					&GPU::Instance->Backbuffer);
+				pBuffer->Release();
+
+				GPU::Instance->Context->OMSetRenderTargets(1, &GPU::Instance->Backbuffer, NULL);
+
+				D3D11_VIEWPORT vp;
+				vp.Width = Platform::window->Width;
+				vp.Height = Platform::window->Height;
+				vp.MinDepth = 0.0f;
+				vp.MaxDepth = 1.0f;
+				vp.TopLeftX = 0;
+				vp.TopLeftY = 0;
+				GPU::Instance->Context->RSSetViewports(1, &vp);
+			}
+			return 1;
 	}
 	
 	return DefWindowProc(hwnd,
@@ -26,12 +55,12 @@ LRESULT CALLBACK WndProc(HWND hwnd,
 		lParam);
 }
 
-sakura_ptr<Window> Window::Create(sakura_string title,int width,int height)
+std::shared_ptr<Window> Window::Create(std::string title,int width,int height)
 {
-	wstring temp = wstring(title.begin(), title.end());
+	std::wstring temp = std::wstring(title.begin(), title.end());
 	LPCWSTR titleLpcwstr = temp.c_str();
 
-	sakura_ptr<Window> window = make_shared<Window>();
+	std::shared_ptr<Window> window = std::make_shared<Window>();
 	window->Width = width;
 	window->Height = height;
 

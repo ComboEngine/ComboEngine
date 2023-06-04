@@ -1,5 +1,5 @@
 #pragma once
-#include "EngineHeaders.h"
+#include "pch.h"
 #include "EngineUtils.h"
 #include <Platform/Platform.h>
 #include <Utility/Version.h>
@@ -13,12 +13,12 @@ public:
 	static Logger logger;
 	static Version version;
 	static bool shouldExit;
-	static sakura_array<sakura_ptr<Material>> Materials;
-	static sakura_ptr<GPUFramebuffer> Color;
-	static sakura_ptr<GPUFramebuffer> Depth;
+	static std::vector<std::shared_ptr<Material>> Materials;
+	static std::shared_ptr<GPUFramebuffer> Color;
+	static std::shared_ptr<GPUFramebuffer> Depth;
 
 	//Engine entry point
-	static int Main(sakura_array<sakura_string> args);
+	static int Main(std::vector<std::string> args);
 	static bool ShouldExit();
 	static void RequestExit();
 

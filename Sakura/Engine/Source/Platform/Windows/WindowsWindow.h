@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Engine/EngineHeaders.h>
+#include <pch.h>
 
 class Window {
 public:
@@ -8,5 +8,5 @@ public:
 	HWND Hwnd = NULL;
 	int Width;
 	int Height;
-	static sakura_ptr<Window> Create(sakura_string title, int width, int height);
+	static std::shared_ptr<Window> Create(std::string title, int width, int height);
 };

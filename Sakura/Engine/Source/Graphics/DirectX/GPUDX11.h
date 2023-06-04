@@ -1,8 +1,8 @@
 #pragma once
 
-#include <Platform/Windows/IncludeDirectXHeaders.h>
+
 #include <Platform/Platform.h>
-#include <Engine/EngineHeaders.h>
+#include <pch.h>
 #include "GPURenderPassDX11.h"
 #include <Graphics/Mesh.h>
 #include "../GPURenderData.h"
@@ -11,11 +11,13 @@
 
 class GPURenderPass;
 class GPUShader;
+class GPUFramebuffer;
+class Transform;
 class Material;
 class GPU {
 public:
-	static sakura_ptr<GPU> Instance;
-	static sakura_ptr<GPU> Create();
+	static std::shared_ptr<GPU> Instance;
+	static std::shared_ptr<GPU> Create();
 
 	IDXGISwapChain* SwapChain;
 	ID3D11Device* Device;
@@ -25,10 +27,11 @@ public:
 	ID3D11DepthStencilView* DepthStencilView;
 	ID3D11Texture2D* DepthStencilBuffer;
 
-	sakura_ptr<GPURenderPass> RenderPass;
+	std::shared_ptr<GPURenderPass> RenderPass;
+	std::vector<std::shared_ptr<GPUFramebuffer>> Framebuffers = std::vector<std::shared_ptr<GPUFramebuffer>>();
 
 	void Initalize();
-	sakura_ptr<Mesh> CreateMesh(Vertex vertices[], int vertexCount,DWORD indices[], int indicesSize);
-	void SubmitData(sakura_ptr<Mesh> mesh, sakura_ptr<Material> material);
+	std::shared_ptr<Submesh> CreateSubmesh(std::vector<Vertex> vertices,std::vector<DWORD> indices);
+	void SubmitData(std::shared_ptr<Mesh> mesh, std::shared_ptr<Material> material,std::shared_ptr<Transform> transform);
 	void Release();
 };

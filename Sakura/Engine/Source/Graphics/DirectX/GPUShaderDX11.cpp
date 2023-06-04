@@ -1,13 +1,14 @@
+#include "pch.h"
 #include "GPUShaderDX11.h"
 
-sakura_ptr<GPUShader> GPUShader::Create(sakura_string shader)
+std::shared_ptr<GPUShader> GPUShader::Create(std::string shader)
 {
-	sakura_ptr<GPUShader> pShader = make_shared<GPUShader>();
+	std::shared_ptr<GPUShader> pShader = std::make_shared<GPUShader>();
 	pShader->Initalize(shader);
 	return pShader;
 }
 
-void GPUShader::Initalize(sakura_string text)
+void GPUShader::Initalize(std::string text)
 {
 	const char* textC = text.c_str();
 	D3DX11CompileFromMemory(textC, strlen(textC), nullptr, nullptr, nullptr, "VShader", "vs_4_0", 0, 0, nullptr, &this->VertexShaderBlob, nullptr, nullptr);

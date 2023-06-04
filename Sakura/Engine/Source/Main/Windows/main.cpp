@@ -1,3 +1,4 @@
+#include "pch.h"
 #include <Engine/Engine.h>
 
 
@@ -8,10 +9,10 @@ int main(int argc, char* argv[]) {
 	windows = false;
 #endif
 	if (!windows) {
-		cout << "Non-Windows platforms are not currently supported" << endl;
+		std::cout << "Non-Windows platforms are not currently supported" << std::endl;
 		return -1;
 	}
-	sakura_array<string> arguments;
+	std::vector<std::string> arguments;
 	for (int i = 0; i < argc; i++) {
 		arguments.push_back(argv[i]);
 	}

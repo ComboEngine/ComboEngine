@@ -1,4 +1,5 @@
 #include "Engine.h"
+#include "pch.h"
 #include <Platform/Platform.h>
 #include <Scripting/Scripting.h>
 #include <Graphics/GPU.h>
@@ -7,18 +8,20 @@
 #include <Renderer/Material.h>
 #include <fstream>
 #include <Graphics/GPU2D.h>
+#include <Utility/AssimpModelImporter.h>
+#include <Graphics/GPUTexture.h>
 
 
 /*
 * 	AssetManager::InitAssetManager();
-	sakura_ptr<MaterialAsset> materialasset = AssetManager::GetAsset<MaterialAsset>(AssetManager::GetUUIDByName("TestMaterial"));
-	sakura_ptr<MeshAsset> meshasset = AssetManager::GetAsset<MeshAsset>(AssetManager::GetUUIDByName("TestMesh"));
+	std::shared_ptr<MaterialAsset> materialasset = AssetManager::GetAsset<MaterialAsset>(AssetManager::GetUUIDByName("TestMaterial"));
+	std::shared_ptr<MeshAsset> meshasset = AssetManager::GetAsset<MeshAsset>(AssetManager::GetUUIDByName("TestMesh"));
 
 	AssetManager::SaveAssetPack("test.sakura");
 	AssetManager::LoadAssetPack("test.sakura");*/
 
 //Engine entry point
-int Engine::Main(sakura_array<sakura_string> args)
+int Engine::Main(std::vector<std::string> args)
 {
 	logger.Info("Initalizing Sakura Engine " + Engine::version.GetVersionString());
 
@@ -29,68 +32,35 @@ int Engine::Main(sakura_array<sakura_string> args)
 	Scripting::Init();
 	World::Init();
 
-	sakura_ptr<Actor> actor = make_shared<Actor>();
+	std::shared_ptr<Actor> actor = Actor::Create();
 	actor->Scripts.push_back(Scripting::Scripts[0]);
-	World::Actors.push_back(actor);
 
-	Vertex vertices[] =
-	{
-		Vertex(-1.0f, -1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f,1.0f),
-		Vertex(-1.0f, +1.0f, -1.0f, 0.0f, 1.0f, 0.0f, 1.0f,1.0f),
-		Vertex(+1.0f, +1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f,1.0f),
-		Vertex(+1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 0.0f, 1.0f,1.0f),
-		Vertex(-1.0f, -1.0f, +1.0f, 0.0f, 1.0f, 1.0f, 1.0f,1.0f),
-		Vertex(-1.0f, +1.0f, +1.0f, 1.0f, 1.0f, 1.0f, 1.0f,1.0f),
-		Vertex(+1.0f, +1.0f, +1.0f, 1.0f, 0.0f, 1.0f, 1.0f,1.0f),
-		Vertex(+1.0f, -1.0f, +1.0f, 1.0f, 0.0f, 0.0f, 1.0f,1.0f),
-	};
-
-	DWORD indices[] = {
-		// front face
-		   0, 1, 2,
-		   0, 2, 3,
-
-		   // back face
-		   4, 6, 5,
-		   4, 7, 6,
-
-		   // left face
-		   4, 5, 1,
-		   4, 1, 0,
-
-		   // right face
-		   3, 2, 6,
-		   3, 6, 7,
-
-		   // top face
-		   1, 5, 6,
-		   1, 6, 2,
-
-		   // bottom face
-		   4, 0, 3,
-		   4, 3, 7
-	};
-
-	sakura_ptr<Mesh> mesh = GPU::Instance->CreateMesh(vertices, sizeof(vertices), indices, sizeof(indices));
-	sakura_ptr<Material> material = Material::Create();
+	
+	std::shared_ptr<Mesh> mesh = AssimpModelImporter::LoadMesh("chalet.obj");
+	std::shared_ptr<Material> material = Material::Create();
+	std::shared_ptr<GPUTexture> texture = GPUTexture::Create("chalet.jpg");
+	material->texture = texture;
 	material->Init();
 
+	actor->GetTransform()->SetTransform(Vector3(0, -3, 0), Vector3(90, 0, 0), Vector3(1.5f,1.5f,1.5f));
+	float delta = 0;
 	OnStart();
 	while (!ShouldExit()) {
 		OnUpdate();
-		GPU::Instance->SubmitData(mesh, material);
-
+		delta += 1;
+		actor->GetTransform()->SetOrientation(Vector3(-90, delta, 0));
+		GPU::Instance->SubmitData(mesh, material,actor->GetTransform());
 		GPU::Instance->RenderPass->Render(false,Engine::Color);
 		OnDraw();
 
 		GPU::Instance->RenderPass->Render(false);
 		GPU2D::RenderQuad(0, 0, Platform::window->Width, 40, Color32::From255Values(24, 24, 24, 255), GPU::Instance->RenderPass);
-		GPU2D::RenderQuad(0, 40, 200, 1080 - 40, Color32::From255Values(18, 18, 18, 255), GPU::Instance->RenderPass);
-		GPU2D::RenderQuad(1920 - 200, 40, 200, 1080 - 40, Color32::From255Values(18, 18, 18, 255), GPU::Instance->RenderPass);
-		GPU2D::RenderQuad(0, 1080 - 200, 1920, 1080, Color32::From255Values(18, 18, 18, 255), GPU::Instance->RenderPass);
-		GPU2D::RenderFramebuffer(200, 40, 1920 - 400, 1080 - 40 - 200, Engine::Color, GPU::Instance->RenderPass);
-		Engine::Color->RendererWidth = 1920 - 400;
-		Engine::Color->RendererHeight = 1080 - 40 - 200;
+		GPU2D::RenderQuad(0, 40, 200, Platform::window->Height - 40, Color32::From255Values(18, 18, 18, 255), GPU::Instance->RenderPass);
+		GPU2D::RenderQuad(Platform::window->Width - 200, 40, 200, Platform::window->Height - 40, Color32::From255Values(18, 18, 18, 255), GPU::Instance->RenderPass);
+		GPU2D::RenderQuad(0, Platform::window->Height - 200, Platform::window->Width, Platform::window->Height, Color32::From255Values(18, 18, 18, 255), GPU::Instance->RenderPass);
+		GPU2D::RenderFramebuffer(200, 40, Platform::window->Width - 400, Platform::window->Height - 40 - 200, Engine::Color, GPU::Instance->RenderPass);
+		Engine::Color->RendererWidth = Platform::window->Width - 400;
+		Engine::Color->RendererHeight = Platform::window->Height - 40 - 200;
 		GPU::Instance->RenderPass->SubmitToScreen(true);
 	}
 	OnExit();
@@ -119,8 +89,8 @@ void Engine::OnUpdate()
 	Platform::OnUpdate();
 
 
-	for (sakura_ptr<Actor> actor : World::Actors) {
-		for (sakura_ptr<Script> script : actor->Scripts) {
+	for (std::shared_ptr<Actor> actor : World::Actors) {
+		for (std::shared_ptr<Script> script : actor->Scripts) {
 			script->Update();
 		}
 	}
@@ -129,8 +99,8 @@ void Engine::OnUpdate()
 
 void Engine::OnDraw()
 {
-	for (sakura_ptr<Actor> actor : World::Actors) {
-		for (sakura_ptr<Script> script : actor->Scripts) {
+	for (std::shared_ptr<Actor> actor : World::Actors) {
+		for (std::shared_ptr<Script> script : actor->Scripts) {
 			script->Draw();
 		}
 	}

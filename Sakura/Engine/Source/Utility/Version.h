@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Engine/EngineHeaders.h>
+#include <pch.h>
 
 struct Version {
 	int major, minor, build;
@@ -8,7 +8,7 @@ struct Version {
 
 	}
 
-	sakura_string GetVersionString() {
-		return to_string(major) + "." + to_string(minor) + "." + to_string(build);
+	std::string GetVersionString() {
+		return std::to_string(major) + "." + std::to_string(minor) + "." + std::to_string(build);
  	}
 };

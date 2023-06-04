@@ -7,12 +7,12 @@
 class GPU2D {
 public:
 	static ID3D11SamplerState* TextureSampler;
-	static sakura_ptr<GPUShader> QuadShader;
-	static sakura_ptr<GPUShader> TexturedQuadShader;
-	static sakura_ptr<Mesh> QuadMesh;
+	static std::shared_ptr<GPUShader> QuadShader;
+	static std::shared_ptr<GPUShader> TexturedQuadShader;
+	static std::shared_ptr<Submesh> QuadMesh;
 	static void Init();
-	static void RenderQuad(float x,float y,float width,float height,Color32 color, sakura_ptr<GPURenderPass> renderPass);
-	static void RenderFramebuffer(float x, float y, float width, float height, sakura_ptr<GPUFramebuffer> color, sakura_ptr<GPURenderPass> renderPass);
+	static void RenderQuad(float x,float y,float width,float height,Color32 color, std::shared_ptr<GPURenderPass> renderPass);
+	static void RenderFramebuffer(float x, float y, float width, float height, std::shared_ptr<GPUFramebuffer> color, std::shared_ptr<GPURenderPass> renderPass);
 };
 
 struct ConstantBufferPass2D {

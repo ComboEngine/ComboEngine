@@ -6,7 +6,7 @@
 class Platform {
 public:
 	static HINSTANCE hInstance;
-	static sakura_ptr<Window> window;
+	static std::shared_ptr<Window> window;
 	static MSG msg;
 	static void PreInit(HINSTANCE hInstance);
 	static void Init();

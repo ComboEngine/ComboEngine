@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "GPUImGuiDX11.h"
 
 #include <Platform/Platform.h>

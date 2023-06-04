@@ -1,13 +1,14 @@
 #pragma once
+#include "pch.h"
 #include "GPUDX11.h"
 #include <Engine/Engine.h>
 #include "GPUImGuiDX11.h"
 
-sakura_ptr<GPU> GPU::Instance = NULL;
+std::shared_ptr<GPU> GPU::Instance = NULL;
 
-sakura_ptr<GPU> GPU::Create()
+std::shared_ptr<GPU> GPU::Create()
 {
-	sakura_ptr<GPU> gpu = make_shared<GPU>();
+	std::shared_ptr<GPU> gpu = std::make_shared<GPU>();
 
 	gpu->Initalize();
 
@@ -92,44 +93,40 @@ void GPU::Initalize()
     Context->RSSetState(this->Solid);
     
     //Create RenderPass
-    this->RenderPass = make_shared<GPURenderPass>();
+    this->RenderPass = std::make_shared<GPURenderPass>();
 
     GPUImGuiDX11::Create(this);
 }
 
-sakura_ptr<Mesh> GPU::CreateMesh(Vertex vertices[], int vertexCount, DWORD indices[], int indicesSize)
+std::shared_ptr<Submesh> GPU::CreateSubmesh(std::vector<Vertex> vertices, std::vector<DWORD> indices)
 {
-    sakura_ptr<Mesh> mesh = make_shared<Mesh>();
+    std::shared_ptr<Submesh> mesh = std::make_shared<Submesh>();
 
-    //stride = 8
-    //4 = stride / 2
-    mesh->VertexCount = indicesSize / 4;
+    mesh->VertexCount = indices.size();
 
     D3D11_BUFFER_DESC bd;
     ZeroMemory(&bd, sizeof(bd));
 
     bd.Usage = D3D11_USAGE_DYNAMIC;
-    bd.ByteWidth = sizeof(Vertex) * 8;
+    bd.ByteWidth = sizeof(Vertex) * vertices.size();
     bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 
-    this->Device->CreateBuffer(&bd, NULL, &mesh->VertexBuffer);
+    D3D11_SUBRESOURCE_DATA iiinitData;
+    iiinitData.pSysMem = vertices.data();
 
-    D3D11_MAPPED_SUBRESOURCE ms;
-    this->Context->Map(mesh->VertexBuffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &ms);
-    memcpy(ms.pData, vertices, vertexCount);
-    this->Context->Unmap(mesh->VertexBuffer, NULL);
+    this->Device->CreateBuffer(&bd, &iiinitData, &mesh->VertexBuffer);
 
     D3D11_BUFFER_DESC indexBufferDesc;
     ZeroMemory(&indexBufferDesc, sizeof(indexBufferDesc));
     indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-    indexBufferDesc.ByteWidth = sizeof(DWORD) * mesh->VertexCount * 8;
+    indexBufferDesc.ByteWidth = sizeof(DWORD) * indices.size();
     indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
     indexBufferDesc.CPUAccessFlags = 0;
     indexBufferDesc.MiscFlags = 0;
 
     D3D11_SUBRESOURCE_DATA iinitData;
-    iinitData.pSysMem = indices;
+    iinitData.pSysMem = indices.data();
   
     this->Device->CreateBuffer(&indexBufferDesc, &iinitData, &mesh->IndexBuffer);
 
@@ -146,11 +143,12 @@ sakura_ptr<Mesh> GPU::CreateMesh(Vertex vertices[], int vertexCount, DWORD indic
     return mesh;
 }
 
-void GPU::SubmitData(sakura_ptr<Mesh> mesh, sakura_ptr<Material> material)
+void GPU::SubmitData(std::shared_ptr<Mesh> mesh, std::shared_ptr<Material> material, std::shared_ptr<Transform> transform)
 {
     GPURenderData data;
     data.Mesh = mesh;
     data.Material = material;
+    data.Matrix = transform->CalculateMatrix();
     this->RenderPass->RenderDataList.push_back(data);
 }
 

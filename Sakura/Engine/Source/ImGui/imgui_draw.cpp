@@ -22,6 +22,8 @@ Index of this file:
 
 */
 
+#include "pch.h"
+
 #if defined(_MSC_VER) && !defined(_CRT_SECURE_NO_WARNINGS)
 #define _CRT_SECURE_NO_WARNINGS
 #endif
@@ -82,6 +84,8 @@ Index of this file:
 //#define IMGUI_STB_RECT_PACK_FILENAME  "my_folder/stb_rect_pack.h"
 //#define IMGUI_DISABLE_STB_TRUETYPE_IMPLEMENTATION
 //#define IMGUI_DISABLE_STB_RECT_PACK_IMPLEMENTATION
+
+
 
 #ifdef IMGUI_STB_NAMESPACE
 namespace IMGUI_STB_NAMESPACE

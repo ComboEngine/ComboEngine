@@ -9,7 +9,6 @@ extern "C" {
 #include <lauxlib.h>
 }
 
-
 class Script {
 private:
 	lua_State* state;
@@ -22,6 +21,6 @@ public:
 
 class Scripting {
 public:
-	static sakura_array<sakura_ptr<Script>> Scripts;
+	static std::vector<std::shared_ptr<Script>> Scripts;
 	static void Init();
 };

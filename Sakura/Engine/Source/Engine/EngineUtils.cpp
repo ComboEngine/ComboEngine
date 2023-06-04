@@ -1,6 +1,7 @@
+#include "pch.h"
 #include "EngineUtils.h"
 
-void Logger::Info(sakura_string content)
+void Logger::Info(std::string content)
 {
-	cout << "[Info] " + content << endl;
+	std::cout << "[Info] " + content << std::endl;
 }

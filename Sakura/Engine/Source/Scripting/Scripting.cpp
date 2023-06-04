@@ -1,8 +1,9 @@
+#include "pch.h"
 #include "Scripting.h"
 
 #include <Graphics/GPU2D.h>
 
-sakura_array<sakura_ptr<Script>> Scripting::Scripts;
+std::vector<std::shared_ptr<Script>> Scripting::Scripts;
 
 static int Log_Info(lua_State* L) // Lua callable functions must be this format
 {
@@ -17,7 +18,7 @@ static int Render2D_RenderQuad(lua_State* L) {
     float width = lua_tointeger(L, 3);
     float height = lua_tointeger(L, 4);
 
-    GPU2D::RenderQuad(x,y,width,height, Color32(1, 1, 1, 1), GPU::Instance->RenderPass);
+    GPU2D::RenderQuad(x, y, width, height, Color32(1, 1, 1, 1), GPU::Instance->RenderPass);
 
     return 0;
 }
@@ -25,7 +26,7 @@ static int Render2D_RenderQuad(lua_State* L) {
 void Scripting::Init()
 {
     //Sakura.Lua
-    sakura_ptr<Script> test = make_shared<Script>();
+    std::shared_ptr<Script> test = std::make_shared<Script>();
     test->Create("Source/Sakura.lua");
     Scripts.push_back(test);
 }
@@ -36,7 +37,7 @@ void Script::Create(std::string path)
     luaL_openlibs(state);
     lua_register(state, "info", Log_Info);
     lua_register(state, "RenderQuad", Render2D_RenderQuad);
-    luaL_dofile(state,path.c_str());
+    luaL_dofile(state, path.c_str());
 }
 
 void Script::Update()

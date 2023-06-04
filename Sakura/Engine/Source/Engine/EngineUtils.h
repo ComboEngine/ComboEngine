@@ -1,7 +1,7 @@
 #pragma once
-#include "EngineHeaders.h"
+#include "pch.h"
 
 class Logger {
 public:
-	void Info(sakura_string content);
+	void Info(std::string content);
 };

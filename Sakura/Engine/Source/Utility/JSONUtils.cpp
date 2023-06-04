@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "JSONUtils.h"
 
 Color32 JSONUtils::ReadColorFromJson(nlohmann::json j)

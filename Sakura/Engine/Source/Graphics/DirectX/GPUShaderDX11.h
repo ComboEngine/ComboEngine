@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include <Engine/EngineHeaders.h>
+#include <pch.h>
 #include "GPUDX11.h"
 
 class GPUShader {
@@ -11,7 +11,7 @@ public:
 	ID3D11VertexShader* VertexShader;
 	ID3D11PixelShader* PixelShader;
 	ID3D11InputLayout* Layout;
-	static sakura_ptr<GPUShader> Create(sakura_string shader);
+	static std::shared_ptr<GPUShader> Create(std::string shader);
 
-	void Initalize(sakura_string text);
+	void Initalize(std::string text);
 };

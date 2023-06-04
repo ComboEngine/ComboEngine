@@ -9,6 +9,6 @@ class World;
 
 class World {
 public:
-	static sakura_array<sakura_ptr<Actor>> Actors;
+	static std::vector<std::shared_ptr<Actor>> Actors;
 	static void Init();
 };

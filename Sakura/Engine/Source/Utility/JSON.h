@@ -6080,7 +6080,7 @@ NLOHMANN_JSON_NAMESPACE_END
 #include <cstddef> // size_t
 #include <cstring> // strlen
 #include <iterator> // begin, end, iterator_traits, random_access_iterator_tag, distance, next
-#include <memory> // shared_ptr, make_shared, addressof
+#include <memory> // shared_ptr, std::make_shared, addressof
 #include <numeric> // accumulate
 #include <string> // string, char_traits
 #include <type_traits> // enable_if, is_base_of, is_pointer, is_integral, remove_pointer
@@ -14799,7 +14799,7 @@ NLOHMANN_JSON_NAMESPACE_END
 #include <algorithm> // copy
 #include <cstddef> // size_t
 #include <iterator> // back_inserter
-#include <memory> // shared_ptr, make_shared
+#include <memory> // shared_ptr, std::make_shared
 #include <string> // basic_string
 #include <vector> // vector
 
@@ -14913,15 +14913,15 @@ namespace detail
     public:
         template<typename AllocatorType = std::allocator<CharType>>
         output_adapter(std::vector<CharType, AllocatorType>& vec)
-            : oa(std::make_shared<output_vector_adapter<CharType, AllocatorType>>(vec)) {}
+            : oa(std::std::make_shared<output_vector_adapter<CharType, AllocatorType>>(vec)) {}
 
 #ifndef JSON_NO_IO
         output_adapter(std::basic_ostream<CharType>& s)
-            : oa(std::make_shared<output_stream_adapter<CharType>>(s)) {}
+            : oa(std::std::make_shared<output_stream_adapter<CharType>>(s)) {}
 #endif  // JSON_NO_IO
 
         output_adapter(StringType& s)
-            : oa(std::make_shared<output_string_adapter<CharType, StringType>>(s)) {}
+            : oa(std::std::make_shared<output_string_adapter<CharType, StringType>>(s)) {}
 
         operator output_adapter_t<CharType>()
         {

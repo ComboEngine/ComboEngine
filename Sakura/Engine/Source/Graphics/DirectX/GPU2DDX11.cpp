@@ -1,8 +1,10 @@
+#include "pch.h"
 #include "GPU2DDX11.h"
 
-sakura_ptr<GPUShader> GPU2D::QuadShader = nullptr;
-sakura_ptr<GPUShader> GPU2D::TexturedQuadShader = nullptr;
-sakura_ptr<Mesh> GPU2D::QuadMesh = nullptr;
+
+std::shared_ptr<GPUShader> GPU2D::QuadShader = nullptr;
+std::shared_ptr<GPUShader> GPU2D::TexturedQuadShader = nullptr;
+std::shared_ptr<Submesh> GPU2D::QuadMesh = nullptr;
 ID3D11SamplerState* GPU2D::TextureSampler = nullptr;
 
 void GPU2D::Init()
@@ -93,7 +95,7 @@ void GPU2D::Init()
         0, 2, 3
     };
 
-    QuadMesh = make_shared<Mesh>();
+    QuadMesh = std::make_shared<Submesh>();
 
 
     D3D11_BUFFER_DESC bd;
@@ -135,7 +137,7 @@ void GPU2D::Init()
     GPU::Instance->Device->CreateBuffer(&ConstantBufferDesc, NULL, &QuadMesh->ConstantBuffer);
 }
 
-void GPU2D::RenderQuad(float x, float y, float width, float height, Color32 color,sakura_ptr<GPURenderPass> renderPass)
+void GPU2D::RenderQuad(float x, float y, float width, float height, Color32 color,std::shared_ptr<GPURenderPass> renderPass)
 {
     if (QuadShader == nullptr) {
         Init();
@@ -165,7 +167,7 @@ void GPU2D::RenderQuad(float x, float y, float width, float height, Color32 colo
 
 }
 
-void GPU2D::RenderFramebuffer(float x, float y, float width, float height, sakura_ptr<GPUFramebuffer> color, sakura_ptr<GPURenderPass> renderPass)
+void GPU2D::RenderFramebuffer(float x, float y, float width, float height, std::shared_ptr<GPUFramebuffer> color, std::shared_ptr<GPURenderPass> renderPass)
 {
     if (QuadShader == nullptr) {
         Init();

@@ -1,8 +1,9 @@
+#include "pch.h"
 #include "GPUFramebufferDX11.h"
 
-sakura_ptr<GPUFramebuffer> GPUFramebuffer::Create(float width,float height)
+std::shared_ptr<GPUFramebuffer> GPUFramebuffer::Create(float width,float height)
 {
-	sakura_ptr<GPUFramebuffer> framebuffer = make_shared<GPUFramebuffer>();
+	std::shared_ptr<GPUFramebuffer> framebuffer = std::make_shared<GPUFramebuffer>();
 	framebuffer->Init(width,height);
 	return framebuffer;
 }

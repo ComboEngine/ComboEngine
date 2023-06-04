@@ -1,9 +1,10 @@
+#include "pch.h"
 #include "WindowsPlatform.h"
 #include <Engine/Engine.h>
 
 
 HINSTANCE Platform::hInstance = nullptr;
-sakura_ptr<Window> Platform::window = nullptr;
+std::shared_ptr<Window> Platform::window = nullptr;
 MSG Platform::msg;
 void Platform::PreInit(HINSTANCE hInstance)
 {

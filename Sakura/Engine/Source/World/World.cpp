@@ -1,6 +1,7 @@
+#include "pch.h"
 #include "World.h"
 
-sakura_array<sakura_ptr<Actor>> World::Actors;
+std::vector<std::shared_ptr<Actor>> World::Actors;
 
 void World::Init()
 {

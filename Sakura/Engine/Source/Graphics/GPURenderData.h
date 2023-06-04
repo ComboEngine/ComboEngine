@@ -9,6 +9,7 @@ class Material;
 
 
 struct GPURenderData {
-	sakura_ptr<Material> Material;
-	sakura_ptr<Mesh> Mesh;
+	std::shared_ptr<Material> Material;
+	std::shared_ptr<Mesh> Mesh;
+	XMMATRIX Matrix;
 };

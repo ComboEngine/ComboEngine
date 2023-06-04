@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Platform/Windows/IncludeDirectXHeaders.h>
+#include "pch.h"
 
 class Color32 {
 public:
