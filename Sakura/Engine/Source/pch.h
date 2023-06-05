@@ -17,6 +17,7 @@
 #include <xnamath.h>
 #include <D2D1.h>
 #include <D3Dcompiler.h>
+#include <dinput.h>
 
 
 //Include the Direct3D Library file
@@ -25,3 +26,5 @@
 #pragma comment (lib, "d3dx10.lib")
 #pragma comment (lib, "d2d1.lib")
 #pragma comment(lib,"d3dcompiler.lib")
+#pragma comment (lib, "dinput8.lib")
+#pragma comment (lib, "dxguid.lib")

@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "WindowsPlatform.h"
 #include <Engine/Engine.h>
+#include "WindowsInput.h"
 
 
 HINSTANCE Platform::hInstance = nullptr;
@@ -15,6 +16,9 @@ void Platform::Init()
 {
 	Platform::window = Window::Create("Sakura",1920,1080);
     ZeroMemory(&Platform::msg, sizeof(MSG));
+
+    Input::Init();
+
 }
 
 void Platform::OnUpdate()
@@ -26,5 +30,6 @@ void Platform::OnUpdate()
 
         TranslateMessage(&msg);
         DispatchMessage(&msg);
+        Input::Update();
     }
 }

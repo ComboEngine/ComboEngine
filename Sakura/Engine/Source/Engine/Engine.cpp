@@ -10,6 +10,7 @@
 #include <Graphics/GPU2D.h>
 #include <Utility/AssimpModelImporter.h>
 #include <Graphics/GPUTexture.h>
+#include <Platform/Input.h>
 
 
 /*
@@ -26,29 +27,34 @@ int Engine::Main(std::vector<std::string> args)
 	logger.Info("Initalizing Sakura Engine " + Engine::version.GetVersionString());
 
 	Platform::Init();
+	logger.Info("Initalized Platform");
 	GPU::Instance = GPU::Create();
+	logger.Info("Created GPU");
 	Engine::Color = GPUFramebuffer::Create(Platform::window->Width,Platform::window->Height);
+	logger.Info("Created Color Framebuffer");
 
 	Scripting::Init();
+	logger.Info("Initalized Scripting");
 	World::Init();
+	logger.Info("Initalized World");
 
 	std::shared_ptr<Actor> actor = Actor::Create();
 	actor->Scripts.push_back(Scripting::Scripts[0]);
 
 	
-	std::shared_ptr<Mesh> mesh = AssimpModelImporter::LoadMesh("chalet.obj");
+	std::shared_ptr<Mesh> mesh = AssimpModelImporter::LoadMesh("interior.fbx");
 	std::shared_ptr<Material> material = Material::Create();
 	std::shared_ptr<GPUTexture> texture = GPUTexture::Create("chalet.jpg");
 	material->texture = texture;
 	material->Init();
 
-	actor->GetTransform()->SetTransform(Vector3(0, -3, 0), Vector3(90, 0, 0), Vector3(1.5f,1.5f,1.5f));
 	float delta = 0;
 	OnStart();
+	logger.Info("Entered into loop");
 	while (!ShouldExit()) {
 		OnUpdate();
 		delta += 1;
-		actor->GetTransform()->SetOrientation(Vector3(-90, delta, 0));
+
 		GPU::Instance->SubmitData(mesh, material,actor->GetTransform());
 		GPU::Instance->RenderPass->Render(false,Engine::Color);
 		OnDraw();
@@ -62,6 +68,8 @@ int Engine::Main(std::vector<std::string> args)
 		Engine::Color->RendererWidth = Platform::window->Width - 400;
 		Engine::Color->RendererHeight = Platform::window->Height - 40 - 200;
 		GPU::Instance->RenderPass->SubmitToScreen(true);
+
+		Input::End();
 	}
 	OnExit();
 	return 0;
@@ -87,7 +95,7 @@ void Engine::OnUpdate()
 {
 	//Platform update
 	Platform::OnUpdate();
-
+	World::Update();
 
 	for (std::shared_ptr<Actor> actor : World::Actors) {
 		for (std::shared_ptr<Script> script : actor->Scripts) {

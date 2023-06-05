@@ -9,12 +9,16 @@
 
 std::shared_ptr<Mesh> AssimpModelImporter::LoadMesh(std::string path)
 {
+
+	std::cout << "STARTED IMPORTING" << std::endl;
 	Assimp::Importer importer;
 	const aiScene* scene = importer.ReadFile(path.c_str(), aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_JoinIdenticalVertices);
+	std::cout << "ENDED IMPORTING" << std::endl;
 
 
 	std::vector<std::shared_ptr<Submesh>> submeshesList;
 
+	std::cout << "CREATING SUBMESHES" << std::endl;
 	for (int index = 0; index < scene->mNumMeshes;index++) {
 		std::vector<Vertex> vertices;
 		std::vector<DWORD> indices;
@@ -22,7 +26,7 @@ std::shared_ptr<Mesh> AssimpModelImporter::LoadMesh(std::string path)
 
 		for (int i = 0; i < mesh->mNumVertices; i++) {
 			int indice = i;
-			Vertex vertex;
+			Vertex vertex; 
 			vertex.pos.x = mesh->mVertices[indice].x;
 			vertex.pos.y = mesh->mVertices[indice].y;
 			vertex.pos.z = mesh->mVertices[indice].z;
@@ -57,6 +61,7 @@ std::shared_ptr<Mesh> AssimpModelImporter::LoadMesh(std::string path)
 		submeshesList.push_back(GPU::Instance->CreateSubmesh(vertices, indices));
 	}
 
+	std::cout << "ENDED CREATING SUBMESHES" << std::endl;
 
 	std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
 	mesh->Submeshes = submeshesList;

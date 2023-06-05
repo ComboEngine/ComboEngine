@@ -1,7 +1,6 @@
 #pragma once
-
+#include "pch.h"
 #include "WindowsWindow.h"
-#include "IncludeWindowsHeaders.h"
 
 class Platform {
 public:

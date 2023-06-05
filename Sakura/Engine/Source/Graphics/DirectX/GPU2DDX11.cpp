@@ -135,6 +135,8 @@ void GPU2D::Init()
     ConstantBufferDesc.MiscFlags = 0;
 
     GPU::Instance->Device->CreateBuffer(&ConstantBufferDesc, NULL, &QuadMesh->ConstantBuffer);
+
+    std::cout << "Created 2D Graphics Context" << std::endl;
 }
 
 void GPU2D::RenderQuad(float x, float y, float width, float height, Color32 color,std::shared_ptr<GPURenderPass> renderPass)

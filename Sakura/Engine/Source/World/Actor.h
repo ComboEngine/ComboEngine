@@ -14,4 +14,5 @@ public:
 	std::string Name = "Actor";
 	static std::vector<std::shared_ptr<Script>> Scripts;
 	static std::shared_ptr<Actor> Create();
+	void CreateTransform();
 };

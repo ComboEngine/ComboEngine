@@ -2,6 +2,8 @@
 #include "GPURenderPassDX11.h"
 #include "GPUDX11.h"
 #include "GPUImGuiDX11.h"
+#include <World/World.h>
+
 
 float rotation = 0;
 
@@ -9,6 +11,7 @@ void GPURenderPass::Render(bool RenderImGui,std::shared_ptr<GPUFramebuffer> fram
 {
 	this->ActiveFramebuffer = framebuffer;
 	XMMATRIX projection;
+	XMMATRIX camera = World::GetCamera()->CalculateMatrix();
 	if (framebuffer == nullptr) {
 		GPU::Instance->Context->ClearRenderTargetView(GPU::Instance->Backbuffer, this->Color.GetD3DXColor());
 		GPU::Instance->Context->OMSetRenderTargets(1, &GPU::Instance->Backbuffer, NULL);
@@ -27,7 +30,8 @@ void GPURenderPass::Render(bool RenderImGui,std::shared_ptr<GPUFramebuffer> fram
 		for (std::shared_ptr<Submesh> submesh : data.Mesh->Submeshes) {
 			ConstantBufferPass pass;
 			rotation += 0.05f;
-			pass.WVP = data.Matrix * XMMatrixLookAtLH(XMVectorSet(0.0f, 0.0f, 3.0f, 0.0f), XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f), XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f)) * projection;
+
+			pass.WVP = data.Matrix * camera * projection;
 			pass.WVP = XMMatrixTranspose(pass.WVP);
 			GPU::Instance->Context->VSSetShader(data.Material->shader->VertexShader, 0, 0);
 			GPU::Instance->Context->PSSetShader(data.Material->shader->PixelShader, 0, 0);

@@ -11,8 +11,13 @@ std::shared_ptr<Transform> Actor::GetTransform()
 std::shared_ptr<Actor> Actor::Create()
 {
 	std::shared_ptr<Actor> actor = std::make_shared<Actor>();
-	actor->transform = std::make_shared<Transform>();
+	actor->CreateTransform();
 	actor->transform->SetTransform(Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(1, 1, 1));
 	World::Actors.push_back(actor);
 	return actor;
+}
+
+void Actor::CreateTransform()
+{
+	this->transform = std::make_shared<Transform>();
 }
