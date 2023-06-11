@@ -228,6 +228,18 @@ namespace Combo.Tools {
                 standardLang1Element.InnerText = "stdcpp17";
                 clCompile1Element.AppendChild(standardLang1Element);
 
+                //PCH
+                if(entry.Value.PCH) {
+                    XmlElement precompiledHeader = doc.CreateElement("PrecompiledHeader");
+                    precompiledHeader.InnerText = "Use";
+                    clCompile1Element.AppendChild(precompiledHeader);
+                    
+
+                    XmlElement precompiledHeaderFile = doc.CreateElement("PrecompiledHeaderFile");
+                    precompiledHeaderFile.InnerText = "pch.h";
+                    clCompile1Element.AppendChild(precompiledHeaderFile);
+                }
+
                 XmlElement link1Element = doc.CreateElement("Link");
                 itemDefGroup1Element.AppendChild(link1Element);
 
@@ -272,6 +284,17 @@ namespace Combo.Tools {
                 standardLang2Element.InnerText = "stdcpp17";
                 clCompile2Element.AppendChild(standardLang2Element);
 
+                if(entry.Value.PCH) {
+                    XmlElement precompiledHeader = doc.CreateElement("PrecompiledHeader");
+                    precompiledHeader.InnerText = "Use";
+                    clCompile2Element.AppendChild(precompiledHeader);
+                    
+
+                    XmlElement precompiledHeaderFile = doc.CreateElement("PrecompiledHeaderFile");
+                    precompiledHeaderFile.InnerText = "pch.h";
+                    clCompile2Element.AppendChild(precompiledHeaderFile);
+                }
+
                 XmlElement link2Element = doc.CreateElement("Link");
                 itemDefGroup2Element.AppendChild(link2Element);
 
@@ -302,6 +325,19 @@ namespace Combo.Tools {
                     if(path.EndsWith(".cpp") || path.EndsWith(".c")) {
                         XmlElement includea = doc.CreateElement("ClCompile");
                         includea.SetAttribute("Include",path.Replace(Path.GetDirectoryName(entry.Key) + "\\",""));
+
+                        if(entry.Value.PCH && path.EndsWith("pch.cpp")) {
+                            XmlElement precompiledHeader = doc.CreateElement("PrecompiledHeader");
+                            precompiledHeader.SetAttribute("Condition","'$(Configuration)|$(Platform)'=='Debug|x64'");
+                            precompiledHeader.InnerText = "Create";
+                            includea.AppendChild(precompiledHeader);
+
+                            XmlElement precompiledHeader2 = doc.CreateElement("PrecompiledHeader");
+                            precompiledHeader2.SetAttribute("Condition","'$(Configuration)|$(Platform)'=='Release|x64'");
+                            precompiledHeader2.InnerText = "Create";
+                            includea.AppendChild(precompiledHeader2);
+                        }
+                    
                         sourceCppGroup.AppendChild(includea);
                     }
                 }

@@ -12,6 +12,7 @@ namespace Combo.BuildTools {
         public List<string> modules = new List<string>();
         public List<string> compilerDefinitions = new List<string>();
         private BuildType buildType = BuildType.Executable;
+        public bool PCH = true;
 
         public string Localization;
 

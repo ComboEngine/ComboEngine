@@ -11,7 +11,7 @@ namespace Combo.Tools {
             } else {
                 String path = Path.GetDirectoryName(targetPath) + "\\" + target.GetName() + ".vcxproj";
                 Directory.CreateDirectory(target.GetName() + "_Dist");
-                cmdExec("C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\IDE\\devenv.exe", Path.GetFullPath(path) + " /Build /ProjectConfig Debug|x64");
+                cmdExec("C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\IDE\\devenv.exe", Path.GetFullPath(path) + " /build /prj=Combo.Engine /cfg=\"Debug|x64,Release|x64\"");
                 File.Copy(Path.GetDirectoryName(targetPath) + "\\Binary\\" + target.GetName() + (target.GetBuildType() == BuildType.Executable ? ".exe" : ".dll"),target.GetName() + "_Dist\\" + target.GetName() + (target.GetBuildType() == BuildType.Executable ? ".exe" : ".dll"));
             }
         }

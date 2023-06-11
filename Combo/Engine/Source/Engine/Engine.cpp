@@ -57,7 +57,8 @@ int Engine::Main(std::vector<std::string> args)
 	while (!ShouldExit()) {
 		OnUpdate();
 		delta += 1;
-		World::camera->transform->Rotate(glm::quat(glm::vec3(0, 10, 0)));
+		World::camera->transform->Position = glm::vec3(0, 5,20);
+		World::camera->transform->Orientation = glm::quat(glm::vec3(glm::radians(-10.0f), 0, 0));
 		GPU::Instance->SubmitData(mesh, material,actor->GetTransform());
 		GPU::Instance->RenderPass->Render(false,Engine::Color);
 		OnDraw();
