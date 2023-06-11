@@ -1,9 +1,9 @@
 @echo off
 
 rem Created by tecnessino
-cd Sakura
+cd Combo
 cd Tools
 mkdir Binary
 cd ..\..\
-copy Sakura\Tools\Libraries\Newtonsoft.Json.dll Sakura\Tools\Binary\Newtonsoft.Json.dll
-mcs Sakura\Tools\**.cs -out:Sakura\Tools\Binary\Sakura.Tools.exe -r:Microsoft.Build.dll -r:Sakura\Tools\Libraries\Newtonsoft.Json.dll
+copy Combo\Tools\Libraries\Newtonsoft.Json.dll Combo\Tools\Binary\Newtonsoft.Json.dll
+mcs Combo\Tools\**.cs -out:Combo\Tools\Binary\Combo.Tools.exe -r:Microsoft.Build.dll -r:Combo\Tools\Libraries\Newtonsoft.Json.dll
