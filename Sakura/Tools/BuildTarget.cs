@@ -13,6 +13,8 @@ namespace Sakura.BuildTools {
         public List<string> compilerDefinitions = new List<string>();
         private BuildType buildType = BuildType.Executable;
 
+        public string Localization;
+
         public string GetName() {
             return this.name;
         }

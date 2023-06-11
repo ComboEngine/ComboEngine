@@ -2,9 +2,9 @@
 #include "AssimpModelImporter.h"
 
 
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
+#include <Importer.hpp>
+#include <scene.h>
+#include <postprocess.h>
 #pragma comment(lib,"assimp-vc143-mtd.lib")
 
 std::shared_ptr<Mesh> AssimpModelImporter::LoadMesh(std::string path)

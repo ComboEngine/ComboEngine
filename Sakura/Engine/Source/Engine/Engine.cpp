@@ -44,7 +44,7 @@ int Engine::Main(std::vector<std::string> args)
 	
 	std::shared_ptr<Mesh> mesh = AssimpModelImporter::LoadMesh("scena.obj");
 	std::shared_ptr<Material> material = Material::Create();
-	std::shared_ptr<GPUTexture> texture = GPUTexture::Create("chalet.jpg");
+	std::shared_ptr<GPUTexture> texture = GPUTexture::Create("scena.png");
 	//material->texture = texture;
 	material->texture = nullptr;
 	material->albedo = Color32(1, 0,0, 1);

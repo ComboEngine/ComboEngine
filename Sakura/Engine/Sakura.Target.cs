@@ -17,12 +17,11 @@ public class SakuraEngine : BuildTarget {
         this.SetBuildType(BuildType.Executable);
         this.AddModule("Sakura.Lua");
 
-        List<string> libraries = new List<string>();
 
         Settings json = JsonConvert.DeserializeObject<Settings>(File.ReadAllText("Sakura/Engine/Settings.json"));
 
         if(json.GraphicsAPI == "DirectX11") {
-            libraries.Add("DirectX");
+            this.AddModule("DirectX11");
             AddDefinition("COMBO_DIRECTX11");
         }
 
@@ -37,15 +36,9 @@ public class SakuraEngine : BuildTarget {
         if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             AddDefinition("COMBO_LINUX");
 
-        Libraries.Add("Lua");
-        Libraries.Add("assimp");
-        Libraries.Add("glm");
-
-
-        foreach(string library in Libraries) {
-            AddIncludeDirectory("Include\\" + library);
-            AddLibraryDirectory("Library\\" + library);
-        }
+        this.AddModule("LuaC");
+        this.AddModule("assimp");
+        this.AddModule("glm");
 
     }
 }

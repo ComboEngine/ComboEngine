@@ -66,6 +66,7 @@ namespace Sakura.Tools {
 
                             target.includeDirectories = includeDirectories;
                             target.libraryDirectories = libraryDirectories;
+                            target.Localization = path;
                             assemblies[path] = target;
                         }
                     }
@@ -104,6 +105,7 @@ namespace Sakura.Tools {
                             }
                         }
                         if(target != null) {
+                            entryValue.includeDirectories.Add(Path.GetDirectoryName(Path.GetFullPath(target.Localization)) + "\\" + target.GetSourceFolder());
                             foreach(string str in target.includeDirectories) {
                                 entryValue.includeDirectories.Add(str);
                             }
