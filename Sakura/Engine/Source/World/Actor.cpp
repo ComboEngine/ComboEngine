@@ -12,7 +12,7 @@ std::shared_ptr<Actor> Actor::Create()
 {
 	std::shared_ptr<Actor> actor = std::make_shared<Actor>();
 	actor->CreateTransform();
-	actor->transform->SetTransform(Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(1, 1, 1));
+	actor->transform->Scale = glm::vec3(1, 1, 1);
 	World::Actors.push_back(actor);
 	return actor;
 }

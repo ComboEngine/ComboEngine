@@ -37,7 +37,7 @@ bool Input::IsKeyDown(int key)
     return (KeyboardState[key] & 0x80) != 0;
 }
 
-Vector2 Input::GetMouseDelta()
+glm::vec2 Input::GetMouseDelta()
 {
-    return Vector2(Input::MouseState.lX - Input::MouseLastState.lX, Input::MouseState.lY - Input::MouseLastState.lY);
+    return glm::vec2(Input::MouseState.lX - Input::MouseLastState.lX, Input::MouseState.lY - Input::MouseLastState.lY);
 }

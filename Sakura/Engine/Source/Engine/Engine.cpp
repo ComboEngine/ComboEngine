@@ -42,11 +42,14 @@ int Engine::Main(std::vector<std::string> args)
 	actor->Scripts.push_back(Scripting::Scripts[0]);
 
 	
-	std::shared_ptr<Mesh> mesh = AssimpModelImporter::LoadMesh("interior.fbx");
+	std::shared_ptr<Mesh> mesh = AssimpModelImporter::LoadMesh("scena.obj");
 	std::shared_ptr<Material> material = Material::Create();
 	std::shared_ptr<GPUTexture> texture = GPUTexture::Create("chalet.jpg");
-	material->texture = texture;
+	//material->texture = texture;
+	material->texture = nullptr;
+	material->albedo = Color32(1, 0,0, 1);
 	material->Init();
+
 
 	float delta = 0;
 	OnStart();
@@ -54,7 +57,7 @@ int Engine::Main(std::vector<std::string> args)
 	while (!ShouldExit()) {
 		OnUpdate();
 		delta += 1;
-
+		World::camera->transform->Rotate(glm::quat(glm::vec3(0, 10, 0)));
 		GPU::Instance->SubmitData(mesh, material,actor->GetTransform());
 		GPU::Instance->RenderPass->Render(false,Engine::Color);
 		OnDraw();

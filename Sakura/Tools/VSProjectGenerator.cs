@@ -221,7 +221,7 @@ namespace Sakura.Tools {
                 clCompile1Element.AppendChild(runtimeLibrary1Element);
 
                 XmlElement preprocessorDefs1Element = doc.CreateElement("PreprocessorDefinitions");
-                preprocessorDefs1Element.InnerText = "x64;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)";
+                preprocessorDefs1Element.InnerText = string.Join(";",entry.Value.compilerDefinitions) + ";x64;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)";
                 clCompile1Element.AppendChild(preprocessorDefs1Element);
 
                 XmlElement standardLang1Element = doc.CreateElement("LanguageStandard");
@@ -265,7 +265,7 @@ namespace Sakura.Tools {
                 clCompile2Element.AppendChild(runtimeLibrary2Element);
 
                 XmlElement preprocessorDefs2Element = doc.CreateElement("PreprocessorDefinitions");
-                preprocessorDefs2Element.InnerText = "x64;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)";
+                preprocessorDefs2Element.InnerText = string.Join(";",entry.Value.compilerDefinitions) + "x64;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)";
                 clCompile2Element.AppendChild(preprocessorDefs2Element);
 
                 XmlElement standardLang2Element = doc.CreateElement("LanguageStandard");

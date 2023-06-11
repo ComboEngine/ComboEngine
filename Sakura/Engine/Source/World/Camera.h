@@ -7,5 +7,5 @@ class Camera {
 public:
 	std::shared_ptr<Transform> transform;
 	void UpdateCamera();
-	XMMATRIX CalculateMatrix();
+	glm::mat4 CalculateMatrix();
 };

@@ -5,44 +5,31 @@
 
 void Camera::UpdateCamera()
 {
-    float moveX = sin(XMConvertToRadians(this->transform->GetOrientation().X)) * 0.05f;
-    float moveZ = cos(XMConvertToRadians(this->transform->GetOrientation().Y)) * 0.05f;
-    float moveY = sin(XMConvertToRadians(this->transform->GetOrientation().Z)) * 0.05f;
+    float moveX = sin(glm::radians(transform->Orientation.x)) * 0.05f;
+    float moveZ = cos(glm::radians(transform->Orientation.y)) * 0.05f;
+    float moveY = sin(glm::radians(transform->Orientation.z)) * 0.05f;
 
-    if (Input::IsKeyDown(DIK_S)) {
-        this->transform->SetPosition(this->transform->GetPosition() + Vector3(-moveX, moveY, -moveZ));
-    }
     if (Input::IsKeyDown(DIK_W)) {
-        this->transform->SetPosition(this->transform->GetPosition() + Vector3(moveX, -moveY, moveZ));
+        transform->Move(glm::vec3(-moveX, moveY, -moveZ));
+    }
+    if (Input::IsKeyDown(DIK_S)) {
+        transform->Move(glm::vec3(moveX, -moveY, moveZ));
     }
     if (Input::IsKeyDown(DIK_A)) {
-        this->transform->SetPosition(this->transform->GetPosition() + Vector3(-moveZ, 0, moveX));
+        transform->Move(glm::vec3(-moveZ, 0, moveX));
     }
     if (Input::IsKeyDown(DIK_D)) {
-        this->transform->SetPosition(this->transform->GetPosition() + Vector3(moveZ, 0, -moveX));
+        transform->Move(glm::vec3(moveZ, 0, -moveX));
     }
 
-    Vector3 delta = Vector3(-Input::GetMouseDelta().Y*0.05f, -Input::GetMouseDelta().X * 0.05f, 0);
-    Vector3 orientation = this->transform->GetOrientation();
-    std::cout << "Delta X" << delta.X << std::endl;
-    std::cout << "Orientation X"  << orientation.X << std::endl;
-    this->transform->SetOrientation(orientation + delta);
 }
 
-XMMATRIX Camera::CalculateMatrix()
+glm::mat4 Camera::CalculateMatrix()
 {
-    XMVECTOR position = XMLoadFloat3(&this->transform->GetPosition().ToGraphicsAPIVector());
-    XMFLOAT3 rotationVec = XMFLOAT3(
-        XMConvertToRadians(this->transform->GetOrientation().GetX()),
-        XMConvertToRadians(this->transform->GetOrientation().GetY()),
-        XMConvertToRadians(this->transform->GetOrientation().GetZ())
-    );
-    XMVECTOR rotationQuaternion = XMQuaternionRotationRollPitchYawFromVector(XMLoadFloat3(&rotationVec));
-    XMMATRIX rotationMatrix = XMMatrixRotationQuaternion(rotationQuaternion);
-    XMMATRIX translationMatrix = XMMatrixTranslationFromVector(position);
-    XMMATRIX viewMatrix = XMMatrixMultiply(translationMatrix, rotationMatrix);
-    XMVECTOR determinant = XMMatrixDeterminant(viewMatrix);
-    viewMatrix = XMMatrixInverse(&determinant, viewMatrix);
-    return viewMatrix;
+    auto rotation = this->transform->Orientation;
+    auto r = glm::mat4_cast(rotation);
+    auto t = glm::translate(glm::mat4(1.f), transform->Position);
+    auto view = glm::affineInverse(t * r);
+    return view;
 }
 

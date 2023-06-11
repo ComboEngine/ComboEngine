@@ -10,6 +10,7 @@ namespace Sakura.BuildTools {
         public List<string> libraryDirectories = new List<string>();
         public List<string> linkLibraries = new List<string>();
         public List<string> modules = new List<string>();
+        public List<string> compilerDefinitions = new List<string>();
         private BuildType buildType = BuildType.Executable;
 
         public string GetName() {
@@ -32,6 +33,11 @@ namespace Sakura.BuildTools {
             this.includeDirectories.Add(directory);
         }
 
+        public void AddDefinition(string def) {
+            this.compilerDefinitions.Add(def);
+        }
+
+
         public void AddLibraryDirectory(string directory) {
             this.libraryDirectories.Add(directory);
         }
@@ -42,6 +48,10 @@ namespace Sakura.BuildTools {
 
         public List<string> GetIncludeDirectories() {
             return this.includeDirectories;
+        }
+
+        public List<string> GetDefinitions() {
+            return this.compilerDefinitions;
         }
 
         public List<string> GetLibraryDirectories() {

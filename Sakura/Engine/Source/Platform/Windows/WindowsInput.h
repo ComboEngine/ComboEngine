@@ -1,7 +1,6 @@
 #pragma once
 #include "pch.h"
 
-#include <Math/Vector2.h>
 class Input {
 public:
 	static BYTE KeyboardState[256];
@@ -14,5 +13,5 @@ public:
 	static void Update();
 	static void End();
 	static bool IsKeyDown(int key);
-	static Vector2 GetMouseDelta();
+	static glm::vec2 GetMouseDelta();
 };

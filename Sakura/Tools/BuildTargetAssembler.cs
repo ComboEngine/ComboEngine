@@ -4,6 +4,7 @@ using System.CodeDom.Compiler;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Newtonsoft.Json;
 
 namespace Sakura.Tools {
     public class BuildTargetAssembler {
@@ -18,6 +19,7 @@ namespace Sakura.Tools {
             cp.TreatWarningsAsErrors = false;
             cp.GenerateInMemory = true;
             cp.ReferencedAssemblies.Add(typeof(ArgumentParser).Assembly.Location);
+            cp.ReferencedAssemblies.Add(typeof(JsonConvert).Assembly.Location);
             cp.IncludeDebugInformation = false;
 
             CompilerResults cr = provider.CompileAssemblyFromFile(cp, path);

@@ -9,14 +9,7 @@ namespace Sakura.Tools {
         public static Dictionary<String,Sakura.BuildTools.BuildTarget> targets;
         public static void Main(string[] args) {
             ArgumentParser parser = new ArgumentParser();
-            Options options = parser.accept<Options>(args);
-            Console.WriteLine(
-"░██████╗░█████╗░██╗░░██╗██╗░░░██╗██████╗░░█████╗░\n" +
-"██╔════╝██╔══██╗██║░██╔╝██║░░░██║██╔══██╗██╔══██╗\n" +
-"╚█████╗░███████║█████═╝░██║░░░██║██████╔╝███████║\n" +
-"░╚═══██╗██╔══██║██╔═██╗░██║░░░██║██╔══██╗██╔══██║\n" +
-"██████╔╝██║░░██║██║░╚██╗╚██████╔╝██║░░██║██║░░██║\n" +
-"╚═════╝░╚═╝░░╚═╝╚═╝░░╚═╝░╚═════╝░╚═╝░░╚═╝╚═╝░░╚═╝");    
+            Options options = parser.accept<Options>(args);   
 
 
             switch(options.type) {

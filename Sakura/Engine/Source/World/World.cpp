@@ -15,7 +15,6 @@ void World::Init()
 {
 	camera = std::make_shared<Camera>();
 	camera->transform = std::make_shared<Transform>();
-
 }
 
 void World::Update()

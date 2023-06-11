@@ -11,5 +11,5 @@ class Material;
 struct GPURenderData {
 	std::shared_ptr<Material> Material;
 	std::shared_ptr<Mesh> Mesh;
-	XMMATRIX Matrix;
+	glm::mat4 Matrix;
 };
