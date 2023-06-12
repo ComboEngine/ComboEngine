@@ -22,6 +22,10 @@ void Camera::UpdateCamera()
         transform->Move(glm::vec3(moveZ, 0, -moveX));
     }
 
+    glm::vec2 input = Input::GetMouseDelta();
+
+    //transform->Rotate(glm::quat(glm::vec3(glm::radians(input.y), glm::radians(input.x), 0)));
+
 }
 
 glm::mat4 Camera::CalculateMatrix()

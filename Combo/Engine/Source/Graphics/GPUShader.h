@@ -1,5 +1,5 @@
 #pragma once
 
-#ifdef _WIN32
+#ifdef COMBO_DIRECTX11
 #include "DirectX/GPUShaderDX11.h"
 #endif

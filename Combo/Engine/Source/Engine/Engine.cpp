@@ -11,15 +11,7 @@
 #include <Utility/AssimpModelImporter.h>
 #include <Graphics/GPUTexture.h>
 #include <Platform/Input.h>
-
-
-/*
-* 	AssetManager::InitAssetManager();
-	std::shared_ptr<MaterialAsset> materialasset = AssetManager::GetAsset<MaterialAsset>(AssetManager::GetUUIDByName("TestMaterial"));
-	std::shared_ptr<MeshAsset> meshasset = AssetManager::GetAsset<MeshAsset>(AssetManager::GetUUIDByName("TestMesh"));
-
-	AssetManager::SaveAssetPack("test.Combo");
-	AssetManager::LoadAssetPack("test.Combo");*/
+#include <Assets/MeshAsset.h>
 
 //Engine entry point
 int Engine::Main(std::vector<std::string> args)
@@ -43,12 +35,19 @@ int Engine::Main(std::vector<std::string> args)
 
 	
 	std::shared_ptr<Mesh> mesh = AssimpModelImporter::LoadMesh("scena.obj");
+
+	//MeshSerializer::Save(mesh, "xd.cbmesh");
+	mesh = MeshSerializer::Read("xd.cbmesh");
+
 	std::shared_ptr<Material> material = Material::Create();
 	std::shared_ptr<GPUTexture> texture = GPUTexture::Create("scena.png");
 	//material->texture = texture;
 	material->texture = nullptr;
 	material->albedo = Color32(1, 0,0, 1);
 	material->Init();
+
+	World::camera->transform->Position = glm::vec3(0, 5, 20);
+	World::camera->transform->Orientation = glm::quat(glm::vec3(glm::radians(-10.0f), 0, 0));
 
 
 	float delta = 0;
@@ -57,8 +56,6 @@ int Engine::Main(std::vector<std::string> args)
 	while (!ShouldExit()) {
 		OnUpdate();
 		delta += 1;
-		World::camera->transform->Position = glm::vec3(0, 5,20);
-		World::camera->transform->Orientation = glm::quat(glm::vec3(glm::radians(-10.0f), 0, 0));
 		GPU::Instance->SubmitData(mesh, material,actor->GetTransform());
 		GPU::Instance->RenderPass->Render(false,Engine::Color);
 		OnDraw();

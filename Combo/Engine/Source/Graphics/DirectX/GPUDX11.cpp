@@ -102,6 +102,9 @@ std::shared_ptr<Submesh> GPU::CreateSubmesh(std::vector<Vertex> vertices, std::v
 {
     std::shared_ptr<Submesh> mesh = std::make_shared<Submesh>();
 
+    mesh->Vertices = vertices;
+    mesh->Indices = indices;
+
     mesh->VertexCount = indices.size();
 
     D3D11_BUFFER_DESC bd;
