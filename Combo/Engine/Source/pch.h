@@ -1,44 +1,16 @@
-#pragma once
+//Copyright (c) 2022-2023 tecnessino. All rights reserved.
 
 #include <iostream>
 #include <vector>
 #include <string>
-#include <sstream>
-#include <random>
-#include <glm.hpp>
-#include <gtc/type_ptr.hpp>
-#define GLM_ENABLE_EXPERIMENTAL
-#include <glm.hpp>
-#include <gtc/type_ptr.hpp>
-#include <gtc/matrix_transform.hpp>
-#include <gtc/quaternion.hpp>
-#include <gtc/matrix_inverse.hpp>
-#include <detail/type_quat.hpp>
-#include <gtx/quaternion.hpp>
+#include <any>
 
-#ifdef COMBO_WIN32
-//Windows header
+#define LOG(...) std::cout<<"\u001b[31m[COMBO]\u001b[0m "<<__VA_ARGS__<<std::endl;
+
+#ifdef COMBO_BUILD_WINAPI
 #include <Windows.h>
-#include <WindowsX.h>
+#include <windowsx.h>
 #endif
 
 #ifdef COMBO_DIRECTX11
-//DirectX headers
-#include <d3d11.h>
-#include <xnamath.h>
-#include <d3dx11.h>
-#include <d3dx10.h>
-#include <D2D1.h>
-#include <D3Dcompiler.h>
-#include <dinput.h>
-
-
-//Include the Direct3D Library file
-#pragma comment (lib, "d3d11.lib")
-#pragma comment (lib, "d3dx11.lib")
-#pragma comment (lib, "d3dx10.lib")
-#pragma comment (lib, "d2d1.lib")
-#pragma comment(lib,"d3dcompiler.lib")
-#pragma comment (lib, "dinput8.lib")
-#pragma comment (lib, "dxguid.lib")
 #endif
