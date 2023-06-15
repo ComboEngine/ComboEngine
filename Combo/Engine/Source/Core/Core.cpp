@@ -5,6 +5,7 @@
 Scope<Window> Core::s_Window;
 Scope<Platform> Core::s_Platform;
 RendererAPI Core::RendererType = Null;
+Scope<Context> Core::s_Context;
 
 
 int Core::Init()
@@ -14,12 +15,18 @@ int Core::Init()
 	Core::RendererType = DirectX11;
 #endif
 
+	CB_ASSERT(Core::RendererType != Null, "Renderer API cannot be null!");
+
 	WindowSpecification WindowSpec;
+	WindowSpec.Title = "Core";
 	Window::Create(s_Window, WindowSpec);
 
-	int updateCount = 0;
+	ContextSpecification ContextSpec;
+	Context::Create(s_Context, ContextSpec);
+
 	while (true) {
 		s_Window.Get()->Update();
+		s_Context.Get()->Update();
 	}
 	return 0;
 }

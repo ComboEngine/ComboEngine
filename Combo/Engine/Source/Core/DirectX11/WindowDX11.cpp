@@ -25,7 +25,7 @@ void WindowDX11::Init()
 	wc.cbSize = sizeof(WNDCLASSEX);
 	RegisterClassEx(&wc);
 
-	this->hWnd = CreateWindowEx(NULL, window_name.c_str(), window_name.c_str(), WS_OVERLAPPEDWINDOW, 300, 300, 500, 400, NULL, NULL, platform->hInstance, NULL);
+	this->hWnd = CreateWindowEx(NULL, window_name.c_str(), window_name.c_str(), WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, Specification.Width, Specification.Height, NULL, NULL, platform->hInstance, NULL);
 	
 	ShowWindow(this->hWnd, SW_SHOW);
 }
