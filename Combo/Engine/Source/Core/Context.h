@@ -1,11 +1,10 @@
 #pragma once
 #include "pch.h"
 #include "Scope.h"
+#include "Pipeline.h"
 
 struct ContextSpecification {
-	std::string Title = "Combo";
-	int Width = 1920;
-	int Height = 1080;
+	
 };
 
 class Context {
@@ -15,6 +14,8 @@ public:
 
 	//API Functions
 	virtual void Init() = 0;
-	virtual void Update() = 0;
+	virtual void BeginDraw() = 0;
+	virtual void EndDraw() = 0;
+	virtual void Draw(Pipeline pipeline) = 0;
 	virtual std::string GetApiName() = 0;
 };

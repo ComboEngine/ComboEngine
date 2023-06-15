@@ -9,7 +9,9 @@ public:
 	IDXGISwapChain* SwapChain;
 	ID3D11RenderTargetView* RenderTargetView;
 	virtual void Init();
-	virtual void Update();
+	virtual void BeginDraw();
+	virtual void EndDraw();
+	virtual void Draw(Pipeline pipeline);
 	virtual std::string GetApiName();
 };
 #endif

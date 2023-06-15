@@ -6,7 +6,6 @@
 int main(int argc, char** argv) {
 	LOG("Running on Win32 Arch");
 	HINSTANCE instance = GetModuleHandle(NULL);
-	//Pass HINSTANCE
 	Platform::Create(Core::s_Platform, instance);
 	return Core::Init();
 }
