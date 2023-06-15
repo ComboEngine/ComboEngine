@@ -59,9 +59,9 @@ void ContextDX11::Draw(Pipeline pipeline)
 	Context->IASetInputLayout(shader->InputLayout);
 	Context->IASetVertexBuffers(0, 1, &vertexBuffer->Buffer, &Stride,&Offset);
 	if (pipeline.Indexed) {
-		Context->IASetIndexBuffer(indexBuffer->Buffer, DXGI_FORMAT_R32_UINT,0);
+		Context->IASetIndexBuffer(indexBuffer->Buffer, DXGI_FORMAT_R32_UINT, 0);
 	}
-	Context->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	Context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	if (pipeline.Indexed) {
 		Context->DrawIndexed(pipeline.Count, 0, 0);
 	}

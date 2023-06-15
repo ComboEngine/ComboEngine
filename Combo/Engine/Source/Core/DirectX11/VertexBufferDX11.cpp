@@ -15,7 +15,7 @@ void VertexBufferDX11::Init(std::vector<Vertex> Vertices)
 	BufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	BufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 
-	D3D11_SUBRESOURCE_DATA BufferInitData;
+	D3D11_SUBRESOURCE_DATA BufferInitData{};
 	BufferInitData.pSysMem = Vertices.data();
 	CB_CHECKHR(context->Device->CreateBuffer(&BufferDesc, &BufferInitData, &this->Buffer))
 }

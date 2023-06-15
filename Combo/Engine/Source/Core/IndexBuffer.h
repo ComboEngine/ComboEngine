@@ -5,9 +5,9 @@
 
 class IndexBuffer {
 public:
-	static void Create(Scope<IndexBuffer>& indexBuffer,std::vector<int> Indices);
+	static void Create(Scope<IndexBuffer>& indexBuffer,std::vector<uint32_t> Indices);
 
 	//API Functions
-	virtual void Init(std::vector<int> Indices) = 0;
+	virtual void Init(std::vector<uint32_t> Indices) = 0;
 	virtual std::string GetApiName() = 0;
 };

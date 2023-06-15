@@ -5,18 +5,18 @@
 #include <Core/Core.h>
 #include "ContextDX11.h"
 
-void IndexBufferDX11::Init(std::vector<int> Indices)
+void IndexBufferDX11::Init(std::vector<uint32_t> Indices)
 {
 	ContextDX11* context = Core::s_Context.Cast<ContextDX11>();
 	D3D11_BUFFER_DESC BufferDesc;
 	ZeroMemory(&BufferDesc, sizeof(BufferDesc));
 	BufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	BufferDesc.ByteWidth = sizeof(int) * Indices.size();
+	BufferDesc.ByteWidth = sizeof(uint32_t) * Indices.size();
 	BufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	BufferDesc.CPUAccessFlags = 0;
 	BufferDesc.MiscFlags = 0;
 
-	D3D11_SUBRESOURCE_DATA BufferInitData;
+	D3D11_SUBRESOURCE_DATA BufferInitData{};
 	BufferInitData.pSysMem = Indices.data();
 	CB_CHECKHR(context->Device->CreateBuffer(&BufferDesc, &BufferInitData, &this->Buffer))
 }

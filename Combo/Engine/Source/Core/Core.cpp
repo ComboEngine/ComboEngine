@@ -29,13 +29,14 @@ int Core::Init()
 	Shader::Create(testShader, "./shader.hlsl", "./shader.hlsl");
 
 	Vertex vertices[] = {
-		{0.0f,0.5f,0.0f, 1.0f,0.0f,0.0f,1.0f},
-		{0.45f,-0.5f,0.0f, 0.0f,1.0f,0.0f,1.0f},
-		{-0.45f,-0.5f,0.0f, 0.0f,0.0f,1.0f,1.0f}
+		{-0.5f,  -0.5f, 1.0f, 1.0f,0.0f,0.0f,1.0f},
+		{-0.5f,   0.5f, 1.0f, 0.0f,1.0f,0.0f,1.0f},
+		{ 0.5f,   0.5f, 1.0f, 0.0f,0.0f,1.0f,1.0f},
+		{ 0.5f,  -0.5f, 1.0f, 1.0f,0.0f,1.0f,1.0f}
 	};
 
-	std::vector<int> indices = {
-		0,1,2
+	std::vector<uint32_t> indices = {
+		0,1,2,0,2,3
 	};
 
 	Scope<VertexBuffer> testVertices;
@@ -48,8 +49,8 @@ int Core::Init()
 		s_Context.Get()->BeginDraw();
 
 		Pipeline pipeline;
-		pipeline.Count = 3;
-		pipeline.Indexed = false;
+		pipeline.Count = 6;
+		pipeline.Indexed = true;
 		pipeline.Shader = testShader;
 		pipeline.VertexBuffer = testVertices;
 		pipeline.IndexBuffer = testIndices;

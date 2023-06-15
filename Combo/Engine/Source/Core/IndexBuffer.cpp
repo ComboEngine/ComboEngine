@@ -4,7 +4,7 @@
 #include <Core/DirectX11/IndexBufferDX11.h>
 #endif
 
-void IndexBuffer::Create(Scope<IndexBuffer>& indexBuffer, std::vector<int> Indices)
+void IndexBuffer::Create(Scope<IndexBuffer>& indexBuffer, std::vector<uint32_t> Indices)
 {
 	indexBuffer = Scope<IndexBuffer>();
 	//Select window api
