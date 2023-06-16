@@ -39,6 +39,7 @@ public class ComboEngine : BuildTarget {
         this.AddModule("LuaC");
         this.AddModule("assimp");
         this.AddModule("glm");
+        this.AddModule("ImGui");
 
     }
 }

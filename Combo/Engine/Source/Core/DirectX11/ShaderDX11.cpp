@@ -25,10 +25,11 @@ void ShaderDX11::Init(std::string VertexSource, std::string PixelSource)
 	D3D11_INPUT_ELEMENT_DESC InputElementDesc[] =
 	{
 		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-		{"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"NORMAL", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 20, D3D11_INPUT_PER_VERTEX_DATA, 0}
 	};
 
-	CB_CHECKHR(context->Device->CreateInputLayout(InputElementDesc, 2, VertexBlob->GetBufferPointer(), VertexBlob->GetBufferSize(), &InputLayout));
+	CB_CHECKHR(context->Device->CreateInputLayout(InputElementDesc, 3, VertexBlob->GetBufferPointer(), VertexBlob->GetBufferSize(), &InputLayout));
 
 	context->Context->VSSetShader(0, 0, 0);
 	context->Context->PSSetShader(0, 0, 0);

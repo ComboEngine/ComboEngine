@@ -44,6 +44,8 @@ LRESULT CALLBACK WndProc(HWND hwnd,
 			ViewportDesc.TopLeftY = 0;
 			ViewportDesc.Width = Core::s_Window.Get()->GetWidth();
 			ViewportDesc.Height = Core::s_Window.Get()->GetHeight();
+			ViewportDesc.MinDepth = 0.0f;
+			ViewportDesc.MaxDepth = 1.0f;
 			context->Context->RSSetViewports(1, &ViewportDesc);
 		}
 		return 1;

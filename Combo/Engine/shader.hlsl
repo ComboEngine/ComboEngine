@@ -6,13 +6,15 @@ cbuffer ConstantBuffer
 struct PSInput
 {
     float4 Position : SV_Position;
-    float4 Color : COLOR;
+    float2 TexCoord : TEXCOORD;
+    float4 Normal : NORMAL;
 };
 
 struct VSInput
 {
     float4 Position : POSITION;
-    float4 Color : COLOR;
+    float2 TexCoord : TEXCOORD;
+    float4 Normal : NORMAL;
 };
 
 PSInput VSMain(VSInput input)
@@ -20,12 +22,14 @@ PSInput VSMain(VSInput input)
     PSInput output;
     
     output.Position = mul(input.Position,WVP);
-    output.Color = input.Color;
+    //output.Position = input.Position;
+    output.TexCoord = input.TexCoord;
+    output.Normal = input.Normal;
     
     return output;
 }
 
 float4 PSMain(PSInput input) : SV_Target
 {
-    return input.Color;
+    return float4(input.TexCoord, 1, 1);
 }

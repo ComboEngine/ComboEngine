@@ -6,6 +6,15 @@
 #include <any>
 
 #include <glm.hpp>
+#include <gtc/type_ptr.hpp>
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm.hpp>
+#include <gtc/type_ptr.hpp>
+#include <gtc/matrix_transform.hpp>
+#include <gtc/quaternion.hpp>
+#include <gtc/matrix_inverse.hpp>
+#include <detail/type_quat.hpp>
+#include <gtx/quaternion.hpp>
 
 #define LOG(...) std::cout<<"\u001b[31m[COMBO]\u001b[0m "<<__VA_ARGS__<<std::endl;
 #define CB_CRASH(...) std::cout<<"\u001b[31m[COMBO]\u001b[0m CRASH: "<<__VA_ARGS__<<std::endl; exit(0);
@@ -23,6 +32,9 @@ extern "C" {
 #include <lauxlib.h>
 }
 #pragma comment(lib,"lua54.lib")
+
+#include <imgui.h>
+#pragma comment(lib,"ImGui.lib")
 
 #ifdef COMBO_DIRECTX11
 #define CB_CHECKHR(...) if(__VA_ARGS__ == 0) {} else { LOG("DX Operation Failed: " + std::system_category().message(__VA_ARGS__)) __debugbreak(); }

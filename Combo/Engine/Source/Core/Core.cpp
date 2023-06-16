@@ -3,6 +3,9 @@
 #include "Pipeline.h"
 #include "Shader.h"
 #include "ShaderDataBuffer.h"
+#include "Mesh.h"
+#include "Renderer.h"
+#include "Assets/MeshSerializer.h"
 
 Scope<Window> Core::s_Window;
 Scope<Platform> Core::s_Platform;
@@ -14,6 +17,9 @@ Event Core::UpdateEvent;
 Event Core::DrawEvent;
 Event Core::BeginPlayEvent;
 Event Core::ExitEvent;
+
+std::vector<Scope<Actor>> Core::Actors;
+Scope<Shader> Core::Render3DShader;
 
 bool Core::ShouldExit = false;
 
@@ -49,44 +55,29 @@ int Core::Init()
 		s_Context.Get()->EndDraw();
 	});
 
-	Scope<Shader> testShader;
-	Shader::Create(testShader, "./shader.hlsl", "./shader.hlsl");
+	Shader::Create(Render3DShader, "./shader.hlsl", "./shader.hlsl");
 
-	std::vector<Vertex> vertices = {
-		{-0.5f,  -0.5f, 1.0f, 1.0f,0.0f,0.0f,1.0f},
-		{-0.5f,   0.5f, 1.0f, 0.0f,1.0f,0.0f,1.0f},
-		{ 0.5f,   0.5f, 1.0f, 0.0f,0.0f,1.0f,1.0f},
-		{ 0.5f,  -0.5f, 1.0f, 1.0f,0.0f,1.0f,1.0f}
-	};
+	Scope<Actor> actor;
+	Actor::Create(actor);
 
-	std::vector<uint32_t> indices = {
-		0,1,2,0,2,3
-	};
+	Scope<Renderer> renderer;
+	Scope<Renderer>::Create(renderer);
 
-	Scope<VertexBuffer> testVertices;
-	Scope<IndexBuffer> testIndices;
-	Scope<ShaderDataBuffer> testConstantBuffer;
+	actor.Get()->AddComponent(renderer.Cast<Component>());
 
-	VertexBuffer::Create(testVertices, vertices);
-	IndexBuffer::Create(testIndices, indices);
-	ShaderDataBuffer::Create(testConstantBuffer, sizeof(ConstantBufferData));
+	for (Scope<Actor> actor : Actors) {
+		for (Component* component : actor.Get()->Components) {
+			component->Init();
+		}
+	}
+
+	Scope<Mesh> mesh;
+	MeshSerializer::Read(mesh, "Cube.cbmesh");
+
+	renderer.Get()->mesh = mesh;
 
 	DrawEvent.Hook([&] {
 		s_Context.Get()->SetClearColor(glm::vec3(0, 0, 0));
-
-		Pipeline pipeline;
-		pipeline.Count = testIndices.Get()->Size;
-		pipeline.ShaderDataBuffer = testConstantBuffer;
-		pipeline.Indexed = true;
-		pipeline.Shader = testShader;
-		pipeline.VertexBuffer = testVertices;
-		pipeline.IndexBuffer = testIndices;
-
-		ConstantBufferData data;
-		data.WVP = XMMatrixTranspose(XMMatrixTranslation(1, 0, 0));
-
-		testConstantBuffer.Get()->Update(&data);
-		s_Context.Get()->Draw(pipeline);
 	});
 
 	BeginPlayEvent.Invoke();

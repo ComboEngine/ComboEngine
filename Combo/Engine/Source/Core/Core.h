@@ -5,6 +5,7 @@
 #include "Platform.h"
 #include "Context.h"
 #include "Scripting.h"
+#include "Actor.h"
 #include "Event.h"
 
 enum RendererAPI {
@@ -24,6 +25,10 @@ public:
 	static Event UpdateEvent;
 	static Event DrawEvent;
 	static Event ExitEvent;
+
+	static Scope<Shader> Render3DShader;
+
+	static std::vector<Scope<Actor>> Actors;
 
 	static bool ShouldExit;
 

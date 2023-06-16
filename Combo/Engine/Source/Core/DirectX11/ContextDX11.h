@@ -8,6 +8,9 @@ public:
 	ID3D11DeviceContext* Context;
 	IDXGISwapChain* SwapChain;
 	ID3D11RenderTargetView* RenderTargetView;
+	ID3D11DepthStencilView* DepthStencilView;
+	ID3D11Texture2D* DepthStencilBuffer;
+	ID3D11RasterizerState* RasterizerState;
 	float ClearColor[4] = { 0.0f,0.0f,0.0f,1.0f };
 	virtual void Init();
 	virtual void BeginDraw();

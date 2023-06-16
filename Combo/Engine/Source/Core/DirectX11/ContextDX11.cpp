@@ -19,14 +19,33 @@ void ContextDX11::Init()
 	SwapChainDesc.OutputWindow = Core::s_Window.Cast<WindowDX11>()->hWnd;
 	SwapChainDesc.SampleDesc.Count = 4;
 	SwapChainDesc.Windowed = TRUE;
+	SwapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
 	CB_CHECKHR(D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, NULL, NULL, NULL, D3D11_SDK_VERSION, &SwapChainDesc, &SwapChain, &Device, NULL, &Context));
 
 	ID3D11Texture2D* BackBufferTexture;
 	SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&BackBufferTexture);
 
+	D3D11_TEXTURE2D_DESC depthStencilDesc;
+	depthStencilDesc.Width = Core::s_Window.Get()->GetWidth();
+	depthStencilDesc.Height = Core::s_Window.Get()->GetHeight();
+	depthStencilDesc.MipLevels = 1;
+	depthStencilDesc.ArraySize = 1;
+	depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	depthStencilDesc.SampleDesc.Count = 1;
+	depthStencilDesc.SampleDesc.Quality = 0;
+	depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
+	depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	depthStencilDesc.CPUAccessFlags = 0;
+	depthStencilDesc.MiscFlags = 0;
+	Device->CreateTexture2D(&depthStencilDesc, NULL, &DepthStencilBuffer);
+	Device->CreateDepthStencilView(DepthStencilBuffer, NULL, &DepthStencilView);
+
 	CB_CHECKHR(Device->CreateRenderTargetView(BackBufferTexture, NULL, &RenderTargetView));
 	BackBufferTexture->Release();
+
+	Context->OMSetRenderTargets(1, &RenderTargetView, NULL);
+
 
 	D3D11_VIEWPORT ViewportDesc;
 	ZeroMemory(&ViewportDesc, sizeof(ViewportDesc));
@@ -34,19 +53,39 @@ void ContextDX11::Init()
 	ViewportDesc.TopLeftY = 0;
 	ViewportDesc.Width = Core::s_Window.Get()->GetWidth();
 	ViewportDesc.Height = Core::s_Window.Get()->GetHeight();
+	ViewportDesc.MinDepth = 0.0f;
+	ViewportDesc.MaxDepth = 1.0f;
 	Context->RSSetViewports(1, &ViewportDesc);
+
+	D3D11_RASTERIZER_DESC rasterDesc{};
+	rasterDesc.AntialiasedLineEnable = false;
+	rasterDesc.CullMode = D3D11_CULL_BACK;
+	rasterDesc.DepthBias = 0;
+	rasterDesc.DepthBiasClamp = 0.0f;
+	rasterDesc.DepthClipEnable = true;
+	rasterDesc.FillMode = D3D11_FILL_SOLID;
+	rasterDesc.FrontCounterClockwise = false;
+	rasterDesc.MultisampleEnable = false;
+	rasterDesc.ScissorEnable = false;
+	rasterDesc.SlopeScaledDepthBias = 0.0f;
+	Device->CreateRasterizerState(&rasterDesc, &this->RasterizerState);
+
+	Context->RSSetState(this->RasterizerState);
 
 	Core::ExitEvent.Hook([&] {
 		this->Device->Release();
 		this->Context->Release();
 		this->SwapChain->Release();
 		this->RenderTargetView->Release();
+		this->DepthStencilBuffer->Release();
+		this->DepthStencilView->Release();
 	});
 }
 void ContextDX11::BeginDraw()
 {
-	Context->OMSetRenderTargets(1, &RenderTargetView, NULL);
 	Context->ClearRenderTargetView(RenderTargetView, this->ClearColor);
+	Context->OMSetRenderTargets(1, &RenderTargetView, DepthStencilView);
+	Context->ClearDepthStencilView(DepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 }
 void ContextDX11::EndDraw()
 {
