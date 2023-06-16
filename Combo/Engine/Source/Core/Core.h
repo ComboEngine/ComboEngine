@@ -4,6 +4,7 @@
 #include "Window.h"
 #include "Platform.h"
 #include "Context.h"
+#include "Scripting.h"
 #include "Event.h"
 
 enum RendererAPI {
@@ -17,6 +18,7 @@ public:
 	static Scope<Window> s_Window;
 	static Scope<Platform> s_Platform;
 	static Scope<Context> s_Context;
+	static Scope<Scripting> s_Scripting;
 
 	static Event BeginPlayEvent;
 	static Event UpdateEvent;

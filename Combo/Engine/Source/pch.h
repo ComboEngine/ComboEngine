@@ -17,6 +17,13 @@
 #include <windowsx.h>
 #endif
 
+extern "C" {
+#include <lua.h>
+#include <lualib.h>
+#include <lauxlib.h>
+}
+#pragma comment(lib,"lua54.lib")
+
 #ifdef COMBO_DIRECTX11
 #define CB_CHECKHR(...) if(__VA_ARGS__ == 0) {} else { LOG("DX Operation Failed: " + std::system_category().message(__VA_ARGS__)) __debugbreak(); }
 #include <d3d11.h>

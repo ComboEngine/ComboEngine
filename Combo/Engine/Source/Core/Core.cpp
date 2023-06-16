@@ -2,11 +2,13 @@
 #include "Core.h"
 #include "Pipeline.h"
 #include "Shader.h"
+#include "ShaderDataBuffer.h"
 
 Scope<Window> Core::s_Window;
 Scope<Platform> Core::s_Platform;
 RendererAPI Core::RendererType = Null;
 Scope<Context> Core::s_Context;
+Scope<Scripting> Core::s_Scripting;
 
 Event Core::UpdateEvent;
 Event Core::DrawEvent;
@@ -14,6 +16,10 @@ Event Core::BeginPlayEvent;
 Event Core::ExitEvent;
 
 bool Core::ShouldExit = false;
+
+struct ConstantBufferData {
+	XMMATRIX WVP;
+};
 
 int Core::Init()
 {
@@ -34,6 +40,8 @@ int Core::Init()
 
 	ContextSpecification ContextSpec;
 	Context::Create(s_Context, ContextSpec);
+
+	Scripting::Create(s_Scripting);
 
 	UpdateEvent.Hook([&] {
 		s_Context.Get()->BeginDraw();
@@ -57,19 +65,27 @@ int Core::Init()
 
 	Scope<VertexBuffer> testVertices;
 	Scope<IndexBuffer> testIndices;
+	Scope<ShaderDataBuffer> testConstantBuffer;
 
 	VertexBuffer::Create(testVertices, vertices);
 	IndexBuffer::Create(testIndices, indices);
+	ShaderDataBuffer::Create(testConstantBuffer, sizeof(ConstantBufferData));
 
 	DrawEvent.Hook([&] {
 		s_Context.Get()->SetClearColor(glm::vec3(0, 0, 0));
 
 		Pipeline pipeline;
 		pipeline.Count = testIndices.Get()->Size;
+		pipeline.ShaderDataBuffer = testConstantBuffer;
 		pipeline.Indexed = true;
 		pipeline.Shader = testShader;
 		pipeline.VertexBuffer = testVertices;
 		pipeline.IndexBuffer = testIndices;
+
+		ConstantBufferData data;
+		data.WVP = XMMatrixTranspose(XMMatrixTranslation(1, 0, 0));
+
+		testConstantBuffer.Get()->Update(&data);
 		s_Context.Get()->Draw(pipeline);
 	});
 

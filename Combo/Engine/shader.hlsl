@@ -1,3 +1,8 @@
+cbuffer ConstantBuffer
+{
+    float4x4 WVP;
+};
+
 struct PSInput
 {
     float4 Position : SV_Position;
@@ -14,7 +19,7 @@ PSInput VSMain(VSInput input)
 {
     PSInput output;
     
-    output.Position = input.Position;
+    output.Position = mul(input.Position,WVP);
     output.Color = input.Color;
     
     return output;

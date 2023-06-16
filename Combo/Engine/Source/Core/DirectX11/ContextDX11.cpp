@@ -6,6 +6,7 @@
 #include "ShaderDX11.h"
 #include "VertexBufferDX11.h"
 #include "IndexBufferDX11.h"
+#include "ShaderDataBufferDX11.h"
 
 
 void ContextDX11::Init()
@@ -56,12 +57,15 @@ void ContextDX11::Draw(Pipeline pipeline)
 	ShaderDX11* shader = pipeline.Shader.Cast<ShaderDX11>();
 	VertexBufferDX11* vertexBuffer = pipeline.VertexBuffer.Cast<VertexBufferDX11>();
 	IndexBufferDX11* indexBuffer = pipeline.IndexBuffer.Cast<IndexBufferDX11>();
+	ShaderDataBufferDX11* shaderDataBuffer = pipeline.ShaderDataBuffer.Cast<ShaderDataBufferDX11>();
 
 	UINT Stride = sizeof(Vertex);
 	UINT Offset = 0;
 
 	Context->VSSetShader(shader->VertexShader, 0, 0);
 	Context->PSSetShader(shader->PixelShader, 0, 0);
+	Context->VSSetConstantBuffers(0, 1, &shaderDataBuffer->Buffer);
+	Context->PSSetConstantBuffers(0, 1, &shaderDataBuffer->Buffer);
 	Context->IASetInputLayout(shader->InputLayout);
 	Context->IASetVertexBuffers(0, 1, &vertexBuffer->Buffer, &Stride,&Offset);
 	if (pipeline.Indexed) {

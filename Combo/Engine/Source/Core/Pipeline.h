@@ -3,6 +3,7 @@
 #include "Shader.h"
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
+#include "ShaderDataBuffer.h"
 
 struct Pipeline {
 	int Count;
@@ -10,4 +11,5 @@ struct Pipeline {
 	Scope<Shader> Shader;
 	Scope<VertexBuffer> VertexBuffer;
 	Scope<IndexBuffer> IndexBuffer;
+	Scope<ShaderDataBuffer> ShaderDataBuffer;
 };
