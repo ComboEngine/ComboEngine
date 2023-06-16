@@ -5,6 +5,7 @@
 
 class VertexBuffer {
 public:
+	int Size;
 	static void Create(Scope<VertexBuffer>& vertexBuffer,std::vector<Vertex> Vertices);
 
 	//API Functions

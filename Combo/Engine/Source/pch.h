@@ -5,6 +5,8 @@
 #include <string>
 #include <any>
 
+#include <glm.hpp>
+
 #define LOG(...) std::cout<<"\u001b[31m[COMBO]\u001b[0m "<<__VA_ARGS__<<std::endl;
 #define CB_CRASH(...) std::cout<<"\u001b[31m[COMBO]\u001b[0m CRASH: "<<__VA_ARGS__<<std::endl; exit(0);
 //#define CB_CHECK_API_ISNT_NULL(...) __VA_ARGS__ ? 

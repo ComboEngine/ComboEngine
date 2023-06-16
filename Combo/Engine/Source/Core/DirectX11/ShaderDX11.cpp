@@ -32,6 +32,14 @@ void ShaderDX11::Init(std::string VertexSource, std::string PixelSource)
 
 	context->Context->VSSetShader(0, 0, 0);
 	context->Context->PSSetShader(0, 0, 0);
+
+	Core::ExitEvent.Hook([&] {
+		this->PixelShader->Release();
+		this->VertexShader->Release();
+		this->PixelBlob->Release();
+		this->VertexBlob->Release();
+		this->InputLayout->Release();
+	});
 }
 std::string ShaderDX11::GetApiName()
 {

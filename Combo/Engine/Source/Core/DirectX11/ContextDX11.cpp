@@ -34,12 +34,18 @@ void ContextDX11::Init()
 	ViewportDesc.Width = Core::s_Window.Get()->GetWidth();
 	ViewportDesc.Height = Core::s_Window.Get()->GetHeight();
 	Context->RSSetViewports(1, &ViewportDesc);
+
+	Core::ExitEvent.Hook([&] {
+		this->Device->Release();
+		this->Context->Release();
+		this->SwapChain->Release();
+		this->RenderTargetView->Release();
+	});
 }
 void ContextDX11::BeginDraw()
 {
-	float color[] = { 0.0f,0.0f,1.0f,1.0f };
 	Context->OMSetRenderTargets(1, &RenderTargetView, NULL);
-	Context->ClearRenderTargetView(RenderTargetView, color);
+	Context->ClearRenderTargetView(RenderTargetView, this->ClearColor);
 }
 void ContextDX11::EndDraw()
 {
@@ -49,7 +55,7 @@ void ContextDX11::Draw(Pipeline pipeline)
 {
 	ShaderDX11* shader = pipeline.Shader.Cast<ShaderDX11>();
 	VertexBufferDX11* vertexBuffer = pipeline.VertexBuffer.Cast<VertexBufferDX11>();
-	IndexBufferDX11* indexBuffer = pipeline.VertexBuffer.Cast<IndexBufferDX11>();
+	IndexBufferDX11* indexBuffer = pipeline.IndexBuffer.Cast<IndexBufferDX11>();
 
 	UINT Stride = sizeof(Vertex);
 	UINT Offset = 0;
@@ -69,6 +75,15 @@ void ContextDX11::Draw(Pipeline pipeline)
 		Context->Draw(pipeline.Count, 0);
 	}
 }
+
+void ContextDX11::SetClearColor(glm::vec3 color)
+{
+	this->ClearColor[0] = color.x;
+	this->ClearColor[1] = color.y;
+	this->ClearColor[2] = color.z;
+	this->ClearColor[3] = 1;
+}
+
 std::string ContextDX11::GetApiName()
 {
 	return "DX11";

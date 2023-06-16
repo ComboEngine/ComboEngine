@@ -17,5 +17,6 @@ public:
 	virtual void BeginDraw() = 0;
 	virtual void EndDraw() = 0;
 	virtual void Draw(Pipeline pipeline) = 0;
+	virtual void SetClearColor(glm::vec3 color) = 0;
 	virtual std::string GetApiName() = 0;
 };

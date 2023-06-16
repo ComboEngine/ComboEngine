@@ -5,6 +5,7 @@
 
 class IndexBuffer {
 public:
+	int Size;
 	static void Create(Scope<IndexBuffer>& indexBuffer,std::vector<uint32_t> Indices);
 
 	//API Functions

@@ -13,6 +13,8 @@ void IndexBuffer::Create(Scope<IndexBuffer>& indexBuffer, std::vector<uint32_t> 
 	indexBuffer.Set(new IndexBufferDX11());
 #endif
 
+	indexBuffer.Get()->Size = Indices.size();
+
 	//Call API Window
 	indexBuffer.Get()->Init(Indices);
 

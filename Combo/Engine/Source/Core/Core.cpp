@@ -8,6 +8,12 @@ Scope<Platform> Core::s_Platform;
 RendererAPI Core::RendererType = Null;
 Scope<Context> Core::s_Context;
 
+Event Core::UpdateEvent;
+Event Core::DrawEvent;
+Event Core::BeginPlayEvent;
+Event Core::ExitEvent;
+
+bool Core::ShouldExit = false;
 
 int Core::Init()
 {
@@ -22,13 +28,23 @@ int Core::Init()
 	WindowSpec.Title = "Core";
 	Window::Create(s_Window, WindowSpec);
 
+	UpdateEvent.Hook([&] {
+		s_Window.Get()->Update();
+	});
+
 	ContextSpecification ContextSpec;
 	Context::Create(s_Context, ContextSpec);
+
+	UpdateEvent.Hook([&] {
+		s_Context.Get()->BeginDraw();
+		DrawEvent.Invoke();
+		s_Context.Get()->EndDraw();
+	});
 
 	Scope<Shader> testShader;
 	Shader::Create(testShader, "./shader.hlsl", "./shader.hlsl");
 
-	Vertex vertices[] = {
+	std::vector<Vertex> vertices = {
 		{-0.5f,  -0.5f, 1.0f, 1.0f,0.0f,0.0f,1.0f},
 		{-0.5f,   0.5f, 1.0f, 0.0f,1.0f,0.0f,1.0f},
 		{ 0.5f,   0.5f, 1.0f, 0.0f,0.0f,1.0f,1.0f},
@@ -41,22 +57,31 @@ int Core::Init()
 
 	Scope<VertexBuffer> testVertices;
 	Scope<IndexBuffer> testIndices;
-	VertexBuffer::Create(testVertices, std::vector<Vertex>(vertices,vertices + (sizeof(vertices) / sizeof(vertices[0]))));
+
+	VertexBuffer::Create(testVertices, vertices);
 	IndexBuffer::Create(testIndices, indices);
 
-	while (true) {
-		s_Window.Get()->Update();
-		s_Context.Get()->BeginDraw();
+	DrawEvent.Hook([&] {
+		s_Context.Get()->SetClearColor(glm::vec3(0, 0, 0));
 
 		Pipeline pipeline;
-		pipeline.Count = 6;
+		pipeline.Count = testIndices.Get()->Size;
 		pipeline.Indexed = true;
 		pipeline.Shader = testShader;
 		pipeline.VertexBuffer = testVertices;
 		pipeline.IndexBuffer = testIndices;
 		s_Context.Get()->Draw(pipeline);
+	});
 
-		s_Context.Get()->EndDraw();
+	BeginPlayEvent.Invoke();
+	while (!ShouldExit) {
+		UpdateEvent.Invoke();
 	}
+	ExitEvent.Invoke();
 	return 0;
+}
+
+void Core::RequestExit()
+{
+	ShouldExit = true;
 }

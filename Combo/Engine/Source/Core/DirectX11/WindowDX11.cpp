@@ -4,6 +4,56 @@
 #include "WindowDX11.h"
 #include "PlatformDX11.h"
 #include <Core/Core.h>
+#include "ContextDX11.h"
+
+
+LRESULT CALLBACK WndProc(HWND hwnd,
+	UINT msg,
+	WPARAM wParam,
+	LPARAM lParam)
+{
+	switch (msg)
+	{
+	case WM_KEYDOWN:
+		break;
+	case WM_DESTROY:
+		PostQuitMessage(0);
+		Core::RequestExit();
+		return 0;
+	case WM_CLOSE:
+		Core::RequestExit();
+		return 0;
+	case WM_QUIT:
+		Core::RequestExit();
+		return 0;
+	case WM_SIZE:
+		ContextDX11* context = Core::s_Context.Cast<ContextDX11>();
+		if (context != nullptr && context->SwapChain != nullptr)
+		{
+			context->RenderTargetView->Release();
+			context->SwapChain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0);
+			ID3D11Texture2D* BackBufferTexture;
+			context->SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&BackBufferTexture);
+
+			CB_CHECKHR(context->Device->CreateRenderTargetView(BackBufferTexture, NULL, &context->RenderTargetView));
+			BackBufferTexture->Release();
+
+			D3D11_VIEWPORT ViewportDesc;
+			ZeroMemory(&ViewportDesc, sizeof(ViewportDesc));
+			ViewportDesc.TopLeftX = 0;
+			ViewportDesc.TopLeftY = 0;
+			ViewportDesc.Width = Core::s_Window.Get()->GetWidth();
+			ViewportDesc.Height = Core::s_Window.Get()->GetHeight();
+			context->Context->RSSetViewports(1, &ViewportDesc);
+		}
+		return 1;
+	}
+
+	return DefWindowProc(hwnd,
+		msg,
+		wParam,
+		lParam);
+}
 
 void WindowDX11::Init()
 {
@@ -33,11 +83,12 @@ void WindowDX11::Init()
 void WindowDX11::Update() {
 	if (PeekMessage(&Message, NULL, 0, 0, PM_REMOVE))
 	{
-		if (Message.message == WM_QUIT)
-			//Engine::RequestExit();
-			return;
 		TranslateMessage(&Message);
 		DispatchMessage(&Message);
+		if (Message.message == WM_QUIT)
+		{
+			Core::RequestExit();
+		}
 	}
 }
 

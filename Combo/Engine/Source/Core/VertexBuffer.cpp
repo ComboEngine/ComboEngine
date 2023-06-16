@@ -13,6 +13,8 @@ void VertexBuffer::Create(Scope<VertexBuffer>& vertexBuffer, std::vector<Vertex>
 	vertexBuffer.Set(new VertexBufferDX11());
 #endif
 
+	vertexBuffer.Get()->Size = Vertices.size();
+
 	//Call API Window
 	vertexBuffer.Get()->Init(Vertices);
 

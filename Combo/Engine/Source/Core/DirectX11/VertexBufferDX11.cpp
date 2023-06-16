@@ -17,7 +17,11 @@ void VertexBufferDX11::Init(std::vector<Vertex> Vertices)
 
 	D3D11_SUBRESOURCE_DATA BufferInitData{};
 	BufferInitData.pSysMem = Vertices.data();
-	CB_CHECKHR(context->Device->CreateBuffer(&BufferDesc, &BufferInitData, &this->Buffer))
+	CB_CHECKHR(context->Device->CreateBuffer(&BufferDesc, &BufferInitData, &this->Buffer));
+
+	Core::ExitEvent.Hook([&] {
+		this->Buffer->Release();
+	});
 }
 
 std::string VertexBufferDX11::GetApiName()
