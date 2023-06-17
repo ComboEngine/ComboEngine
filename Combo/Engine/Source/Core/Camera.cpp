@@ -16,7 +16,7 @@ glm::mat4 Camera::CalculateViewMatrix()
 
 void Camera::Drone()
 {
-	Core::s_Window.Get()->LockCursor(true);
+	//Core::s_Window.Get()->LockCursor(true);
 	float moveX = sin(glm::radians(Camera::Orientation.x)) * 0.05f;
 	float moveZ = cos(glm::radians(Camera::Orientation.y)) * 0.05f;
 	float moveY = sin(glm::radians(Camera::Orientation.z)) * 0.05f;
@@ -34,9 +34,8 @@ void Camera::Drone()
 		Camera::Position += glm::vec3(moveZ, 0, -moveX);
 	}
 
-
 	glm::vec2 delta = Input::GetMouseDelta();
-	Camera::Orientation += glm::vec3(-(delta.y * 0.05f), (-delta.x * 0.05f), 0);
+	Camera::Orientation += glm::vec3(-(delta.y * 0.05f), (delta.x * 0.05f), 0);
 }
 
 glm::mat4 Camera::CalculateProjectionMatrix()

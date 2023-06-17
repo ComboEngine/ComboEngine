@@ -7,6 +7,7 @@
 #include "Scripting.h"
 #include "Actor.h"
 #include "Event.h"
+#include "Framebuffer.h"
 
 enum RendererAPI {
 	Null,
@@ -20,11 +21,13 @@ public:
 	static Scope<Platform> s_Platform;
 	static Scope<Context> s_Context;
 	static Scope<Scripting> s_Scripting;
+	static Scope<Framebuffer> s_Color;
 
 	static Event BeginPlayEvent;
 	static Event UpdateEvent;
 	static Event DrawEvent;
 	static Event ExitEvent;
+	static Event ImGuiDrawEvent;
 
 	static std::vector<Scope<Actor>> Actors;
 

@@ -8,6 +8,7 @@
 #include "IndexBufferDX11.h"
 #include "ShaderDataBufferDX11.h"
 #include "TextureDX11.h"
+#include "FramebufferDX11.h"
 
 
 void ContextDX11::Init()
@@ -82,11 +83,19 @@ void ContextDX11::Init()
 		this->DepthStencilView->Release();
 	});
 }
-void ContextDX11::BeginDraw()
+void ContextDX11::BeginDraw(Scope<Framebuffer> framebuffer)
 {
-	Context->ClearRenderTargetView(RenderTargetView, this->ClearColor);
-	Context->OMSetRenderTargets(1, &RenderTargetView, DepthStencilView);
-	Context->ClearDepthStencilView(DepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	FramebufferDX11* framebufferDX11 = framebuffer.Cast<FramebufferDX11>();
+	if (framebuffer.Get() == nullptr) {
+		Context->ClearRenderTargetView(RenderTargetView, this->ClearColor);
+		Context->OMSetRenderTargets(1, &RenderTargetView, NULL);
+		//Context->ClearDepthStencilView(DepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	}
+	else {
+		Context->OMSetRenderTargets(1, &framebufferDX11->RenderTargetView, DepthStencilView);
+		Context->ClearRenderTargetView(framebufferDX11->RenderTargetView, this->ClearColor);
+		Context->ClearDepthStencilView(DepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	}
 }
 void ContextDX11::EndDraw()
 {

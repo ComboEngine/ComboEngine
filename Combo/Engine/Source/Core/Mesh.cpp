@@ -23,9 +23,6 @@ XMMATRIX ConvertToXMMATRIX(const glm::mat4& matrix)
 	return XMLoadFloat4x4(&xnaMatrix);
 }
 
-
-
-
 void Mesh::Render(Scope<Material> Mat,glm::vec3 Position, glm::quat Orientation, glm::vec3 Scale)
 {
 	for (Submesh submesh : Submeshes) {

@@ -13,7 +13,7 @@ public:
 	ID3D11RasterizerState* RasterizerState;
 	float ClearColor[4] = { 0.0f,0.0f,0.0f,1.0f };
 	virtual void Init();
-	virtual void BeginDraw();
+	virtual void BeginDraw(Scope<Framebuffer> framebuffer);
 	virtual void EndDraw();
 	virtual void Draw(Pipeline pipeline);
 	virtual void SetClearColor(glm::vec3 color);

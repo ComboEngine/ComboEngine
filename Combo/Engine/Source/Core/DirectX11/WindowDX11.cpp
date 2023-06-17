@@ -59,7 +59,12 @@ const void* WindowDX11::GetPlainWindow()
 
 void WindowDX11::LockCursor(bool lock)
 {
-	glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	if (lock) {
+		glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	}
+	else {
+		glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+	}
 }
 
 std::string WindowDX11::GetApiName()
