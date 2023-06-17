@@ -19,5 +19,6 @@ public:
 	virtual int GetWidth() = 0;
 	virtual int GetHeight() = 0;
 	virtual const void* GetPlainWindow() = 0;
+	virtual void LockCursor(bool lock) = 0;
 	virtual std::string GetApiName() = 0;
 };

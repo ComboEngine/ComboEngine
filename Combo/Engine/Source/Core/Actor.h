@@ -2,9 +2,12 @@
 #include "pch.h"
 #include "Scope.h"
 
+class Actor;
+
 class Component {
 public:
-	virtual void Init() = 0;
+	virtual void Update(Scope<Actor> actor) = 0;
+	virtual void Draw(Scope<Actor> actor) = 0;
 };
 
 class Actor {

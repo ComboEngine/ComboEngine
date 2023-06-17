@@ -4,6 +4,7 @@
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
 #include "ShaderDataBuffer.h"
+#include "Texture.h"
 
 struct Pipeline {
 	int Count;
@@ -12,4 +13,5 @@ struct Pipeline {
 	Scope<VertexBuffer> VertexBuffer;
 	Scope<IndexBuffer> IndexBuffer;
 	Scope<ShaderDataBuffer> ShaderDataBuffer;
+	Scope<Texture> Texture;
 };

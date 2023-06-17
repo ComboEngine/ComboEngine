@@ -7,6 +7,7 @@
 #include "VertexBufferDX11.h"
 #include "IndexBufferDX11.h"
 #include "ShaderDataBufferDX11.h"
+#include "TextureDX11.h"
 
 
 void ContextDX11::Init()
@@ -16,7 +17,7 @@ void ContextDX11::Init()
 	SwapChainDesc.BufferCount = 1;
 	SwapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	SwapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-	SwapChainDesc.OutputWindow = Core::s_Window.Cast<WindowDX11>()->hWnd;
+	SwapChainDesc.OutputWindow = (HWND)Core::s_Window.Get()->GetPlainWindow();
 	SwapChainDesc.SampleDesc.Count = 4;
 	SwapChainDesc.Windowed = TRUE;
 	SwapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
@@ -97,6 +98,7 @@ void ContextDX11::Draw(Pipeline pipeline)
 	VertexBufferDX11* vertexBuffer = pipeline.VertexBuffer.Cast<VertexBufferDX11>();
 	IndexBufferDX11* indexBuffer = pipeline.IndexBuffer.Cast<IndexBufferDX11>();
 	ShaderDataBufferDX11* shaderDataBuffer = pipeline.ShaderDataBuffer.Cast<ShaderDataBufferDX11>();
+	TextureDX11* texture = pipeline.Texture.Cast<TextureDX11>();
 
 	UINT Stride = sizeof(Vertex);
 	UINT Offset = 0;
@@ -111,6 +113,10 @@ void ContextDX11::Draw(Pipeline pipeline)
 		Context->IASetIndexBuffer(indexBuffer->Buffer, DXGI_FORMAT_R32_UINT, 0);
 	}
 	Context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	if (pipeline.Texture.Get()) {
+		Context->PSSetShaderResources(0, 1, &texture->ShaderResourceView);
+		Context->PSSetSamplers(0, 1, &texture->Sampler);
+	}
 	if (pipeline.Indexed) {
 		Context->DrawIndexed(pipeline.Count, 0, 0);
 	}

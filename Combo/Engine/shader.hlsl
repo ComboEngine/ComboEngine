@@ -1,6 +1,8 @@
 cbuffer ConstantBuffer
 {
     float4x4 WVP;
+    float4 Diffuse;
+    int DiffuseUseTexture;
 };
 
 struct PSInput
@@ -29,7 +31,19 @@ PSInput VSMain(VSInput input)
     return output;
 }
 
+Texture2D Texture;
+SamplerState Sampler;
 float4 PSMain(PSInput input) : SV_Target
 {
-    return float4(input.TexCoord, 1, 1);
+    float4 MaterialDiffuse = float4(1, 1, 1, 1);
+    if (DiffuseUseTexture)
+    {
+        MaterialDiffuse = Texture.Sample(Sampler, input.TexCoord);
+    }
+    else
+    {
+        MaterialDiffuse = Diffuse;
+    }
+    
+    return MaterialDiffuse;
 }

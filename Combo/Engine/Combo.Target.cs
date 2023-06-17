@@ -22,6 +22,7 @@ public class ComboEngine : BuildTarget {
 
         if(json.GraphicsAPI == "DirectX11") {
             this.AddModule("DirectXTK");
+            this.AddModule("glfw");
             AddDefinition("COMBO_DIRECTX11");
         }
 

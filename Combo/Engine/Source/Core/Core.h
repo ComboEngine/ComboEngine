@@ -26,8 +26,6 @@ public:
 	static Event DrawEvent;
 	static Event ExitEvent;
 
-	static Scope<Shader> Render3DShader;
-
 	static std::vector<Scope<Actor>> Actors;
 
 	static bool ShouldExit;

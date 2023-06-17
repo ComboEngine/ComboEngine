@@ -1,10 +1,12 @@
-#ifdef COMBO_DIRECTX11
+#ifdef 0
 #pragma once
 #include <Core/Window.h>
 
-class WindowDX11 : public Window {
+class WindowDX11 : public Window{
 public:
-	GLFWwindow* glfwWindow;
+	HWND hWnd;
+	bool MouseLocked;
+	MSG Message;
 	virtual void Init();
 	virtual void Update();
 	virtual int GetWidth();

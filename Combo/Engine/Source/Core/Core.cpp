@@ -6,6 +6,11 @@
 #include "Mesh.h"
 #include "Renderer.h"
 #include "Assets/MeshSerializer.h"
+#include "Input.h"
+#include "GlobalShaders.h"
+#include "Assets/TextureSerializer.h"
+#include "Camera.h"
+
 
 Scope<Window> Core::s_Window;
 Scope<Platform> Core::s_Platform;
@@ -19,7 +24,6 @@ Event Core::BeginPlayEvent;
 Event Core::ExitEvent;
 
 std::vector<Scope<Actor>> Core::Actors;
-Scope<Shader> Core::Render3DShader;
 
 bool Core::ShouldExit = false;
 
@@ -55,7 +59,7 @@ int Core::Init()
 		s_Context.Get()->EndDraw();
 	});
 
-	Shader::Create(Render3DShader, "./shader.hlsl", "./shader.hlsl");
+	GlobalShaders::Init();
 
 	Scope<Actor> actor;
 	Actor::Create(actor);
@@ -65,24 +69,45 @@ int Core::Init()
 
 	actor.Get()->AddComponent(renderer.Cast<Component>());
 
-	for (Scope<Actor> actor : Actors) {
-		for (Component* component : actor.Get()->Components) {
-			component->Init();
-		}
-	}
-
 	Scope<Mesh> mesh;
 	MeshSerializer::Read(mesh, "Cube.cbmesh");
 
 	renderer.Get()->mesh = mesh;
 
+	UpdateEvent.Hook([&] { Camera::Drone(); });
+
+	
+	Scope<Texture> test;
+	TextureSerializer::Read(test, "test.cbtexture");
+
+	Scope<Material> material;
+	Material::Create(material);
+	//material.Get()->Diffuse = MaterialColor::FromTexture(test);
+	material.Get()->Diffuse = MaterialColor::FromColor(glm::vec4(1, 1, 1, 1));
+
+	renderer.Get()->material = material;
+
 	DrawEvent.Hook([&] {
 		s_Context.Get()->SetClearColor(glm::vec3(0, 0, 0));
+		for (Scope<Actor> actor : Actors) {
+			for (Component* component : actor.Get()->Components) {
+				component->Draw(actor);
+			}
+		}
+	});
+
+	UpdateEvent.Hook([&] {
+		for (Scope<Actor> actor : Actors) {
+			for (Component* component : actor.Get()->Components) {
+				component->Update(actor);
+			}
+		}
 	});
 
 	BeginPlayEvent.Invoke();
 	while (!ShouldExit) {
 		UpdateEvent.Invoke();
+		Input::LastMousePosition = Input::CurrentMousePosition;
 	}
 	ExitEvent.Invoke();
 	return 0;
