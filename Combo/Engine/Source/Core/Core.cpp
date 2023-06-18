@@ -50,6 +50,10 @@ int Core::Init()
 
 	Scripting::Create(s_Scripting);
 
+	BeginPlayEvent.Hook([&] {
+		s_Scripting.Get()->CSBeginPlay.Invoke();
+	});
+
 	ImGuiAdapter::Init();
 
 	Scope<Framebuffer> EmptyFramebuffer;
@@ -74,6 +78,7 @@ int Core::Init()
 
 	DrawEvent.Hook([&] {
 		s_Context.Get()->SetClearColor(glm::vec3(0, 0, 0));
+		s_Scripting.Get()->CSDraw.Invoke();
 		for (Scope<Actor> actor : Actors) {
 			for (Component* component : actor.Get()->Components) {
 				component->Draw(actor);
@@ -82,6 +87,7 @@ int Core::Init()
 	});
 
 	UpdateEvent.Hook([&] {
+		s_Scripting.Get()->CSUpdate.Invoke();
 		for (Scope<Actor> actor : Actors) {
 			for (Component* component : actor.Get()->Components) {
 				component->Update(actor);
@@ -95,6 +101,7 @@ int Core::Init()
 		Input::LastMousePosition = Input::CurrentMousePosition;
 	}
 	ExitEvent.Invoke();
+	s_Scripting.Get()->CSExit.Invoke();
 	return 0;
 }
 

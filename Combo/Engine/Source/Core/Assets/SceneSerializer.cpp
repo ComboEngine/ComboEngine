@@ -23,6 +23,12 @@ void SceneSerializer::Load(std::string path)
 		}
 		ImGui::Image((void*)Core::s_Color.Get()->GetImage(), ImGui::GetWindowSize());
 		ImGui::End();
+
+		ImGui::Begin("Scripts");
+		for (std::string component : Core::s_Scripting.Get()->ScriptNames) {
+			ImGui::Text(component.c_str());
+		}
+		ImGui::End();
 	});
 
 	//game code

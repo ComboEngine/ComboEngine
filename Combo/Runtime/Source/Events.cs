@@ -11,8 +11,25 @@ namespace Combo
     {
         public static void AddBeginPlayEvent(Action action)
         {
-            Bindings.ReadyCallback callback = new Bindings.ReadyCallback(action);
+            Bindings.BeginPlayCallback callback = new Bindings.BeginPlayCallback(action);
             Bindings.Interop_AddBeginPlayCallback(Marshal.GetFunctionPointerForDelegate(callback));
+        }
+
+        public static void AddUpdateEvent(Action action)
+        {
+            Bindings.UpdateCallback callback = new Bindings.UpdateCallback(action);
+            Bindings.Interop_AddUpdateCallback(Marshal.GetFunctionPointerForDelegate(callback));
+        }
+
+        public static void AddDrawEvent(Action action)
+        {
+            Bindings.DrawCallback callback = new Bindings.DrawCallback(action);
+            Bindings.Interop_AddDrawCallback(Marshal.GetFunctionPointerForDelegate(callback));
+        }
+        public static void AddExitEvent(Action action)
+        {
+            Bindings.ExitCallback callback = new Bindings.ExitCallback(action);
+            Bindings.Interop_AddExitCallback(Marshal.GetFunctionPointerForDelegate(callback));
         }
     }
 }

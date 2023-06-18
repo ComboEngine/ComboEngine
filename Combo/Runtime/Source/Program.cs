@@ -9,6 +9,11 @@ class Program
         Events.AddBeginPlayEvent(() => {
             Logger.Info("LOD Test");
         });
+
+        Events.AddUpdateEvent(() =>
+        {
+            Interop.ExposeComponents();
+        });
         Environment.Exit(Core.Init());
     }
 }

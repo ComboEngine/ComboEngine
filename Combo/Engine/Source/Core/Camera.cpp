@@ -17,7 +17,7 @@ glm::mat4 Camera::CalculateViewMatrix()
 void Camera::Drone()
 {
 	//Core::s_Window.Get()->LockCursor(true);
-	/*float moveX = sin(glm::radians(Camera::Orientation.x)) * 0.05f;
+	float moveX = sin(glm::radians(Camera::Orientation.x)) * 0.05f;
 	float moveZ = cos(glm::radians(Camera::Orientation.y)) * 0.05f;
 	float moveY = sin(glm::radians(Camera::Orientation.z)) * 0.05f;
 
@@ -32,35 +32,6 @@ void Camera::Drone()
 	}
 	if (Input::IsKeyDown(COMBO_KEY_D)) {
 		Camera::Position += glm::vec3(moveZ, 0, -moveX);
-	}
-
-	glm::vec2 delta = Input::GetMouseDelta();
-	Camera::Orientation += glm::vec3(-(delta.y * 0.05f), (delta.x * 0.05f), 0);*/
-
-
-	float speed = 0.01f;
-	if (Input::IsKeyDown(COMBO_KEY_W)) {
-		Camera::Position += glm::vec3(0, 0, -speed);
-	}
-
-	if (Input::IsKeyDown(COMBO_KEY_S)) {
-		Camera::Position += glm::vec3(0, 0, speed);
-	}
-
-	if (Input::IsKeyDown(COMBO_KEY_A)) {
-		Camera::Position += glm::vec3(-speed, 0, 0);
-	}
-
-	if (Input::IsKeyDown(COMBO_KEY_D)) {
-		Camera::Position += glm::vec3(speed, 0,0);
-	}
-
-	if (Input::IsKeyDown(COMBO_KEY_SPACE)) {
-		Camera::Position += glm::vec3(0, speed, 0);
-	}
-
-	if (Input::IsKeyDown(COMBO_KEY_LEFT_SHIFT)) {
-		Camera::Position += glm::vec3(0, -speed, 0);
 	}
 
 	glm::vec2 delta = Input::GetMouseDelta();
