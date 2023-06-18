@@ -1,6 +1,8 @@
 Binary
 .vs
 *.vcxproj
+*.csproj
 *.user
 *.sln
 Cache
+obj
