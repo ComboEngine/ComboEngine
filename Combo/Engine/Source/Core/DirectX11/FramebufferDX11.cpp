@@ -39,6 +39,21 @@ void FramebufferDX11::Init()
     shaderResourceViewDesc.Texture2D.MipLevels = 1;
 
     CB_CHECKHR(context->Device->CreateShaderResourceView(this->RenderTargetTexture, &shaderResourceViewDesc, &this->ShaderResourceView));
+
+    D3D11_TEXTURE2D_DESC DepthStencilDesc;
+    DepthStencilDesc.Width = Core::s_Window.Get()->GetWidth();
+    DepthStencilDesc.Height = Core::s_Window.Get()->GetHeight();
+    DepthStencilDesc.MipLevels = 1;
+    DepthStencilDesc.ArraySize = 1;
+    DepthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+    DepthStencilDesc.SampleDesc.Count = 1;
+    DepthStencilDesc.SampleDesc.Quality = 0;
+    DepthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
+    DepthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+    DepthStencilDesc.CPUAccessFlags = 0;
+    DepthStencilDesc.MiscFlags = 0;
+    CB_CHECKHR(context->Device->CreateTexture2D(&DepthStencilDesc, NULL, &DepthStencilBuffer));
+    CB_CHECKHR(context->Device->CreateDepthStencilView(DepthStencilBuffer, NULL, &DepthStencilView));
 }
 void* FramebufferDX11::GetImage()
 {

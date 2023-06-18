@@ -92,9 +92,9 @@ void ContextDX11::BeginDraw(Scope<Framebuffer> framebuffer)
 		//Context->ClearDepthStencilView(DepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	}
 	else {
-		Context->OMSetRenderTargets(1, &framebufferDX11->RenderTargetView, DepthStencilView);
+		Context->OMSetRenderTargets(1, &framebufferDX11->RenderTargetView, framebufferDX11->DepthStencilView);
 		Context->ClearRenderTargetView(framebufferDX11->RenderTargetView, this->ClearColor);
-		Context->ClearDepthStencilView(DepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+		Context->ClearDepthStencilView(framebufferDX11->DepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	}
 }
 void ContextDX11::EndDraw()
