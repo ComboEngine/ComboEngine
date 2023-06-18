@@ -13,8 +13,17 @@ namespace Combo.BuildTools {
         public List<string> compilerDefinitions = new List<string>();
         private BuildType buildType = BuildType.Executable;
         public bool PCH = true;
+        private Language language = Language.Cpp;
 
         public string Localization;
+
+        public Language GetLanguage() {
+            return language;
+        }
+
+        public void SetLanguage(Language Lang) {
+            this.language = Lang;
+        }
 
         public string GetName() {
             return this.name;
