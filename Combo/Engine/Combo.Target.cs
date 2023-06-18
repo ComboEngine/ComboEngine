@@ -14,7 +14,7 @@ public class ComboEngine : BuildTarget {
         this.SetName("Combo.Engine");
         this.AddSourceFolder("Source");
         this.AddIncludeDirectory("Source");
-        this.SetBuildType(BuildType.Executable);
+        this.SetBuildType(BuildType.Library);
         this.AddModule("Combo.Lua");
 
 
