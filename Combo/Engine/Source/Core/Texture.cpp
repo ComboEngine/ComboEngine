@@ -11,11 +11,6 @@ void Texture::Create(Scope<Texture>& Obj, void* mipData, int Width, int Height)
 #ifdef COMBO_DIRECTX11
 	Obj.Set(new TextureDX11());
 #endif
-
-
-	Obj.Get()->MipData = mipData;
-	Obj.Get()->Width = Width;
-	Obj.Get()->Height = Height;
 	//Call
 	Obj.Get()->Init(mipData,Width,Height);
 

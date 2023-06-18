@@ -62,7 +62,4 @@ void Submesh::Init(std::vector<Vertex> Vertices, std::vector<uint32_t> Indices)
 {
 	VertexBuffer::Create(this->VertexBuffer, Vertices);
 	IndexBuffer::Create(this->IndexBuffer, Indices);
-
-	this->Vertices = Vertices;
-	this->Indices = Indices;
 }

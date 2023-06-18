@@ -10,7 +10,7 @@
 
 void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	Input::Keys[key] = action == GLFW_PRESS;
+	Input::Keys[key] = action == GLFW_PRESS || action == GLFW_REPEAT;
 }
 
 void WindowDX11::Init()

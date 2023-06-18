@@ -29,13 +29,15 @@ void SceneSerializer::Load(std::string path)
 	Scope<Actor> actor;
 	Actor::Create(actor);
 
+	actor.Get()->Scale = glm::vec3(0.001f, 0.001f, 0.001f);
+
 	Scope<Renderer> renderer;
 	Scope<Renderer>::Create(renderer);
 
 	actor.Get()->AddComponent(renderer.Cast<Component>());
 
 	Scope<Mesh> mesh;
-	MeshSerializer::Read(mesh, "Cube.cbmesh");
+	MeshSerializer::Read(mesh, "Sponza.cbmesh");
 
 	renderer.Get()->mesh = mesh;
 

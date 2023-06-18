@@ -5,6 +5,8 @@
 #include <stb_image.h>
 #include <nlohmann.h>
 
+//Keep this as example
+/*
 void TextureSerializer::Save(Scope<Texture> texture, std::string path)
 {
 	std::ofstream file;
@@ -26,6 +28,7 @@ void TextureSerializer::Save(Scope<Texture> texture, std::string path)
 
 	file.close();
 }
+*/
 
 void TextureSerializer::Read(Scope<Texture>& texture, std::string path)
 {
@@ -53,7 +56,7 @@ void TextureSerializer::Read(Scope<Texture>& texture, std::string path)
 	Texture::Create(texture, mipData, j["Width"], j["Height"]);
 }
 
-void TextureSerializer::Import(Scope<Texture>& texture, std::string path)
+void TextureSerializer::Import(Scope<Texture>& texture, std::string path,std::string assetPath)
 {
 	int ImageWidth;
 	int ImageHeight;
@@ -63,6 +66,25 @@ void TextureSerializer::Import(Scope<Texture>& texture, std::string path)
 		&ImageWidth,
 		&ImageHeight,
 		&ImageChannels, 4);
+
+	std::ofstream file;
+	file.open(assetPath, std::ios::binary | std::ios::out);
+
+	uint32_t size = ImageWidth * ImageHeight * 4;
+	file.write((const char*)&size, sizeof(uint32_t));
+
+	nlohmann::json j;
+	j["Width"] = ImageWidth;
+	j["Height"] = ImageHeight;
+
+	std::string json = j.dump();
+	uint32_t jsonSize = json.size();
+	file.write((const char*)&jsonSize, sizeof(uint32_t));
+
+	file.write(json.data(), jsonSize);
+	file.write((const char*)ImageData, size);
+
+	file.close();
 
 	Texture::Create(texture, ImageData, ImageWidth, ImageHeight);
 }

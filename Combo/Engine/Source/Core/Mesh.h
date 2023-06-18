@@ -16,8 +16,6 @@ class Submesh {
 public:
 	Scope<VertexBuffer> VertexBuffer;
 	Scope<IndexBuffer> IndexBuffer;
-	std::vector<Vertex> Vertices;
-	std::vector<uint32_t> Indices;
 	std::string Name;
 	int Count;
 	void Init(std::vector<Vertex> Vertices, std::vector<uint32_t> Indices);

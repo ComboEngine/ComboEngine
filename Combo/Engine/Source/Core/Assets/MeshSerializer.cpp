@@ -8,7 +8,8 @@
 #include <postprocessAi.h>
 #pragma comment(lib,"assimp-vc143-mtd.lib")
 
-void MeshSerializer::Save(Scope<Mesh> mesh, std::string path)
+//Keep this as example
+/*void MeshSerializer::Save(Scope<Mesh> mesh, std::string path)
 {
 	std::ofstream file;
 	file.open(path, std::ios::binary | std::ios::out);
@@ -35,6 +36,7 @@ void MeshSerializer::Save(Scope<Mesh> mesh, std::string path)
 
 	file.close();
 }
+*/
 
 void MeshSerializer::Read(Scope<Mesh>& mesh, std::string path)
 {
@@ -79,13 +81,18 @@ void MeshSerializer::Read(Scope<Mesh>& mesh, std::string path)
 	Mesh::Create(mesh, submeshesList);
 }
 
-void MeshSerializer::Import(Scope<Mesh>& mesh, std::string path)
+void MeshSerializer::Import(Scope<Mesh>& mesh, std::string path,std::string assetPath)
 {
 	Assimp::Importer importer;
 	const aiScene* scene = importer.ReadFile(path.c_str(), aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_JoinIdenticalVertices);
 
-
 	std::vector<Submesh> submeshesList;
+
+	std::ofstream file;
+	file.open(assetPath, std::ios::binary | std::ios::out);
+
+	uint32_t size = scene->mNumMeshes;
+	file.write((const char*)&size, sizeof(uint32_t));
 
 	for (int index = 0; index < scene->mNumMeshes; index++) {
 		std::vector<Vertex> vertices;
@@ -126,12 +133,31 @@ void MeshSerializer::Import(Scope<Mesh>& mesh, std::string path)
 			indices.push_back(mesh->mFaces[i].mIndices[1]);
 			indices.push_back(mesh->mFaces[i].mIndices[0]);
 		}
+
 		Submesh submesh;
 		submesh.Init(vertices, indices);
 		submesh.Name = mesh->mName.C_Str();
+
+		nlohmann::json details;
+		details["Name"] = submesh.Name;
+		details["VerticesSize"] = vertices.size();
+		details["IndicesSize"] = indices.size();
+		std::string jsonString = details.dump();
+		uint32_t jsonSize = jsonString.size();
+		file.write((const char*)&jsonSize, sizeof(uint32_t));
+		file.write(jsonString.data(), jsonSize);
+		for (Vertex vertex : vertices) {
+			file.write((const char*)&vertex, sizeof(Vertex));
+		}
+		for (uint32_t index : indices) {
+			file.write((const char*)&index, sizeof(uint32_t));
+		}
+
 		submeshesList.push_back(submesh);
 	}
 
+
+	file.close();
 
 	Mesh::Create(mesh, submeshesList);
 
