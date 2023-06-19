@@ -33,12 +33,10 @@ void Mesh::Render(Scope<Material> Mat,glm::vec3 Position, glm::quat Orientation,
 		pipeline.Shader = Mat.Get()->Shader;
 		pipeline.VertexBuffer = submesh.VertexBuffer;
 		pipeline.IndexBuffer = submesh.IndexBuffer;
+		pipeline.Textures = {};
 
 		if (Mat.Get()->Diffuse.UseTexture) {
-			pipeline.Texture = Mat.Get()->Diffuse.ColorTexture;
-		}
-		else {
-			pipeline.Texture.Set(nullptr);
+			pipeline.Textures.push_back(Mat.Get()->Diffuse.ColorTexture);
 		}
 
 		glm::mat4 wvp = glm::mat4(1.0f);
@@ -49,6 +47,7 @@ void Mesh::Render(Scope<Material> Mat,glm::vec3 Position, glm::quat Orientation,
 		wvp = glm::scale(wvp, Scale);
 
 		MeshShaderData data;
+		data.Stage = Core::CurrentRenderStage;
 		data.WVP = XMMatrixTranspose(ConvertToXMMATRIX(wvp));
 		data.DiffuseUseTexture = false;
 		data.Diffuse = XMFLOAT4(Mat.Get()->Diffuse.Color.x, Mat.Get()->Diffuse.Color.y, Mat.Get()->Diffuse.Color.z, Mat.Get()->Diffuse.Color.w);

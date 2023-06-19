@@ -13,5 +13,5 @@ struct Pipeline {
 	Scope<VertexBuffer> VertexBuffer;
 	Scope<IndexBuffer> IndexBuffer;
 	Scope<ShaderDataBuffer> ShaderDataBuffer;
-	Scope<Texture> Texture;
+	std::vector<Scope<Texture>> Textures;
 };

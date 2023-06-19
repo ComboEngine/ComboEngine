@@ -41,6 +41,7 @@ namespace Combo
         public static extern void Interop_ExposeComponents(string[] components,int arraySize);
 
         [DllImport(DllPath, CallingConvention = CallingConvention.Cdecl)]
+        [return: MarshalAs(UnmanagedType.SafeArray)]
         public static extern string[] Interop_GetUpdateComponentsList();
 
     }

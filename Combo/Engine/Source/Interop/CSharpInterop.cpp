@@ -1,5 +1,4 @@
-#include "pch.h"
-/*#ifdef COMBO_INTEROP
+#include <atlsafe.h>
 #include "pch.h"
 #define COMBO_API_INTEROP _declspec(dllexport)
 
@@ -57,7 +56,7 @@ extern "C" {
 		for (std::string component : Core::s_Scripting.Get()->UpdateScripts) {
 			components.push_back((char*)component.c_str());
 		}
+
 		return &components[0];
 	}
 }
-#endif*/

@@ -1,5 +1,6 @@
 cbuffer ConstantBuffer
 {
+    int Stage;
     float4x4 WVP;
     float4 Diffuse;
     int DiffuseUseTexture;
@@ -24,7 +25,6 @@ PSInput VSMain(VSInput input)
     PSInput output;
     
     output.Position = mul(input.Position,WVP);
-    //output.Position = input.Position;
     output.TexCoord = input.TexCoord;
     output.Normal = input.Normal;
     

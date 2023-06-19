@@ -17,7 +17,8 @@ Scope<Platform> Core::s_Platform;
 RendererAPI Core::RendererType = Null;
 Scope<Context> Core::s_Context;
 Scope<Scripting> Core::s_Scripting;
-Scope<Framebuffer> Core::s_Color;
+std::vector<Scope<Framebuffer>> Core::Framebuffers;
+RenderStage Core::CurrentRenderStage;
 
 Event Core::UpdateEvent;
 Event Core::DrawEvent;
@@ -61,7 +62,12 @@ int Core::Init()
 	EmptyFramebuffer.Set(nullptr);
 
 	UpdateEvent.Hook([&] {
-		s_Context.Get()->BeginDraw(s_Color);
+		CurrentRenderStage = RenderStage::DEPTH;
+		s_Context.Get()->BeginDraw(Framebuffers[CurrentRenderStage]);
+		DrawEvent.Invoke();
+
+		CurrentRenderStage = RenderStage::COLOR;
+		s_Context.Get()->BeginDraw(Framebuffers[CurrentRenderStage]);
 		DrawEvent.Invoke();
 
 		s_Context.Get()->BeginDraw(EmptyFramebuffer);
@@ -74,7 +80,9 @@ int Core::Init()
 
 	GlobalShaders::Init();
 
-	Framebuffer::Create(s_Color, s_Window.Get()->GetWidth(), s_Window.Get()->GetHeight(), FramebufferTarget::Color);
+	Framebuffers.resize(2);
+	Framebuffer::Create(Framebuffers[RenderStage::COLOR], s_Window.Get()->GetWidth(), s_Window.Get()->GetHeight(), FramebufferTarget::Color);
+	Framebuffer::Create(Framebuffers[RenderStage::DEPTH], s_Window.Get()->GetWidth(), s_Window.Get()->GetHeight(), FramebufferTarget::Depth);
 
 	Camera::ProjectionWidth = s_Window.Get()->GetWidth();
 	Camera::ProjectionHeight = s_Window.Get()->GetHeight();

@@ -107,8 +107,7 @@ void ContextDX11::Draw(Pipeline pipeline)
 	VertexBufferDX11* vertexBuffer = pipeline.VertexBuffer.Cast<VertexBufferDX11>();
 	IndexBufferDX11* indexBuffer = pipeline.IndexBuffer.Cast<IndexBufferDX11>();
 	ShaderDataBufferDX11* shaderDataBuffer = pipeline.ShaderDataBuffer.Cast<ShaderDataBufferDX11>();
-	TextureDX11* texture = pipeline.Texture.Cast<TextureDX11>();
-
+	
 	UINT Stride = sizeof(Vertex);
 	UINT Offset = 0;
 
@@ -122,9 +121,12 @@ void ContextDX11::Draw(Pipeline pipeline)
 		Context->IASetIndexBuffer(indexBuffer->Buffer, DXGI_FORMAT_R32_UINT, 0);
 	}
 	Context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	if (pipeline.Texture.Get()) {
-		Context->PSSetShaderResources(0, 1, &texture->ShaderResourceView);
-		Context->PSSetSamplers(0, 1, &texture->Sampler);
+	if (pipeline.Textures.size() != 0) {
+		for (int i = 0; i < pipeline.Textures.size();i++) {
+			Scope<Texture> texture = pipeline.Textures[i];
+			Context->PSSetShaderResources(i, 1, &texture.Cast<TextureDX11>()->ShaderResourceView);
+			Context->PSSetSamplers(i, 1, &texture.Cast<TextureDX11>()->Sampler);
+		}
 	}
 	if (pipeline.Indexed) {
 		Context->DrawIndexed(pipeline.Count, 0, 0);

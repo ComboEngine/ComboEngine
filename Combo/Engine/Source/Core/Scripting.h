@@ -2,11 +2,6 @@
 #include "pch.h"
 #include "Scope.h"
 #include "Event.h"
-/*
-#pragma once
-#include "pch.h"
-#include "Scope.h"
-#include "Event.h"
 
 class Scripting {
 public:
@@ -16,10 +11,5 @@ public:
 	Event CSExit;
 	std::vector<std::string> UpdateScripts;
 	std::vector<std::string> ScriptNames;
-	static void Create(Scope<Scripting>& Obj);
-};*/
-
-class Scripting {
-public:
 	static void Create(Scope<Scripting>& Obj);
 };

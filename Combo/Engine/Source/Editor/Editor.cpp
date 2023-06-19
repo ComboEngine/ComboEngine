@@ -105,13 +105,28 @@ void Editor::Init()
 		window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
 		window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
 
+
 		ImGui::Begin("Dockspace", nullptr, window_flags);
+		if (ImGui::BeginMainMenuBar())
+		{
+			if (ImGui::BeginMenu("File"))
+			{
+				if (ImGui::MenuItem("Import"))
+				{
+					
+				}
+				ImGui::EndMenu();
+			}
+
+			ImGui::EndMainMenuBar();
+		}
+		ImGui::SetCursorPosY(40);
 		ImGui::DockSpace(ImGui::GetID("MyDockspace"));
 
 		ImGui::Begin("Viewport");
 		Camera::ProjectionWidth = ImGui::GetContentRegionAvail().x;
 		Camera::ProjectionHeight = ImGui::GetContentRegionAvail().y;
-		if (ImGui::ImageButton((void*)Core::s_Color.Get()->GetImage(), ImGui::GetContentRegionAvail())) {
+		if (ImGui::ImageButton((void*)Core::Framebuffers[RenderStage::COLOR].Get()->GetImage(), ImGui::GetContentRegionAvail())) {
 			MouseHooked = true;
 		}
 		ImGui::End();

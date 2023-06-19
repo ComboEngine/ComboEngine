@@ -5,8 +5,10 @@
 #include "Shader.h"
 #include "Texture.h"
 #include "Material.h"
+#include "RenderStages.h"
 
 struct MeshShaderData {
+	int Stage;
 	XMMATRIX WVP;
 	XMFLOAT4 Diffuse;
 	int DiffuseUseTexture;

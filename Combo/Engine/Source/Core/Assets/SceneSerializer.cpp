@@ -21,7 +21,7 @@ void SceneSerializer::Load(std::string path)
 		if (mouseSwitch) {
 			Camera::Drone();
 		}
-		ImGui::Image((void*)Core::s_Color.Get()->GetImage(), ImGui::GetWindowSize());
+		ImGui::Image((void*)Core::Framebuffers[RenderStage::COLOR].Get()->GetImage(), ImGui::GetWindowSize());
 		ImGui::End();
 	});
 
