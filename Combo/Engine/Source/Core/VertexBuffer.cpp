@@ -18,5 +18,5 @@ void VertexBuffer::Create(Scope<VertexBuffer>& vertexBuffer, std::vector<Vertex>
 	//Call API Window
 	vertexBuffer.Get()->Init(Vertices);
 
-	LOG(std::string("Created Vertex Buffer (" + std::to_string(Vertices.size()) + " size)"))
+	//LOG(std::string("Created Vertex Buffer (" + std::to_string(Vertices.size()) + " size)"))
 }

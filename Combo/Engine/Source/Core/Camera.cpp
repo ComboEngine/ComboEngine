@@ -5,6 +5,8 @@
 
 glm::vec3 Camera::Position = glm::vec3(0, 0, 3);
 glm::vec3 Camera::Orientation = glm::vec3(0, 0, 0);
+int Camera::ProjectionWidth;
+int Camera::ProjectionHeight;
 glm::mat4 Camera::CalculateViewMatrix()
 {
 	auto rotation = glm::quat(glm::vec3(glm::radians(Orientation.x), glm::radians(Orientation.y), glm::radians(Orientation.z)));
@@ -40,5 +42,5 @@ void Camera::Drone()
 
 glm::mat4 Camera::CalculateProjectionMatrix()
 {
-	return glm::perspective(0.4f * 3.14f, (float)Core::s_Window.Get()->GetWidth() / Core::s_Window.Get()->GetHeight(), 0.001f, 1000.0f);
+	return glm::perspective(0.4f * 3.14f, (float)ProjectionWidth / (float)ProjectionHeight, 0.001f, 1000.0f);
 }

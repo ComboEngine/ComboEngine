@@ -24,21 +24,24 @@ namespace Combo
         public extern static int Core_Init();
 
         [DllImport(DllPath, CallingConvention = CallingConvention.Cdecl)]
-        public extern static int Platform_CSPreInit();
+        public extern static void Platform_CSPreInit();
 
         [DllImport(DllPath, CallingConvention = CallingConvention.Cdecl)]
-        public extern static int Interop_AddBeginPlayCallback(IntPtr callback);
+        public extern static void Interop_AddBeginPlayCallback(IntPtr callback);
         [DllImport(DllPath, CallingConvention = CallingConvention.Cdecl)]
-        public extern static int Interop_AddUpdateCallback(IntPtr callback);
+        public extern static void Interop_AddUpdateCallback(IntPtr callback);
         [DllImport(DllPath, CallingConvention = CallingConvention.Cdecl)]
-        public extern static int Interop_AddDrawCallback(IntPtr callback);
+        public extern static void Interop_AddDrawCallback(IntPtr callback);
         [DllImport(DllPath, CallingConvention = CallingConvention.Cdecl)]
-        public extern static int Interop_AddExitCallback(IntPtr callback);
+        public extern static void Interop_AddExitCallback(IntPtr callback);
         [DllImport(DllPath, CallingConvention = CallingConvention.Cdecl)]
         public extern static void Log_Info(string message);
 
         [DllImport(DllPath, CallingConvention = CallingConvention.Cdecl)]
         public static extern void Interop_ExposeComponents(string[] components,int arraySize);
+
+        [DllImport(DllPath, CallingConvention = CallingConvention.Cdecl)]
+        public static extern string[] Interop_GetUpdateComponentsList();
 
     }
 }

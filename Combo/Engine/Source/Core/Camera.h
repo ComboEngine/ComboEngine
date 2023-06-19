@@ -3,6 +3,8 @@
 
 class Camera {
 public:
+	static int ProjectionWidth;
+	static int ProjectionHeight;
 	static glm::vec3 Position;
 	static glm::vec3 Orientation;
 	static void Drone();

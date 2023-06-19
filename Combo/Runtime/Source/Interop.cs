@@ -22,5 +22,6 @@ namespace Combo
 
             Bindings.Interop_ExposeComponents(components.ToArray(),components.Count);
         }
+
     }
 }

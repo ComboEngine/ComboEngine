@@ -5,6 +5,11 @@
 #include "ImGui.h"
 #include "Input.h"
 #include "Assets/SceneSerializer.h"
+#include "Camera.h"
+#include "Render2D.h"
+#ifdef COMBO_EDITOR
+#include <Editor/Editor.h>
+#endif
 
 
 Scope<Window> Core::s_Window;
@@ -50,10 +55,6 @@ int Core::Init()
 
 	Scripting::Create(s_Scripting);
 
-	BeginPlayEvent.Hook([&] {
-		s_Scripting.Get()->CSBeginPlay.Invoke();
-	});
-
 	ImGuiAdapter::Init();
 
 	Scope<Framebuffer> EmptyFramebuffer;
@@ -66,6 +67,7 @@ int Core::Init()
 		s_Context.Get()->BeginDraw(EmptyFramebuffer);
 		ImGuiAdapter::StartFrame();
 		ImGuiDrawEvent.Invoke();
+		Render2D::RenderImGui();
 		ImGuiAdapter::EndFrame();
 		s_Context.Get()->EndDraw();
 	});
@@ -74,11 +76,17 @@ int Core::Init()
 
 	Framebuffer::Create(s_Color, s_Window.Get()->GetWidth(), s_Window.Get()->GetHeight(), FramebufferTarget::Color);
 
+	Camera::ProjectionWidth = s_Window.Get()->GetWidth();
+	Camera::ProjectionHeight = s_Window.Get()->GetHeight();
+
+#ifdef COMBO_EDITOR
+	Editor::Init();
+#else
 	SceneSerializer::Load("test.cbscene");
+#endif
 
 	DrawEvent.Hook([&] {
 		s_Context.Get()->SetClearColor(glm::vec3(0, 0, 0));
-		s_Scripting.Get()->CSDraw.Invoke();
 		for (Scope<Actor> actor : Actors) {
 			for (Component* component : actor.Get()->Components) {
 				component->Draw(actor);
@@ -87,7 +95,6 @@ int Core::Init()
 	});
 
 	UpdateEvent.Hook([&] {
-		s_Scripting.Get()->CSUpdate.Invoke();
 		for (Scope<Actor> actor : Actors) {
 			for (Component* component : actor.Get()->Components) {
 				component->Update(actor);
@@ -101,7 +108,6 @@ int Core::Init()
 		Input::LastMousePosition = Input::CurrentMousePosition;
 	}
 	ExitEvent.Invoke();
-	s_Scripting.Get()->CSExit.Invoke();
 	return 0;
 }
 

@@ -10,9 +10,10 @@ namespace Game
 {
     public class Counter : Component
     {
+        public int Test = 0;
         public override void Update()
         {
-            Logger.Info("Test");
+            Logger.Info("Test " + Test.ToString());
         }
     }
 }

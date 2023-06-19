@@ -17,6 +17,10 @@
 #include <gtx/quaternion.hpp>
 
 
+
+//Enable editor
+#define COMBO_EDITOR
+
 /* The unknown key */
 #define COMBO_KEY_UNKNOWN            -1
 
@@ -173,6 +177,7 @@ extern "C" {
 #include <glfw3native.h>
 #pragma comment(lib,"glfw3.lib")
 #include <imgui.h>
+#include <imgui_internal.h>
 #include <imgui_impl_dx11.h>
 #include <imgui_impl_win32.h>
 #include <imgui_impl_glfw.h>

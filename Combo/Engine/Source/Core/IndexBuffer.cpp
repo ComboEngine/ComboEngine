@@ -18,5 +18,5 @@ void IndexBuffer::Create(Scope<IndexBuffer>& indexBuffer, std::vector<uint32_t> 
 	//Call API Window
 	indexBuffer.Get()->Init(Indices);
 
-	LOG(std::string("Created Index Buffer (" + std::to_string(Indices.size()) + " size)"))
+	//LOG(std::string("Created Index Buffer (" + std::to_string(Indices.size()) + " size)"))
 }

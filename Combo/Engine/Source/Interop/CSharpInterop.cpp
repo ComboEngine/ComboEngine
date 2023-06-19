@@ -1,4 +1,6 @@
 #include "pch.h"
+/*#ifdef COMBO_INTEROP
+#include "pch.h"
 #define COMBO_API_INTEROP _declspec(dllexport)
 
 #include <Core/Core.h>
@@ -22,22 +24,22 @@ extern "C" {
 	COMBO_API_INTEROP void Interop_AddBeginPlayCallback(BeginPlayCallback callback) {
 		Core::BeginPlayEvent.Hook([=] {
 			callback();
-		});
+			});
 	}
 	COMBO_API_INTEROP void Interop_AddUpdateCallback(UpdateCallback callback) {
-		Core::UpdateEvent.Hook([=] {
+		Core::s_Scripting.Get()->CSUpdate.Hook([=] {
 			callback();
-		});
+			});
 	}
 	COMBO_API_INTEROP void Interop_AddDrawCallback(DrawCallback callback) {
-		Core::DrawEvent.Hook([=] {
+		Core::s_Scripting.Get()->CSDraw.Hook([=] {
 			callback();
-		});
+			});
 	}
 	COMBO_API_INTEROP void Interop_AddExitCallback(ExitCallback callback) {
-		Core::ExitEvent.Hook([=] {
+		Core::s_Scripting.Get()->CSExit.Hook([=] {
 			callback();
-		});
+			});
 	}
 
 	COMBO_API_INTEROP void Log_Info(const char* message) {
@@ -45,9 +47,17 @@ extern "C" {
 	}
 	COMBO_API_INTEROP void Interop_ExposeComponents(const char* components[], int arraySize) {
 		std::vector<std::string> Names;
-		for (int i = 0; i < arraySize;i++) {
+		for (int i = 0; i < arraySize; i++) {
 			Names.push_back(components[i]);
 		}
 		Core::s_Scripting.Get()->ScriptNames = Names;
 	}
+	COMBO_API_INTEROP char** Interop_GetUpdateComponentsList() {
+		std::vector<char*> components;
+		for (std::string component : Core::s_Scripting.Get()->UpdateScripts) {
+			components.push_back((char*)component.c_str());
+		}
+		return &components[0];
+	}
 }
+#endif*/
