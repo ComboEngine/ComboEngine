@@ -6,6 +6,7 @@
 #include <Core/Core.h>
 #include "ContextDX11.h"
 #include "../Input.h"
+#include <Editor/Editor.h>
 
 
 void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -20,6 +21,16 @@ void WindowDX11::Init()
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 	glfwWindow = glfwCreateWindow(Specification.Width, Specification.Height, Specification.Title.c_str(), NULL, NULL);
 	glfwSetKeyCallback(glfwWindow, KeyCallback);
+	glfwSetDropCallback(glfwWindow, [](GLFWwindow* window, int count, const char** paths) {
+#ifdef COMBO_EDITOR
+		std::vector<std::string> pathArray;
+		for (int i = 0; i < count; i++) {
+			pathArray.push_back(paths[i]);
+		}
+		Editor::OnDrop(pathArray);
+#endif
+	});
+
 	Core::ExitEvent.Hook([&] {
 		glfwDestroyWindow(glfwWindow);
 		glfwTerminate();

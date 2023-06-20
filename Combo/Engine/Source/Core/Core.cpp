@@ -1,10 +1,8 @@
 #include "pch.h"
 #include "Core.h"
-#include "Assets/MeshSerializer.h"
 #include "GlobalShaders.h"
 #include "ImGui.h"
 #include "Input.h"
-#include "Assets/SceneSerializer.h"
 #include "Camera.h"
 #include "Render2D.h"
 #ifdef COMBO_EDITOR
@@ -19,6 +17,7 @@ Scope<Context> Core::s_Context;
 Scope<Scripting> Core::s_Scripting;
 std::vector<Scope<Framebuffer>> Core::Framebuffers;
 RenderStage Core::CurrentRenderStage;
+Project Core::s_Project;
 
 Event Core::UpdateEvent;
 Event Core::DrawEvent;

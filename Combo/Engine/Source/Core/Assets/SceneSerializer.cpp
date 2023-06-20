@@ -1,53 +1,34 @@
 #include "pch.h"
+#include "../Core.h"
 #include "SceneSerializer.h"
+#include <nlohmann.h>
+#include <fstream>
 
-#include <Core/Core.h>
-#include <Core/Mesh.h>
-#include <Core/Renderer.h>
-#include <Core/Assets/TextureSerializer.h>
-#include <Core/Assets/MeshSerializer.h>
-#include <Core/Camera.h>
-#include <Core/Input.h>
 
-void SceneSerializer::Load(std::string path)
+void SceneSerializer::LoadProject(std::string name)
 {
-	bool mouseSwitch;
-	Core::ImGuiDrawEvent.Hook([&] {
-		ImGui::Begin("xd");
-		if (Input::IsKeyDown(COMBO_KEY_ESCAPE)) {
-			mouseSwitch = !mouseSwitch;
-		}
-		Core::s_Window.Get()->LockCursor(mouseSwitch);
-		if (mouseSwitch) {
-			Camera::Drone();
-		}
-		ImGui::Image((void*)Core::Framebuffers[RenderStage::COLOR].Get()->GetImage(), ImGui::GetWindowSize());
-		ImGui::End();
-	});
+}
 
-	//game code
-	Scope<Actor> actor;
-	Actor::Create(actor);
+void SceneSerializer::CreateProject(std::string name)
+{
+	nlohmann::json j;
+	j["Name"] = name;
 
-	actor.Get()->Scale = glm::vec3(0.001f, 0.001f, 0.001f);
+	std::vector<nlohmann::json> assets;
 
-	Scope<Renderer> renderer;
-	Scope<Renderer>::Create(renderer);
+	for (const auto& a : Core::s_Project.Assets) {
+		nlohmann::json asset;
+		asset["UUID"] = a.first;
+		asset["Type"] = a.second->GetType();
+		asset["OriginalPath"] = a.second->path;
+		asset["Name"] = a.second->GetName();
 
-	actor.Get()->AddComponent(renderer.Cast<Component>());
+		assets.push_back(asset);
+	}
 
-	Scope<Mesh> mesh;
-	MeshSerializer::Read(mesh, "Sponza.cbmesh");
+	j["Assets"] = assets;
 
-	renderer.Get()->mesh = mesh;
-
-	Scope<Texture> test;
-	TextureSerializer::Read(test, "test.cbtexture");
-
-	Scope<Material> material;
-	Material::Create(material);
-	material.Get()->Diffuse = MaterialColor::FromColor(glm::vec4(1, 1, 1, 1));
-
-	renderer.Get()->material = material;
-	//end game code
+	std::ofstream file(name + ".cbproject");
+	file << j.dump(4);
+	file.close();
 }

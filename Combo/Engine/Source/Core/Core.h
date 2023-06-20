@@ -9,6 +9,7 @@
 #include "Event.h"
 #include "Framebuffer.h"
 #include "RenderStages.h"
+#include "Project.h"
 
 enum RendererAPI {
 	Null,
@@ -23,6 +24,7 @@ public:
 	static Scope<Context> s_Context;
 	static Scope<Scripting> s_Scripting;
 	static std::vector<Scope<Framebuffer>> Framebuffers;
+	static Project s_Project;
 
 	static Event BeginPlayEvent;
 	static Event UpdateEvent;

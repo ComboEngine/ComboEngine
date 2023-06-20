@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <filesystem>
 #include <any>
 
 #include <glm.hpp>
@@ -166,6 +167,11 @@ extern "C" {
 #include <lauxlib.h>
 }
 #pragma comment(lib,"lua54.lib")
+
+#include <Importer.hpp>
+#include <postprocessAi.h>
+#include <scene.h>
+#pragma comment(lib,"assimp-vc143-mtd.lib")
 
 #ifdef COMBO_DIRECTX11
 #define CB_CHECKHR(...) if(__VA_ARGS__ == 0) {} else { LOG("DX Operation Failed: " + std::system_category().message(__VA_ARGS__)) __debugbreak(); }

@@ -31,11 +31,8 @@ PSInput VSMain(VSInput input)
     return output;
 }
 
-Texture2D Texture;
-SamplerState Sampler;
-float4 PSMain(PSInput input) : SV_Target
+float4 CalculateMaterialData(PSInput input,Texture2D Texture,SamplerState Sampler, int check, float4 Diffuse)
 {
-    input.Normal = normalize(input.Normal);
     float4 MaterialDiffuse = float4(1, 1, 1, 1);
     if (DiffuseUseTexture)
     {
@@ -45,6 +42,15 @@ float4 PSMain(PSInput input) : SV_Target
     {
         MaterialDiffuse = Diffuse;
     }
+    return MaterialDiffuse;
+}
+
+Texture2D Texture;
+SamplerState Sampler;
+float4 PSMain(PSInput input) : SV_Target
+{
+    input.Normal = normalize(input.Normal);
+    float4 MaterialDiffuse = CalculateMaterialData(input, Texture, Sampler, DiffuseUseTexture, Diffuse);
     
     MaterialDiffuse = float4(input.TexCoord, 1, 1);
     

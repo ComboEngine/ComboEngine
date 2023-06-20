@@ -2,17 +2,21 @@
 #include "Editor.h"
 #include <Core/Core.h>
 #include <Core/Mesh.h>
-#include <Core/Assets/TextureSerializer.h>
-#include <Core/Assets/MeshSerializer.h>
 #include <Core/Renderer.h>
 #include <Core/Input.h>
 #include <Core/Render2D.h>
 #include <Core/Camera.h>
 #include <Core/Script.h>
+#include <Core/Assets/MeshAsset.h>
 #include <imgui_stdlib.h>
+#include <Core/Assets/SceneSerializer.h>
 #include "Color.h"
 
 bool Editor::MouseHooked;
+std::string Editor::ToImportPathBuffer;
+std::string Editor::AssetPathBuffer;
+bool Editor::ShowImport = false;
+bool Editor::ShowImportExisting = false;
 
 void DrawVec3Control(const std::string& label, glm::vec3& values, float resetValue = 0.0f, float columnWidth = 100.0f)
 {
@@ -94,7 +98,6 @@ void Editor::Init()
 			Camera::Drone();
 		}
 	});
-
 	Core::ImGuiDrawEvent.Hook([&] {
 		ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDocking;
 
@@ -111,9 +114,17 @@ void Editor::Init()
 		{
 			if (ImGui::BeginMenu("File"))
 			{
+				if (ImGui::MenuItem("Save Project"))
+				{
+					SceneSerializer::CreateProject("test");
+				}
 				if (ImGui::MenuItem("Import"))
 				{
-					
+					ShowImport = true;
+				}
+				if (ImGui::MenuItem("Import Existing"))
+				{
+					ShowImportExisting = true;
 				}
 				ImGui::EndMenu();
 			}
@@ -177,10 +188,63 @@ void Editor::Init()
 		ImGui::End();
 
 		ImGui::Begin("Content");
+		int index = 0;
+		for (const auto& asset : Core::s_Project.Assets) {
+			if (asset.second != nullptr) {
+				ImGui::Button((asset.second->GetName() + "##" + std::to_string(index)).c_str());
+
+				if (ImGui::BeginDragDropSource()) {
+					ImGui::SetDragDropPayload(asset.second->GetType().c_str(), asset.first.c_str(), sizeof(asset.first));
+					ImGui::Text(asset.first.c_str());
+					ImGui::EndDragDropSource();
+				}
+			}
+			index++;
+		}
+
 		ImGui::End();
 
 		ImGui::Begin("Graphics Settings");
 		ImGui::End();
+
+		if (ShowImport) {
+			ImGui::Begin("Import");
+
+			ImGui::Text("To Import Path");
+			ImGui::SameLine();
+			ImGui::InputText("##ToImportPath", &ToImportPathBuffer);
+			ImGui::Separator();
+
+			ImGui::Text("Asset Path");
+			ImGui::SameLine();
+			ImGui::InputText("##AssetPath", &AssetPathBuffer);
+			ImGui::Separator();
+
+			if (ImGui::Button("Import")) {
+				ImportAsset();
+				ShowImport = false;
+				ToImportPathBuffer = "";
+				AssetPathBuffer = "";
+			}
+			ImGui::End();
+		}
+
+		if (ShowImportExisting) {
+			ImGui::Begin("Import Existing");
+
+			ImGui::Text("Asset Path");
+			ImGui::SameLine();
+			ImGui::InputText("##AssetPath", &AssetPathBuffer);
+			ImGui::Separator();
+
+			if (ImGui::Button("Import")) {
+				ImportExistingAsset();
+				ShowImportExisting = false;
+				ToImportPathBuffer = "";
+				AssetPathBuffer = "";
+			}
+			ImGui::End();
+		}
 
 		ImGui::End();
 	});
@@ -202,13 +266,12 @@ void Editor::Init()
 	actor.Get()->AddComponent(script.Cast<Script>());
 	actor.Get()->AddComponent(renderer.Cast<Component>());
 
-	Scope<Mesh> mesh;
-	MeshSerializer::Read(mesh, "Content/Sponza.cbmesh");
+	Scope<Asset> asset;
+	Asset::Create(asset, "Sponza.cbmesh");
 
-	renderer.Get()->mesh = mesh;
 
-	Scope<Texture> test;
-	TextureSerializer::Read(test, "Content/test.cbtexture");
+	renderer.Get()->MeshUUIDBuffer = asset.Get()->uuid;
+	renderer.Get()->mesh = asset.Get();
 
 	Scope<Material> material;
 	Material::Create(material);
@@ -223,5 +286,49 @@ void Editor::RenderComponent(std::string name,Component* component) {
 		Script* script = reinterpret_cast<Script*>(component);
 		ImGui::Text("Script Name: Counter");
 	}
+	if (name == "Renderer") {
+		Renderer* renderer = reinterpret_cast<Renderer*>(component);
+		ImGui::Text("Mesh");
+		ImGui::SameLine();
+		ImGui::InputText("##MeshUUIDBuffer", &renderer->mesh->GetName(), ImGuiInputTextFlags_ReadOnly);
+
+		if (ImGui::BeginDragDropTarget()) {
+			const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Mesh");
+			if (payload != nullptr) {
+				renderer->mesh = Core::s_Project.Assets[(const char*)payload->Data];
+			}
+			ImGui::EndDragDropTarget();
+		}
+	}
 	ImGui::Separator();
+}
+
+void Editor::ImportAsset()
+{
+	std::string fileExtension = std::filesystem::u8path(ToImportPathBuffer).extension().string();
+	if (fileExtension == ".fbx" || fileExtension == ".obj") {
+		Asset::Import(Scope<Asset>(), ToImportPathBuffer, AssetPathBuffer, NULL);
+	}
+}
+
+void Editor::ImportExistingAsset()
+{
+	Asset::Create(Scope<Asset>(), AssetPathBuffer);
+}
+
+void Editor::OnDrop(std::vector<std::string> paths)
+{
+	for (std::string path : paths) {
+		std::string fileExtension = std::filesystem::u8path(path).extension().string();
+		if (fileExtension == ".cbmesh") {
+			Asset::Create(Scope<Asset>(), path);
+		}
+		else {
+			if (fileExtension == ".fbx" || fileExtension == ".obj") {
+				//Right now we importing asset to project path
+				std::string name = std::filesystem::u8path(path).filename().string();
+				Asset::Import(Scope<Asset>(), path, std::string("./") + name.substr(0, name.find_last_of(".")), NULL);
+			}
+		}
+	}
 }

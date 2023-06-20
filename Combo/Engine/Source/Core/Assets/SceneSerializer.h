@@ -1,7 +1,8 @@
 #pragma once
-#include "pch.h"
 
+#include "../Project.h"
 class SceneSerializer {
 public:
-	static void Load(std::string path);
+	static void LoadProject(std::string name);
+	static void CreateProject(std::string name);
 };

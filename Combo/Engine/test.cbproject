@@ -1,0 +1,17 @@
+{
+    "Assets": [
+        {
+            "Name": "Cube.cbmesh",
+            "OriginalPath": "D:\\ComboEngine\\Combo\\Engine\\Cube.cbmesh",
+            "Type": "Mesh",
+            "UUID": "0a334ff6-3b2c-4911-a309-8670333bed5e"
+        },
+        {
+            "Name": "Sponza.cbmesh",
+            "OriginalPath": "Sponza.cbmesh",
+            "Type": "Mesh",
+            "UUID": "5a64eff8-0388-4386-9c07-3416caf9f159"
+        }
+    ],
+    "Name": "test"
+}
