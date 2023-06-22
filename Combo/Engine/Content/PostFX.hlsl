@@ -42,7 +42,7 @@ SamplerState linear_sample
 };
 float4 PSMain(PSInput input) : SV_Target
 {
-    float4 Position = PositionTexture.Sample(linear_sample, float2(input.TexCoord.x, -input.TexCoord.y));
+    float4 Position = PositionTexture.Sample(SamplerPosition, float2(input.TexCoord.x, -input.TexCoord.y));
    
     return Position;
 }

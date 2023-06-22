@@ -61,17 +61,17 @@ int Core::Init()
 
 	ImGuiAdapter::Init();
 
-	GBuffer::Create(&s_GBuffer);
+	Core::s_Project.Assets["0"] = nullptr;
 
 	std::vector<Vertex> vertices = {
-		{-1.0f,  -1.0f, 1.0f, 1.0f,0.0f,0.0f,1.0f,1.0f,1.0f},
-		{-1.0f,   1.0f, 1.0f, 0.0f,1.0f,0.0f,1.0f,1.0f,1.0f},
-		{ 1.0f,   1.0f, 1.0f, 0.0f,0.0f,1.0f,1.0f,1.0f,1.0f},
-		{ 1.0f,  -1.0f, 1.0f, 1.0f,0.0f,1.0f,1.0f,1.0f,1.0f}
+		{1.0f,1.0f,0.0f,	1.0f,1.0f,	0.0f,0.0f,0.0f,0.0f},
+		{1.0f,-1.0f,0.0f,	1.0f,0.0f,	0.0f,0.0f,0.0f,0.0f},
+		{-1.0f,-1.0f,0.0f,	0.0f,0.0f,	0.0f,0.0f,0.0f,0.0f},
+		{-1.0f,1.0f,0.0f,	0.0f,1.0f,	0.0f,0.0f,0.0f,0.0f}
 	};
 
 	std::vector<uint32_t> indices = {
-		0,1,2,0,2,3
+		0,1,3,1,2,3
 	};
 
 	VertexBuffer* VertexBuffer;
@@ -80,9 +80,28 @@ int Core::Init()
 	IndexBuffer::Create(&IndexBuffer, indices);
 
 	UpdateEvent.Hook([&] {
-		s_Final->Bind(true);
+		/*s_Final->Bind(true);
 		s_Context->BeginDraw();
 		DrawEvent.Invoke();
+		s_Final->Unbind();*/
+ 
+		s_GBuffer->Bind();
+		OPTICK_EVENT("Rendering GBuffer");
+		s_Context->BeginDraw();
+		DrawEvent.Invoke();
+		s_GBuffer->Unbind();
+
+		s_Final->Bind(false);
+		s_Context->BeginDraw();
+		Pipeline pipeline;
+		pipeline.Shader = GlobalShaders::GetShader(GlobalShader::PostFX);
+		pipeline.Count = 6;
+		pipeline.IndexBuffer = IndexBuffer;
+		pipeline.VertexBuffer = VertexBuffer;
+		pipeline.Indexed = true;
+		pipeline.ShaderDataBuffer = nullptr;
+		pipeline.Textures = s_GBuffer->GetTextureArray();
+		s_Context->Draw(pipeline);
 		s_Final->Unbind();
 
 		OPTICK_EVENT("Begin ImGui Draw");
@@ -96,6 +115,7 @@ int Core::Init()
 	GlobalShaders::Init();
 
 	Framebuffer::Create(&s_Final, s_Window->GetWidth(), s_Window->GetHeight(), FramebufferTarget::Color);
+	GBuffer::Create(&s_GBuffer);
 
 	Camera::ProjectionWidth = s_Window->GetWidth();
 	Camera::ProjectionHeight = s_Window->GetHeight();
@@ -126,7 +146,6 @@ int Core::Init()
 	BeginPlayEvent.Invoke();
 	while (!ShouldExit) {
 		OPTICK_FRAME("Update");
-		std::cout << "new frame" << std::endl;
 		UpdateEvent.Invoke();
 		OPTICK_EVENT("Presenting");
 		s_Context->EndDraw();

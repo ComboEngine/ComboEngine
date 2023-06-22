@@ -64,7 +64,7 @@ PSOutput PSMain(PSInput input) : SV_Target
     
    // MaterialDiffuse = float4(input.TexCoord, 1, 1);
         
-    output.Position = MaterialDiffuse;
+    output.Position = input.PositionWithoutMVP;
     output.Diffuse = MaterialDiffuse;
     output.Normal = input.Normal;
    

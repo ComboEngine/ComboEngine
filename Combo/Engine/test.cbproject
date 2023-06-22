@@ -1,25 +1,25 @@
 {
     "Assets": [
         {
-            "Name": "Test2",
-            "OriginalPath": "D:\\ComboEngine\\Combo\\Engine\\mat2.cbmaterial",
+            "Name": "Test",
+            "OriginalPath": "D:\\ComboEngine\\Combo\\Engine\\mat.cbmaterial",
             "Type": "Material",
-            "UUID": "a0ea39c3-7407-47e4-bfb1-67916f037625"
+            "UUID": "a0ea39c3-7407-47e4-bfb1-67916f037624"
         },
         {
             "Name": "untitled.cbmesh",
             "OriginalPath": "D:\\ComboEngine\\Combo\\Engine\\untitled.cbmesh",
             "Type": "Mesh",
-            "UUID": "7dbadb61-02b2-4be9-a3f5-7df99580f64b"
+            "UUID": "aaa2fc24-cc78-46ac-85ba-9c4d22d48a26"
         },
         {
-            "Name": "Test",
-            "OriginalPath": "D:\\ComboEngine\\Combo\\Engine\\mat.cbmaterial",
+            "Name": "Test2",
+            "OriginalPath": "D:\\ComboEngine\\Combo\\Engine\\mat2.cbmaterial",
             "Type": "Material",
-            "UUID": "a0ea39c3-7407-47e4-bfb1-67916f037624"
+            "UUID": "a0ea39c3-7407-47e4-bfb1-67916f037625"
         }
     ],
-    "MainScene": "850d12f4-e987-4ddf-938c-200c41f6e903",
+    "MainScene": "6e197306-f908-4e82-a73b-434d7701a107",
     "Name": "test",
     "Scenes": [
         {
@@ -29,20 +29,20 @@
                         {
                             "Material": "a0ea39c3-7407-47e4-bfb1-67916f037624",
                             "MaterialsPerSubmesh": {
-                                "0": "a0ea39c3-7407-47e4-bfb1-67916f037625",
-                                "1": "0",
+                                "0": "0",
+                                "1": "a0ea39c3-7407-47e4-bfb1-67916f037625",
                                 "10": "0",
-                                "11": "0",
+                                "11": "a0ea39c3-7407-47e4-bfb1-67916f037625",
                                 "2": "0",
                                 "3": "0",
                                 "4": "0",
-                                "5": "0",
-                                "6": "a0ea39c3-7407-47e4-bfb1-67916f037625",
+                                "5": "a0ea39c3-7407-47e4-bfb1-67916f037625",
+                                "6": "0",
                                 "7": "0",
-                                "8": "0",
+                                "8": "a0ea39c3-7407-47e4-bfb1-67916f037625",
                                 "9": "0"
                             },
-                            "Mesh": "7dbadb61-02b2-4be9-a3f5-7df99580f64b",
+                            "Mesh": "aaa2fc24-cc78-46ac-85ba-9c4d22d48a26",
                             "Name": "Renderer"
                         },
                         {
@@ -65,7 +65,7 @@
                         "Y": 1.0,
                         "Z": 1.0
                     },
-                    "UUID": "16c7e415-b8ff-47ef-a4ac-19ead5b65e65"
+                    "UUID": "cb68ea5f-792b-4af8-8101-7548769f30f9"
                 },
                 {
                     "Components": [],
@@ -85,11 +85,11 @@
                         "Y": 1.0,
                         "Z": 1.0
                     },
-                    "UUID": "19376734-e8d3-458d-89e3-34c4771cf329"
+                    "UUID": "f2e97094-abc5-4510-9f66-891c4f1122f6"
                 }
             ],
             "Name": "Main",
-            "UUID": "850d12f4-e987-4ddf-938c-200c41f6e903"
+            "UUID": "6e197306-f908-4e82-a73b-434d7701a107"
         }
     ]
 }

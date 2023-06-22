@@ -2,8 +2,16 @@
 
 #include <Core/Actor.h>
 
+enum EditorViewMode {
+	Position,
+	Normal,
+	Diffuse,
+	FinalBuffer
+};
+
 class Editor {
 public:
+	static EditorViewMode ViewMode;
 	static bool MouseHooked;
 	static bool ShowImport;
 	static bool ShowImportExisting;

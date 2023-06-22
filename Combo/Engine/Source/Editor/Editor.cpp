@@ -17,6 +17,7 @@ std::string Editor::ToImportPathBuffer;
 std::string Editor::AssetPathBuffer;
 bool Editor::ShowImport = false;
 bool Editor::ShowImportExisting = false;
+EditorViewMode Editor::ViewMode = EditorViewMode::FinalBuffer;
 
 void DrawVec3Control(const std::string& label, glm::vec3& values, float resetValue = 0.0f, float columnWidth = 100.0f)
 {
@@ -129,6 +130,14 @@ void Editor::Init()
 				ImGui::EndMenu();
 			}
 
+			if (ImGui::BeginMenu("Viewport")) {
+				if (ImGui::MenuItem("Position")) { ViewMode = Position; }
+				if (ImGui::MenuItem("Normal")) { ViewMode = Normal; }
+				if (ImGui::MenuItem("Diffuse")) { ViewMode = Diffuse; }
+				if (ImGui::MenuItem("GBuffer")) { ViewMode = FinalBuffer; }
+				ImGui::End();
+			}
+
 			ImGui::EndMainMenuBar();
 		}
 		ImGui::SetCursorPosY(40);
@@ -137,7 +146,18 @@ void Editor::Init()
 		ImGui::Begin("Viewport");
 		Camera::ProjectionWidth = ImGui::GetContentRegionAvail().x;
 		Camera::ProjectionHeight = ImGui::GetContentRegionAvail().y;
-		if (ImGui::ImageButton((void*)Core::s_Final->GetImage(), ImGui::GetContentRegionAvail())) {
+		void* image;
+		switch (ViewMode) {
+		case Position:
+			image = Core::s_GBuffer->Position->GetImage(); break;
+		case Normal:
+			image = Core::s_GBuffer->Normal->GetImage(); break;
+		case Diffuse:
+			image = Core::s_GBuffer->Diffuse->GetImage(); break;
+		case FinalBuffer:
+			image = Core::s_Final->GetImage(); break;
+		}
+		if (ImGui::ImageButton((void*)image, ImGui::GetContentRegionAvail())) {
 			MouseHooked = true;
 		}
 		ImGui::End();
@@ -252,24 +272,6 @@ void Editor::Init()
 
 		ImGui::End();
 	});
-
-	Actor* actor;
-	Actor::Create(&actor);
-
-	Actor* actor2;
-	Actor::Create(&actor2);
-
-	Renderer* renderer = new Renderer();
-
-	Script* script = new Script();
-
-	actor->AddComponent(renderer);
-	actor->AddComponent(script);
-
-	//Asset::Create(asset, "Sponza.cbmesh");
-
-
-	//renderer.Get()->mesh = asset.Get();
 }
 
 
@@ -364,6 +366,11 @@ void Editor::OnDrop(std::vector<std::string> paths)
 	Asset* Obj;
 	for (std::string path : paths) {
 		std::string fileExtension = std::filesystem::u8path(path).extension().string();
+
+		if (fileExtension == ".cbproject") {
+			SceneSerializer::LoadProject(path);
+		}
+
 		if (fileExtension == ".cbmesh") {
 			Asset::Create(&Obj, path);
 		}

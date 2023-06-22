@@ -6,16 +6,60 @@
 
 #include "../Renderer.h"
 
-void SceneSerializer::LoadProject(std::string name)
-{
-}
-
 nlohmann::json MarshalVector3(glm::vec3 vec) {
 	nlohmann::json j;
 	j["X"] = vec.x;
 	j["Y"] = vec.y;
 	j["Z"] = vec.z;
 	return j;
+}
+
+glm::vec3 DemarshalVector3(nlohmann::json j) {
+	return glm::vec3(j["X"], j["Y"], j["Z"]);
+}
+
+void SceneSerializer::LoadProject(std::string name)
+{
+	std::ifstream t(name.c_str());
+	std::string str((std::istreambuf_iterator<char>(t)),
+		std::istreambuf_iterator<char>());
+	nlohmann::json j = nlohmann::json::parse(str);
+
+	for (nlohmann::json assetJson : j["Assets"]) {
+		Asset* asset;
+		Asset::Create(&asset, assetJson["OriginalPath"]);
+		Core::s_Project.Assets[asset->uuid] = asset;
+ 	}
+
+	for (nlohmann::json sceneJson : j["Scenes"]) {
+		for (nlohmann::json actorJson : sceneJson["Actors"]) {
+			Actor* actor;
+			Actor::Create(&actor);
+
+			actor->UUID = actorJson["UUID"];
+			actor->Name = actorJson["Name"];
+			actor->Position = DemarshalVector3(actorJson["Position"]);
+			actor->Orientation = DemarshalVector3(actorJson["Orientation"]);
+			actor->Scale = DemarshalVector3(actorJson["Scale"]);
+
+			for (nlohmann::json componentJson : actorJson["Components"]) {
+				if (componentJson["Name"] == "Renderer") {
+					Renderer* renderer = new Renderer();
+					renderer->mesh = Core::s_Project.Assets[componentJson["Mesh"]];
+					renderer->material = Core::s_Project.Assets[componentJson["Material"]];
+
+					Mesh* mesh = std::any_cast<Mesh*>(renderer->mesh->GetHandle());
+					for (int i = 0; i < mesh->Submeshes.size();i++) {
+						mesh->Submeshes[i]->Material = Core::s_Project.Assets[componentJson["MaterialsPerSubmesh"][std::to_string(i)]];
+					}
+					actor->AddComponent(renderer);
+				}
+				else if (componentJson["Name"] == "Script") {
+
+				}
+			}
+		}
+	}
 }
 
 void SceneSerializer::CreateProject(std::string name)
