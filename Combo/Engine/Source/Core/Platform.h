@@ -5,7 +5,7 @@
 
 class Platform {
 public:
-	static void Create(Scope<Platform>& platform, std::any PlatformData);
+	static void Create(Platform** platform, std::any PlatformData);
 
 	//API Functions
 	virtual void Init(std::any PlatformData) = 0;

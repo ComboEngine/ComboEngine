@@ -7,7 +7,7 @@
 
 void ShaderDataBufferDX11::Init(size_t Size)
 {
-	ContextDX11* context = Core::s_Context.Cast<ContextDX11>();
+	ContextDX11* context = reinterpret_cast<ContextDX11*>(Core::s_Context);
 	D3D11_BUFFER_DESC BufferDesc;
 	ZeroMemory(&BufferDesc, sizeof(BufferDesc));
 	BufferDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -24,7 +24,7 @@ void ShaderDataBufferDX11::Init(size_t Size)
 
 void ShaderDataBufferDX11::Update(const void* Data)
 {
-	Core::s_Context.Cast<ContextDX11>()->Context->UpdateSubresource(this->Buffer, 0, NULL, Data, 0, 0);
+	reinterpret_cast<ContextDX11*>(Core::s_Context)->Context->UpdateSubresource(this->Buffer, 0, NULL, Data, 0, 0);
 }
 
 std::string ShaderDataBufferDX11::GetApiName()

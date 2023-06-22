@@ -4,14 +4,14 @@
 #include <Core/DirectX11/PlatformDX11.h>
 #endif
 
-void Platform::Create(Scope<Platform>& platform,std::any PlatformData)
+void Platform::Create(Platform** platform,std::any PlatformData)
 {
-	platform = Scope<Platform>();
 	//Select window api
 #ifdef COMBO_DIRECTX11
-	platform.Set(new PlatformDX11());
+	*platform = new PlatformDX11();
 #endif
-	platform.Get()->Init(PlatformData);
+	Platform* platformPtr = *platform;
+	platformPtr->Init(PlatformData);
 
-	LOG(std::string("Created ") + platform.Get()->GetApiName() + " Platform");
+	LOG(std::string("Created ") + platformPtr->GetApiName() + " Platform");
 }

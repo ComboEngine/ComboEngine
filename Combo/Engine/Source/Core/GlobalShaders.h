@@ -2,13 +2,15 @@
 #include "Shader.h"
 
 enum GlobalShader {
-	Render3D
+	Render3D,
+	PostFX
 };
 
 class GlobalShaders {
 private:
-	static Scope<Shader> Render3D;
+	static Shader* Render3D;
+	static Shader* PostFX;
 public:
 	static void Init();
-	static Scope<Shader> GetShader(GlobalShader shader);
+	static Shader* GetShader(GlobalShader shader);
 };

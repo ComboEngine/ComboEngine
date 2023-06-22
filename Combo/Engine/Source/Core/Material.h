@@ -4,10 +4,10 @@
 #include "Shader.h"
 
 struct MaterialColor {
-	Scope<Texture> ColorTexture;
+	Texture* ColorTexture;
 	glm::vec4 Color;
 	bool UseTexture = false;
-	static MaterialColor FromTexture(Scope<Texture> Texture) {
+	static MaterialColor FromTexture(Texture* Texture) {
 		MaterialColor color;
 		color.ColorTexture = Texture;
 		color.UseTexture = true;
@@ -26,6 +26,6 @@ public:
 	bool CastShadow = true;
 	bool Wireframe = false;
 	MaterialColor Diffuse;
-	Scope<Shader> Shader;
-	static void Create(Scope<Material>& Obj);
+	Shader* Shader;
+	static void Create(Material** Obj);
 };

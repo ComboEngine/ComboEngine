@@ -4,12 +4,12 @@
 #include "GlobalShaders.h"
 
 
-void Script::Update(Scope<Actor> actor)
+void Script::Update(Actor* actor)
 {
-	Core::s_Scripting.Get()->UpdateScripts.push_back(ComponentName);
+	Core::s_Scripting->UpdateScripts.push_back(ComponentName);
 }
 
-void Script::Draw(Scope<Actor> actor)
+void Script::Draw(Actor* actor)
 {
 	
 }

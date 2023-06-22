@@ -93,7 +93,7 @@ void Editor::Init()
 		if (Input::IsKeyDown(COMBO_KEY_ESCAPE)) {
 			MouseHooked = false;
 		}
-		Core::s_Window.Get()->LockCursor(MouseHooked);
+		Core::s_Window->LockCursor(MouseHooked);
 		if (MouseHooked) {
 			Camera::Drone();
 		}
@@ -137,7 +137,7 @@ void Editor::Init()
 		ImGui::Begin("Viewport");
 		Camera::ProjectionWidth = ImGui::GetContentRegionAvail().x;
 		Camera::ProjectionHeight = ImGui::GetContentRegionAvail().y;
-		if (ImGui::ImageButton((void*)Core::Framebuffers[RenderStage::COLOR].Get()->GetImage(), ImGui::GetContentRegionAvail())) {
+		if (ImGui::ImageButton((void*)Core::s_Final->GetImage(), ImGui::GetContentRegionAvail())) {
 			MouseHooked = true;
 		}
 		ImGui::End();
@@ -151,10 +151,10 @@ void Editor::Init()
 		ImGui::TableHeadersRow();
 
 		for (int i = 0;i<Core::Actors.size();i++) {
-			Scope<Actor> actor = Core::Actors[i];
+			Actor* actor = Core::Actors[i];
 			ImGui::TableNextColumn();
 			ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 4);
-			ImGui::Selectable((std::string(actor.Get()->Name.c_str()) + "##" + std::to_string(i)).c_str(), &actor.Get()->ActorSelected, ImGuiSelectableFlags_SpanAllColumns);
+			ImGui::Selectable((std::string(actor->Name.c_str()) + "##" + std::to_string(i)).c_str(), &actor->ActorSelected, ImGuiSelectableFlags_SpanAllColumns);
 		}
 
 		ImGui::EndTable();
@@ -164,17 +164,17 @@ void Editor::Init()
 		ImGui::Begin("Actor Properties");
 
 		for (int i = 0; i < Core::Actors.size(); i++) {
-			Scope<Actor> actor = Core::Actors[i];
-			if (actor.Get()->ActorSelected) {
+			Actor* actor = Core::Actors[i];
+			if (actor->ActorSelected) {
 				ImGui::Text("Name: ");
 				ImGui::SameLine();
-				ImGui::InputText(std::string("##" + std::to_string(i)).c_str(), &actor.Get()->Name);
+				ImGui::InputText(std::string("##" + std::to_string(i)).c_str(), &actor->Name);
 
-				DrawVec3Control("Position", actor.Get()->Position);
-				DrawVec3Control("Orientation", actor.Get()->Orientation);
-				DrawVec3Control("Scale", actor.Get()->Scale);
+				DrawVec3Control("Position", actor->Position);
+				DrawVec3Control("Orientation", actor->Orientation);
+				DrawVec3Control("Scale", actor->Scale);
 
-				for (Component* component : actor.Get()->Components) {
+				for (Component* component : actor->Components) {
 					std::string name = component->GetName();
 					if (ImGui::CollapsingHeader(name.c_str()))
 					{
@@ -191,7 +191,8 @@ void Editor::Init()
 		int index = 0;
 		for (const auto& asset : Core::s_Project.Assets) {
 			if (asset.second != nullptr) {
-				ImGui::Button((asset.second->GetName() + "##" + std::to_string(index)).c_str());
+				ImGui::SameLine();
+				ImGui::Button((asset.second->GetName() + "##" + std::to_string(index)).c_str(),ImVec2(128,128));
 
 				if (ImGui::BeginDragDropSource()) {
 					ImGui::SetDragDropPayload(asset.second->GetType().c_str(), asset.first.c_str(), sizeof(asset.first));
@@ -205,6 +206,9 @@ void Editor::Init()
 		ImGui::End();
 
 		ImGui::Begin("Graphics Settings");
+		//ImGui::InputFloat4("Light Pos", glm::value_ptr(Core::LightPos));
+		//ImGui::InputFloat("Light Range", &Core::LightRange);
+		//ImGui::InputFloat4("Light Atteunation", glm::value_ptr(Core::LightAttenuation));
 		ImGui::End();
 
 		if (ShowImport) {
@@ -249,35 +253,23 @@ void Editor::Init()
 		ImGui::End();
 	});
 
-	Scope<Actor> actor;
-	Actor::Create(actor);
+	Actor* actor;
+	Actor::Create(&actor);
 
-	Scope<Actor> actor2;
-	Actor::Create(actor2);
+	Actor* actor2;
+	Actor::Create(&actor2);
 
-	actor.Get()->Scale = glm::vec3(0.001f, 0.001f, 0.001f);
+	Renderer* renderer = new Renderer();
 
-	Scope<Renderer> renderer;
-	Scope<Renderer>::Create(renderer);
+	Script* script = new Script();
 
-	Scope<Script> script;
-	Scope<Script>::Create(script);
+	actor->AddComponent(renderer);
+	actor->AddComponent(script);
 
-	actor.Get()->AddComponent(script.Cast<Script>());
-	actor.Get()->AddComponent(renderer.Cast<Component>());
-
-	Scope<Asset> asset;
-	Asset::Create(asset, "Sponza.cbmesh");
+	//Asset::Create(asset, "Sponza.cbmesh");
 
 
-	renderer.Get()->MeshUUIDBuffer = asset.Get()->uuid;
-	renderer.Get()->mesh = asset.Get();
-
-	Scope<Material> material;
-	Material::Create(material);
-	material.Get()->Diffuse = MaterialColor::FromColor(glm::vec4(1, 1, 1, 1));
-
-	renderer.Get()->material = material;
+	//renderer.Get()->mesh = asset.Get();
 }
 
 
@@ -290,7 +282,14 @@ void Editor::RenderComponent(std::string name,Component* component) {
 		Renderer* renderer = reinterpret_cast<Renderer*>(component);
 		ImGui::Text("Mesh");
 		ImGui::SameLine();
-		ImGui::InputText("##MeshUUIDBuffer", &renderer->mesh->GetName(), ImGuiInputTextFlags_ReadOnly);
+		std::string text;
+		if (renderer->mesh == nullptr) {
+			text = "None";
+		}
+		else {
+			text = renderer->mesh->GetName();
+		}
+		ImGui::InputText("##MeshUUIDBuffer", &text, ImGuiInputTextFlags_ReadOnly);
 
 		if (ImGui::BeginDragDropTarget()) {
 			const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Mesh");
@@ -299,36 +298,85 @@ void Editor::RenderComponent(std::string name,Component* component) {
 			}
 			ImGui::EndDragDropTarget();
 		}
+
+		ImGui::Text("Global Material");
+		std::string materialText;
+		if (renderer->material == nullptr) {
+			materialText = "None";
+		}
+		else {
+			materialText = renderer->material->GetName();
+		}
+		ImGui::SameLine();
+		ImGui::InputText("##GlobalMaterial", &materialText, ImGuiInputTextFlags_ReadOnly);
+		if (ImGui::BeginDragDropTarget()) {
+			const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Material");
+			if (payload != nullptr) {
+				renderer->material = Core::s_Project.Assets[(const char*)payload->Data];
+			}
+			ImGui::EndDragDropTarget();
+		}
+		ImGui::Separator();
+
+		if (renderer->mesh != nullptr && ImGui::CollapsingHeader("Materials")) {
+			int index = 0;
+			for (Submesh* submesh : std::any_cast<Mesh*>(renderer->mesh->GetHandle())->Submeshes) {
+				std::string submeshMaterialName = "None";
+				if (submesh->Material != nullptr) {
+					submeshMaterialName = submesh->Material->GetName();
+				}
+				ImGui::Text((submesh->Name + " [" + std::to_string(index) + "]").c_str());
+				ImGui::SameLine();
+				ImGui::InputText((std::string("##") + submesh->Name + "Material").c_str(), &submeshMaterialName, ImGuiInputTextFlags_ReadOnly);
+
+				if (ImGui::BeginDragDropTarget()) {
+					const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Material");
+					if (payload != nullptr) {
+						submesh->Material = Core::s_Project.Assets[(const char*)payload->Data];
+					}
+					ImGui::EndDragDropTarget();
+				}
+
+				ImGui::Separator();
+				index++;
+			}
+		}
 	}
 	ImGui::Separator();
 }
 
 void Editor::ImportAsset()
 {
+	Asset* Obj;
 	std::string fileExtension = std::filesystem::u8path(ToImportPathBuffer).extension().string();
 	if (fileExtension == ".fbx" || fileExtension == ".obj") {
-		Asset::Import(Scope<Asset>(), ToImportPathBuffer, AssetPathBuffer, NULL);
+		Asset::Import(&Obj, ToImportPathBuffer, AssetPathBuffer, NULL);
 	}
 }
 
 void Editor::ImportExistingAsset()
 {
-	Asset::Create(Scope<Asset>(), AssetPathBuffer);
+	Asset::Create(nullptr, AssetPathBuffer);
 }
 
 void Editor::OnDrop(std::vector<std::string> paths)
 {
+	Asset* Obj;
 	for (std::string path : paths) {
 		std::string fileExtension = std::filesystem::u8path(path).extension().string();
 		if (fileExtension == ".cbmesh") {
-			Asset::Create(Scope<Asset>(), path);
+			Asset::Create(&Obj, path);
 		}
 		else {
 			if (fileExtension == ".fbx" || fileExtension == ".obj") {
 				//Right now we importing asset to project path
 				std::string name = std::filesystem::u8path(path).filename().string();
-				Asset::Import(Scope<Asset>(), path, std::string("./") + name.substr(0, name.find_last_of(".")), NULL);
+				Asset::Import(&Obj, path, std::string("./") + name.substr(0, name.find_last_of(".")) + ".cbmesh", NULL);
 			}
+		}
+
+		if (fileExtension == ".cbmaterial") {
+			Asset::Create(&Obj, path);
 		}
 	}
 }

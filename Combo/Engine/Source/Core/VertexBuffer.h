@@ -6,7 +6,7 @@
 class VertexBuffer {
 public:
 	int Size;
-	static void Create(Scope<VertexBuffer>& vertexBuffer,std::vector<Vertex> Vertices);
+	static void Create(VertexBuffer** vertexBuffer,std::vector<Vertex> Vertices);
 
 	//API Functions
 	virtual void Init(std::vector<Vertex> Vertices) = 0;

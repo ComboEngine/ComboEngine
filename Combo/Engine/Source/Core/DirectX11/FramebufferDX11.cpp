@@ -4,9 +4,26 @@
 #include "ContextDX11.h"
 #include "../Core.h"
 
+void FramebufferDX11::Bind(bool depth)
+{
+    ContextDX11* context = reinterpret_cast<ContextDX11*>(Core::s_Context);
+    context->Context->OMSetRenderTargets(1, &RenderTargetView,depth ? DepthStencilView : NULL);
+    context->Context->ClearRenderTargetView(RenderTargetView, context->ClearColor);
+    if (depth) {
+        context->Context->ClearDepthStencilView(DepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+    }
+    context->BoundFramebuffer = true;
+}
+
+void FramebufferDX11::Unbind()
+{
+    ContextDX11* context = reinterpret_cast<ContextDX11*>(Core::s_Context);
+    context->BoundFramebuffer = false;
+}
+
 void FramebufferDX11::Init()
 {
-    ContextDX11* context = Core::s_Context.Cast<ContextDX11>();
+    ContextDX11* context = reinterpret_cast<ContextDX11*>(Core::s_Context);
     D3D11_TEXTURE2D_DESC textureDesc;
     ZeroMemory(&textureDesc, sizeof(textureDesc));
 
@@ -41,8 +58,8 @@ void FramebufferDX11::Init()
     CB_CHECKHR(context->Device->CreateShaderResourceView(this->RenderTargetTexture, &shaderResourceViewDesc, &this->ShaderResourceView));
 
     D3D11_TEXTURE2D_DESC DepthStencilDesc;
-    DepthStencilDesc.Width = Core::s_Window.Get()->GetWidth();
-    DepthStencilDesc.Height = Core::s_Window.Get()->GetHeight();
+    DepthStencilDesc.Width = Core::s_Window->GetWidth();
+    DepthStencilDesc.Height = Core::s_Window->GetHeight();
     DepthStencilDesc.MipLevels = 1;
     DepthStencilDesc.ArraySize = 1;
     DepthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;

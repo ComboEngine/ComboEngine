@@ -38,6 +38,7 @@ public class ComboEngine : BuildTarget {
             AddDefinition("COMBO_BUILD_LINUX");
 
         this.AddModule("LuaC");
+        this.AddModule("Optick");
         this.AddModule("assimp");
         this.AddModule("glm");
         this.AddModule("ImGui");

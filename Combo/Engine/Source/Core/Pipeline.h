@@ -9,9 +9,9 @@
 struct Pipeline {
 	int Count;
 	bool Indexed;
-	Scope<Shader> Shader;
-	Scope<VertexBuffer> VertexBuffer;
-	Scope<IndexBuffer> IndexBuffer;
-	Scope<ShaderDataBuffer> ShaderDataBuffer;
-	std::vector<Scope<Texture>> Textures;
+	Shader* Shader;
+	VertexBuffer* VertexBuffer;
+	IndexBuffer* IndexBuffer;
+	ShaderDataBuffer* ShaderDataBuffer;
+	std::vector<Texture*> Textures;
 };

@@ -11,5 +11,5 @@ public:
 	Event CSExit;
 	std::vector<std::string> UpdateScripts;
 	std::vector<std::string> ScriptNames;
-	static void Create(Scope<Scripting>& Obj);
+	static void Create(Scripting** Obj);
 };

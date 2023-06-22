@@ -2,10 +2,12 @@
 #include "Core.h"
 #include "Actor.h"
 
-void Actor::Create(Scope<Actor>& Obj)
+void Actor::Create(Actor** actor)
 {
-	Scope<Actor>::Create(Obj);
-	Core::Actors.push_back(Obj);
+	*actor = new Actor();
+	Actor* ptr = *actor;
+	ptr->UUID = uuid::generate_uuid_v4();
+	Core::Actors.push_back(*actor);
 }
 
 void Actor::AddComponent(Component* component)

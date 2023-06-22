@@ -5,7 +5,7 @@
 
 class MeshAsset : public Asset{
 public:
-	Scope<Mesh> Handle;
+	Mesh* Handle;
 	std::string Name;
 
 	virtual void ReadFromFile(std::string path);

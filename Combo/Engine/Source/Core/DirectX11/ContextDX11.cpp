@@ -18,7 +18,7 @@ void ContextDX11::Init()
 	SwapChainDesc.BufferCount = 1;
 	SwapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	SwapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-	SwapChainDesc.OutputWindow = (HWND)Core::s_Window.Get()->GetPlainWindow();
+	SwapChainDesc.OutputWindow = (HWND)Core::s_Window->GetPlainWindow();
 	SwapChainDesc.SampleDesc.Count = 4;
 	SwapChainDesc.Windowed = TRUE;
 	SwapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
@@ -29,8 +29,8 @@ void ContextDX11::Init()
 	SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&BackBufferTexture);
 
 	D3D11_TEXTURE2D_DESC depthStencilDesc;
-	depthStencilDesc.Width = Core::s_Window.Get()->GetWidth();
-	depthStencilDesc.Height = Core::s_Window.Get()->GetHeight();
+	depthStencilDesc.Width = Core::s_Window->GetWidth();
+	depthStencilDesc.Height = Core::s_Window->GetHeight();
 	depthStencilDesc.MipLevels = 1;
 	depthStencilDesc.ArraySize = 1;
 	depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -53,8 +53,8 @@ void ContextDX11::Init()
 	ZeroMemory(&ViewportDesc, sizeof(ViewportDesc));
 	ViewportDesc.TopLeftX = 0;
 	ViewportDesc.TopLeftY = 0;
-	ViewportDesc.Width = Core::s_Window.Get()->GetWidth();
-	ViewportDesc.Height = Core::s_Window.Get()->GetHeight();
+	ViewportDesc.Width = Core::s_Window->GetWidth();
+	ViewportDesc.Height = Core::s_Window->GetHeight();
 	ViewportDesc.MinDepth = 0.0f;
 	ViewportDesc.MaxDepth = 1.0f;
 	Context->RSSetViewports(1, &ViewportDesc);
@@ -83,18 +83,11 @@ void ContextDX11::Init()
 		this->DepthStencilView->Release();
 	});
 }
-void ContextDX11::BeginDraw(Scope<Framebuffer> framebuffer)
+void ContextDX11::BeginDraw()
 {
-	FramebufferDX11* framebufferDX11 = framebuffer.Cast<FramebufferDX11>();
-	if (framebuffer.Get() == nullptr) {
+	if (!BoundFramebuffer) {
 		Context->ClearRenderTargetView(RenderTargetView, this->ClearColor);
 		Context->OMSetRenderTargets(1, &RenderTargetView, NULL);
-		//Context->ClearDepthStencilView(DepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-	}
-	else {
-		Context->OMSetRenderTargets(1, &framebufferDX11->RenderTargetView, framebufferDX11->DepthStencilView);
-		Context->ClearRenderTargetView(framebufferDX11->RenderTargetView, this->ClearColor);
-		Context->ClearDepthStencilView(framebufferDX11->DepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	}
 }
 void ContextDX11::EndDraw()
@@ -103,18 +96,20 @@ void ContextDX11::EndDraw()
 }
 void ContextDX11::Draw(Pipeline pipeline)
 {
-	ShaderDX11* shader = pipeline.Shader.Cast<ShaderDX11>();
-	VertexBufferDX11* vertexBuffer = pipeline.VertexBuffer.Cast<VertexBufferDX11>();
-	IndexBufferDX11* indexBuffer = pipeline.IndexBuffer.Cast<IndexBufferDX11>();
-	ShaderDataBufferDX11* shaderDataBuffer = pipeline.ShaderDataBuffer.Cast<ShaderDataBufferDX11>();
+	ShaderDX11* shader = reinterpret_cast<ShaderDX11*>(pipeline.Shader);
+	VertexBufferDX11* vertexBuffer = reinterpret_cast<VertexBufferDX11*>(pipeline.VertexBuffer);
+	IndexBufferDX11* indexBuffer = reinterpret_cast<IndexBufferDX11*>(pipeline.IndexBuffer);
+	ShaderDataBufferDX11* shaderDataBuffer = reinterpret_cast<ShaderDataBufferDX11*>(pipeline.ShaderDataBuffer);
 	
 	UINT Stride = sizeof(Vertex);
 	UINT Offset = 0;
 
 	Context->VSSetShader(shader->VertexShader, 0, 0);
 	Context->PSSetShader(shader->PixelShader, 0, 0);
-	Context->VSSetConstantBuffers(0, 1, &shaderDataBuffer->Buffer);
-	Context->PSSetConstantBuffers(0, 1, &shaderDataBuffer->Buffer);
+	if (shaderDataBuffer != nullptr) {
+		Context->VSSetConstantBuffers(0, 1, &shaderDataBuffer->Buffer);
+		Context->PSSetConstantBuffers(0, 1, &shaderDataBuffer->Buffer);
+	}
 	Context->IASetInputLayout(shader->InputLayout);
 	Context->IASetVertexBuffers(0, 1, &vertexBuffer->Buffer, &Stride,&Offset);
 	if (pipeline.Indexed) {
@@ -123,9 +118,9 @@ void ContextDX11::Draw(Pipeline pipeline)
 	Context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	if (pipeline.Textures.size() != 0) {
 		for (int i = 0; i < pipeline.Textures.size();i++) {
-			Scope<Texture> texture = pipeline.Textures[i];
-			Context->PSSetShaderResources(i, 1, &texture.Cast<TextureDX11>()->ShaderResourceView);
-			Context->PSSetSamplers(i, 1, &texture.Cast<TextureDX11>()->Sampler);
+			Texture* texture = pipeline.Textures[i];
+			Context->PSSetShaderResources(i, 1, &reinterpret_cast<TextureDX11*>(texture)->ShaderResourceView);
+			Context->PSSetSamplers(i, 1, &reinterpret_cast<TextureDX11*>(texture)->Sampler);
 		}
 	}
 	if (pipeline.Indexed) {

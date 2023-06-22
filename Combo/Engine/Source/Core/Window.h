@@ -11,7 +11,7 @@ struct WindowSpecification {
 class Window {
 public:
 	WindowSpecification Specification;
-	static void Create(Scope<Window>& Obj,WindowSpecification Specification);
+	static void Create(Window** window,WindowSpecification Specification);
 
 	//API Functions
 	virtual void Init() = 0;

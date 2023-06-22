@@ -1,17 +1,95 @@
 {
     "Assets": [
         {
-            "Name": "Cube.cbmesh",
-            "OriginalPath": "D:\\ComboEngine\\Combo\\Engine\\Cube.cbmesh",
-            "Type": "Mesh",
-            "UUID": "0a334ff6-3b2c-4911-a309-8670333bed5e"
+            "Name": "Test2",
+            "OriginalPath": "D:\\ComboEngine\\Combo\\Engine\\mat2.cbmaterial",
+            "Type": "Material",
+            "UUID": "a0ea39c3-7407-47e4-bfb1-67916f037625"
         },
         {
-            "Name": "Sponza.cbmesh",
-            "OriginalPath": "Sponza.cbmesh",
+            "Name": "untitled.cbmesh",
+            "OriginalPath": "D:\\ComboEngine\\Combo\\Engine\\untitled.cbmesh",
             "Type": "Mesh",
-            "UUID": "5a64eff8-0388-4386-9c07-3416caf9f159"
+            "UUID": "7dbadb61-02b2-4be9-a3f5-7df99580f64b"
+        },
+        {
+            "Name": "Test",
+            "OriginalPath": "D:\\ComboEngine\\Combo\\Engine\\mat.cbmaterial",
+            "Type": "Material",
+            "UUID": "a0ea39c3-7407-47e4-bfb1-67916f037624"
         }
     ],
-    "Name": "test"
+    "MainScene": "850d12f4-e987-4ddf-938c-200c41f6e903",
+    "Name": "test",
+    "Scenes": [
+        {
+            "Actors": [
+                {
+                    "Components": [
+                        {
+                            "Material": "a0ea39c3-7407-47e4-bfb1-67916f037624",
+                            "MaterialsPerSubmesh": {
+                                "0": "a0ea39c3-7407-47e4-bfb1-67916f037625",
+                                "1": "0",
+                                "10": "0",
+                                "11": "0",
+                                "2": "0",
+                                "3": "0",
+                                "4": "0",
+                                "5": "0",
+                                "6": "a0ea39c3-7407-47e4-bfb1-67916f037625",
+                                "7": "0",
+                                "8": "0",
+                                "9": "0"
+                            },
+                            "Mesh": "7dbadb61-02b2-4be9-a3f5-7df99580f64b",
+                            "Name": "Renderer"
+                        },
+                        {
+                            "Name": "Script"
+                        }
+                    ],
+                    "Name": "Actor",
+                    "Orientation": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Position": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    },
+                    "UUID": "16c7e415-b8ff-47ef-a4ac-19ead5b65e65"
+                },
+                {
+                    "Components": [],
+                    "Name": "Actor",
+                    "Orientation": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Position": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    },
+                    "UUID": "19376734-e8d3-458d-89e3-34c4771cf329"
+                }
+            ],
+            "Name": "Main",
+            "UUID": "850d12f4-e987-4ddf-938c-200c41f6e903"
+        }
+    ]
 }

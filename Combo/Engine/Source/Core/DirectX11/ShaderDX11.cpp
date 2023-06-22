@@ -7,11 +7,17 @@
 
 void ShaderDX11::Init(std::string VertexSource, std::string PixelSource)
 {
+	ID3DBlob* blob;
+	ID3DBlob* blobVertex;
+
 	std::wstring vertex_source(VertexSource.begin(), VertexSource.end());
 	std::wstring pixel_source(PixelSource.begin(), PixelSource.end());
-	ContextDX11* context = Core::s_Context.Cast<ContextDX11>();
-	D3DCompileFromFile(vertex_source.c_str(), NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "VSMain", "vs_4_0_level_9_1", NULL, NULL, &VertexBlob, NULL);
-	D3DCompileFromFile(pixel_source.c_str(), NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "PSMain", "ps_4_0_level_9_1", NULL, NULL, &PixelBlob, NULL);
+	ContextDX11* context = reinterpret_cast<ContextDX11*>(Core::s_Context);
+	D3DCompileFromFile(vertex_source.c_str(), NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "VSMain", "vs_5_0", NULL, NULL, &VertexBlob, &blobVertex);
+	D3DCompileFromFile(pixel_source.c_str(), NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "PSMain", "ps_5_0", NULL, NULL, &PixelBlob, &blob);
+
+	//std::cout << (char*)blob->GetBufferPointer() << std::endl;
+//	std::cout << (char*)blobVertex->GetBufferPointer() << std::endl;
 
 	CB_ASSERT(VertexBlob != nullptr, "Failed to compile Vertex Shader!");
 	CB_ASSERT(PixelBlob != nullptr, "Failed to compile Pixel Shader!");

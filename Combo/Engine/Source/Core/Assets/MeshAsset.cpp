@@ -17,14 +17,14 @@ void MeshAsset::ReadFromFile(std::string path)
 	std::string uuid;
 	uuid.resize(uuidSize);
 	infile.read(uuid.data(), uuidSize);
-
+	
 
 	this->uuid = uuid;
 
 	uint32_t size;
 	infile.read((char*)&size, sizeof(uint32_t));
 
-	std::vector<Submesh> submeshesList;
+	std::vector<Submesh*> submeshesList;
 
 	for (int i = 0; i < size; i++) {
 		std::vector<Vertex> vertices;
@@ -48,13 +48,13 @@ void MeshAsset::ReadFromFile(std::string path)
 			infile.read((char*)&d, sizeof(uint32_t));
 			indices.push_back(d);
 		}
-		Submesh submesh;
-		submesh.Init(vertices, indices);
-		submesh.Name = json["Name"];
+		Submesh* submesh = new Submesh();
+		submesh->Init(vertices, indices);
+		submesh->Name = json["Name"];
 		submeshesList.push_back(submesh);
 	}
 
-	Mesh::Create(Handle, submeshesList);
+	Mesh::Create(&Handle, submeshesList);
 }
 
 void MeshAsset::ImportToFile(std::string filePath, std::string assetPath, std::any ImportSettings)
@@ -63,7 +63,7 @@ void MeshAsset::ImportToFile(std::string filePath, std::string assetPath, std::a
 	Assimp::Importer importer;
 	const aiScene* scene = importer.ReadFile(filePath.c_str(), aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_JoinIdenticalVertices);
 
-	std::vector<Submesh> submeshesList;
+	std::vector<Submesh*> submeshesList;
 
 	std::ofstream file;
 	file.open(assetPath, std::ios::binary | std::ios::out);
@@ -116,13 +116,13 @@ void MeshAsset::ImportToFile(std::string filePath, std::string assetPath, std::a
 			indices.push_back(mesh->mFaces[i].mIndices[0]);
 		}
 
-		Submesh submesh;
-		submesh.Init(vertices, indices);
-		submesh.Name = mesh->mName.C_Str();
+		Submesh* submesh = new Submesh();
+		submesh->Init(vertices, indices);
+		submesh->Name = mesh->mName.C_Str();
 
 
 		nlohmann::json details;
-		details["Name"] = submesh.Name;
+		details["Name"] = submesh->Name;
 		details["VerticesSize"] = vertices.size();
 		details["IndicesSize"] = indices.size();
 		std::string jsonString = details.dump();
@@ -142,7 +142,7 @@ void MeshAsset::ImportToFile(std::string filePath, std::string assetPath, std::a
 
 	file.close();
 
-	Mesh::Create(Handle, submeshesList);
+	Mesh::Create(&Handle, submeshesList);
 }
 
 std::any MeshAsset::GetHandle()

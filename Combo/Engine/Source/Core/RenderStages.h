@@ -1,7 +1,6 @@
 #pragma once
 
 enum RenderStage {
-	COLOR,
-	DEPTH,
-	POSTPROCESS
+	GBUFFER,
+	LIGHTING,
 };

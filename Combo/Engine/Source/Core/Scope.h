@@ -1,6 +1,6 @@
 #pragma once
 
-template <typename T>
+/*template <typename T>
 class Scope {
 private:
 	T* Pointer;
@@ -22,4 +22,4 @@ public:
 		scope = Scope();
 		scope.Pointer = new T();
 	}
-};
+};*/

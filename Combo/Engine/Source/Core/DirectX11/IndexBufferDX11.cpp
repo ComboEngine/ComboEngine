@@ -7,7 +7,7 @@
 
 void IndexBufferDX11::Init(std::vector<uint32_t> Indices)
 {
-	ContextDX11* context = Core::s_Context.Cast<ContextDX11>();
+	ContextDX11* context = reinterpret_cast<ContextDX11*>(Core::s_Context);
 	D3D11_BUFFER_DESC BufferDesc;
 	ZeroMemory(&BufferDesc, sizeof(BufferDesc));
 	BufferDesc.Usage = D3D11_USAGE_DEFAULT;

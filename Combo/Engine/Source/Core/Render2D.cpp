@@ -7,7 +7,7 @@ std::vector<DrawTarget> Render2D::DrawTargets;
 void Render2D::RenderImGui()
 {
 	ImGui::SetNextWindowPos(ImVec2(0, 0));
-	ImGui::SetNextWindowSize(ImVec2(Core::s_Window.Get()->GetWidth(), Core::s_Window.Get()->GetHeight()));
+	ImGui::SetNextWindowSize(ImVec2(Core::s_Window->GetWidth(), Core::s_Window->GetHeight()));
 	ImGui::Begin("##Render2DSurface",nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove|ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_NoBackground);
 	for (DrawTarget target : DrawTargets) {
 		if (target.Type == RECTANGLE) {

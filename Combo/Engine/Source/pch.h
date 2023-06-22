@@ -173,6 +173,9 @@ extern "C" {
 #include <scene.h>
 #pragma comment(lib,"assimp-vc143-mtd.lib")
 
+#include <optick.h>
+#pragma comment(lib,"OptickCore.lib")
+
 #ifdef COMBO_DIRECTX11
 #define CB_CHECKHR(...) if(__VA_ARGS__ == 0) {} else { LOG("DX Operation Failed: " + std::system_category().message(__VA_ARGS__)) __debugbreak(); }
 #include <d3d11.h>

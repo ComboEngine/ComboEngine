@@ -8,8 +8,8 @@ public:
 	std::string uuid;
 	std::string path;
 
-	static void Create(Scope<Asset>& Obj,std::string path);
-	static void Import(Scope<Asset>& Obj, std::string filePath, std::string assetPath, std::any ImportSettings);
+	static void Create(Asset** Obj,std::string path);
+	static void Import(Asset** Obj, std::string filePath, std::string assetPath, std::any ImportSettings);
 
 	virtual void ReadFromFile(std::string path) = 0;
 	virtual void ImportToFile(std::string filePath, std::string assetPath,std::any ImportSettings) = 0;

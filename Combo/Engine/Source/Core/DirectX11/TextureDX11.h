@@ -8,6 +8,7 @@ public:
 	ID3D11ShaderResourceView* ShaderResourceView;
 	ID3D11SamplerState* Sampler;
 	virtual void Init(void* mipData, int Width, int Height);
+	virtual void ReadFromFramebuffer(Framebuffer* framebuffer);
 	virtual std::string GetApiName();
 };
 #endif

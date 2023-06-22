@@ -13,7 +13,7 @@ typedef void(__stdcall* ExitCallback)();
 extern "C" {
 	COMBO_API_INTEROP void Platform_CSPreInit() {
 		HINSTANCE instance = GetModuleHandle(NULL);
-		Platform::Create(Core::s_Platform, instance);
+		Platform::Create(&Core::s_Platform, instance);
 	}
 
 	COMBO_API_INTEROP int Core_Init() {
@@ -26,17 +26,17 @@ extern "C" {
 			});
 	}
 	COMBO_API_INTEROP void Interop_AddUpdateCallback(UpdateCallback callback) {
-		Core::s_Scripting.Get()->CSUpdate.Hook([=] {
+		Core::s_Scripting->CSUpdate.Hook([=] {
 			callback();
 			});
 	}
 	COMBO_API_INTEROP void Interop_AddDrawCallback(DrawCallback callback) {
-		Core::s_Scripting.Get()->CSDraw.Hook([=] {
+		Core::s_Scripting->CSDraw.Hook([=] {
 			callback();
 			});
 	}
 	COMBO_API_INTEROP void Interop_AddExitCallback(ExitCallback callback) {
-		Core::s_Scripting.Get()->CSExit.Hook([=] {
+		Core::s_Scripting->CSExit.Hook([=] {
 			callback();
 			});
 	}
@@ -49,11 +49,11 @@ extern "C" {
 		for (int i = 0; i < arraySize; i++) {
 			Names.push_back(components[i]);
 		}
-		Core::s_Scripting.Get()->ScriptNames = Names;
+		Core::s_Scripting->ScriptNames = Names;
 	}
 	COMBO_API_INTEROP char** Interop_GetUpdateComponentsList() {
 		std::vector<char*> components;
-		for (std::string component : Core::s_Scripting.Get()->UpdateScripts) {
+		for (std::string component : Core::s_Scripting->UpdateScripts) {
 			components.push_back((char*)component.c_str());
 		}
 

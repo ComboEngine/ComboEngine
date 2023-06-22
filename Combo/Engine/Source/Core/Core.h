@@ -10,6 +10,7 @@
 #include "Framebuffer.h"
 #include "RenderStages.h"
 #include "Project.h"
+#include "GBuffer.h"
 
 enum RendererAPI {
 	Null,
@@ -19,11 +20,12 @@ enum RendererAPI {
 class Core {
 public:
 	static RendererAPI RendererType;
-	static Scope<Window> s_Window;
-	static Scope<Platform> s_Platform;
-	static Scope<Context> s_Context;
-	static Scope<Scripting> s_Scripting;
-	static std::vector<Scope<Framebuffer>> Framebuffers;
+	static Window* s_Window;
+	static Platform* s_Platform;
+	static Context* s_Context;
+	static GBuffer* s_GBuffer;
+	static Scripting* s_Scripting;
+	static Framebuffer* s_Final;
 	static Project s_Project;
 
 	static Event BeginPlayEvent;
@@ -32,9 +34,7 @@ public:
 	static Event ExitEvent;
 	static Event ImGuiDrawEvent;
 
-	static RenderStage CurrentRenderStage;
-
-	static std::vector<Scope<Actor>> Actors;
+	static std::vector<Actor*> Actors;
 
 	static bool ShouldExit;
 

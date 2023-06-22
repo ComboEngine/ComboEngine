@@ -20,8 +20,8 @@ void ImGuiAdapter::Init()
     ImGui::StyleColorsDark();
 
 #ifdef COMBO_DIRECTX11
-    ContextDX11* context = Core::s_Context.Cast<ContextDX11>();
-    ImGui_ImplGlfw_InitForOther(Core::s_Window.Cast<WindowDX11>()->glfwWindow,true);
+    ContextDX11* context = reinterpret_cast<ContextDX11*>(Core::s_Context);
+    ImGui_ImplGlfw_InitForOther(reinterpret_cast<WindowDX11*>(Core::s_Window)->glfwWindow, true);
     ImGui_ImplDX11_Init(context->Device, context->Context);
 #endif
 

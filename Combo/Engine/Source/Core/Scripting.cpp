@@ -2,7 +2,7 @@
 #include "Scripting.h"
 #include "Core.h"
 
-void Scripting::Create(Scope<Scripting>& Obj)
+void Scripting::Create(Scripting** Obj)
 {
-	Scope<Scripting>::Create(Obj);
+	*Obj = new Scripting();
 }

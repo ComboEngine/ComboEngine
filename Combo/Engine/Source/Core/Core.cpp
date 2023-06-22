@@ -5,19 +5,21 @@
 #include "Input.h"
 #include "Camera.h"
 #include "Render2D.h"
+#include "Mesh.h"
 #ifdef COMBO_EDITOR
 #include <Editor/Editor.h>
 #endif
 
 
-Scope<Window> Core::s_Window;
-Scope<Platform> Core::s_Platform;
+Window* Core::s_Window;
+Platform* Core::s_Platform;
 RendererAPI Core::RendererType = Null;
-Scope<Context> Core::s_Context;
-Scope<Scripting> Core::s_Scripting;
-std::vector<Scope<Framebuffer>> Core::Framebuffers;
-RenderStage Core::CurrentRenderStage;
+Context* Core::s_Context;
+Scripting* Core::s_Scripting;
 Project Core::s_Project;
+Framebuffer* Core::s_Final;
+
+GBuffer* Core::s_GBuffer;
 
 Event Core::UpdateEvent;
 Event Core::DrawEvent;
@@ -25,7 +27,7 @@ Event Core::BeginPlayEvent;
 Event Core::ExitEvent;
 Event Core::ImGuiDrawEvent;
 
-std::vector<Scope<Actor>> Core::Actors;
+std::vector<Actor*> Core::Actors;
 
 bool Core::ShouldExit = false;
 
@@ -35,6 +37,8 @@ struct ConstantBufferData {
 
 int Core::Init()
 {
+
+	LOG(uuid::generate_uuid_v4());
 	//Select Renderer API
 #ifdef COMBO_DIRECTX11
 	Core::RendererType = DirectX11;
@@ -44,47 +48,57 @@ int Core::Init()
 
 	WindowSpecification WindowSpec;
 	WindowSpec.Title = "Core";
-	Window::Create(s_Window, WindowSpec);
+	Window::Create(&s_Window, WindowSpec);
 
 	UpdateEvent.Hook([&] {
-		s_Window.Get()->Update();
+		s_Window->Update();
 	});
 
 	ContextSpecification ContextSpec;
-	Context::Create(s_Context, ContextSpec);
+	Context::Create(&s_Context, ContextSpec);
 
-	Scripting::Create(s_Scripting);
+	Scripting::Create(&s_Scripting);
 
 	ImGuiAdapter::Init();
 
-	Scope<Framebuffer> EmptyFramebuffer;
-	EmptyFramebuffer.Set(nullptr);
+	GBuffer::Create(&s_GBuffer);
+
+	std::vector<Vertex> vertices = {
+		{-1.0f,  -1.0f, 1.0f, 1.0f,0.0f,0.0f,1.0f,1.0f,1.0f},
+		{-1.0f,   1.0f, 1.0f, 0.0f,1.0f,0.0f,1.0f,1.0f,1.0f},
+		{ 1.0f,   1.0f, 1.0f, 0.0f,0.0f,1.0f,1.0f,1.0f,1.0f},
+		{ 1.0f,  -1.0f, 1.0f, 1.0f,0.0f,1.0f,1.0f,1.0f,1.0f}
+	};
+
+	std::vector<uint32_t> indices = {
+		0,1,2,0,2,3
+	};
+
+	VertexBuffer* VertexBuffer;
+	IndexBuffer* IndexBuffer;
+	VertexBuffer::Create(&VertexBuffer, vertices);
+	IndexBuffer::Create(&IndexBuffer, indices);
 
 	UpdateEvent.Hook([&] {
-		CurrentRenderStage = RenderStage::DEPTH;
-		s_Context.Get()->BeginDraw(Framebuffers[CurrentRenderStage]);
+		s_Final->Bind(true);
+		s_Context->BeginDraw();
 		DrawEvent.Invoke();
+		s_Final->Unbind();
 
-		CurrentRenderStage = RenderStage::COLOR;
-		s_Context.Get()->BeginDraw(Framebuffers[CurrentRenderStage]);
-		DrawEvent.Invoke();
-
-		s_Context.Get()->BeginDraw(EmptyFramebuffer);
+		OPTICK_EVENT("Begin ImGui Draw");
+		s_Context->BeginDraw();
 		ImGuiAdapter::StartFrame();
 		ImGuiDrawEvent.Invoke();
 		Render2D::RenderImGui();
 		ImGuiAdapter::EndFrame();
-		s_Context.Get()->EndDraw();
 	});
 
 	GlobalShaders::Init();
 
-	Framebuffers.resize(2);
-	Framebuffer::Create(Framebuffers[RenderStage::COLOR], s_Window.Get()->GetWidth(), s_Window.Get()->GetHeight(), FramebufferTarget::Color);
-	Framebuffer::Create(Framebuffers[RenderStage::DEPTH], s_Window.Get()->GetWidth(), s_Window.Get()->GetHeight(), FramebufferTarget::Depth);
+	Framebuffer::Create(&s_Final, s_Window->GetWidth(), s_Window->GetHeight(), FramebufferTarget::Color);
 
-	Camera::ProjectionWidth = s_Window.Get()->GetWidth();
-	Camera::ProjectionHeight = s_Window.Get()->GetHeight();
+	Camera::ProjectionWidth = s_Window->GetWidth();
+	Camera::ProjectionHeight = s_Window->GetHeight();
 
 #ifdef COMBO_EDITOR
 	Editor::Init();
@@ -93,17 +107,17 @@ int Core::Init()
 #endif
 
 	DrawEvent.Hook([&] {
-		s_Context.Get()->SetClearColor(glm::vec3(0, 0, 0));
-		for (Scope<Actor> actor : Actors) {
-			for (Component* component : actor.Get()->Components) {
+		s_Context->SetClearColor(glm::vec3(0, 0, 0));
+		for (Actor* actor : Actors) {
+			for (Component* component : actor->Components) {
 				component->Draw(actor);
 			}
 		}
 	});
 
 	UpdateEvent.Hook([&] {
-		for (Scope<Actor> actor : Actors) {
-			for (Component* component : actor.Get()->Components) {
+		for (Actor* actor : Actors) {
+			for (Component* component : actor->Components) {
 				component->Update(actor);
 			}
 		}
@@ -111,7 +125,11 @@ int Core::Init()
 
 	BeginPlayEvent.Invoke();
 	while (!ShouldExit) {
+		OPTICK_FRAME("Update");
+		std::cout << "new frame" << std::endl;
 		UpdateEvent.Invoke();
+		OPTICK_EVENT("Presenting");
+		s_Context->EndDraw();
 		Input::LastMousePosition = Input::CurrentMousePosition;
 	}
 	ExitEvent.Invoke();

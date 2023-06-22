@@ -3,10 +3,11 @@
 #include "TextureDX11.h"
 #include "ContextDX11.h"
 #include "../Core.h"
+#include "FramebufferDX11.h"
 
 void TextureDX11::Init(void* mipData, int Width, int Height)
 {
-	ContextDX11* context = Core::s_Context.Cast<ContextDX11>();
+	ContextDX11* context = reinterpret_cast<ContextDX11*>(Core::s_Context);
 	D3D11_TEXTURE2D_DESC TextureDesc;
 	ZeroMemory(&TextureDesc, sizeof(TextureDesc));
 	TextureDesc.Width = Width;
@@ -44,6 +45,13 @@ void TextureDX11::Init(void* mipData, int Width, int Height)
 	SamplerDesc.MaxLOD = FLT_MAX;
 
 	CB_CHECKHR(context->Device->CreateSamplerState(&SamplerDesc, &this->Sampler));
+}
+
+void TextureDX11::ReadFromFramebuffer(Framebuffer* framebuffer)
+{
+	FramebufferDX11* buffer = reinterpret_cast<FramebufferDX11*>(framebuffer);
+	this->ShaderResourceView = buffer->ShaderResourceView;
+	this->Texture2D = buffer->RenderTargetTexture;
 }
 
 std::string TextureDX11::GetApiName()

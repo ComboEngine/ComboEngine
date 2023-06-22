@@ -6,13 +6,14 @@
 #include "Camera.h"
 #include "Texture.h"
 
-void Mesh::Create(Scope<Mesh>& Obj, std::vector<Submesh> Submeshes)
+void Mesh::Create(Mesh** Obj, std::vector<Submesh*> Submeshes)
 {
-	Scope<Mesh>::Create(Obj);
+	*Obj = new Mesh();
 
-	Obj.Get()->Submeshes = Submeshes;
+	Mesh* ObjPtr = *Obj;
+	ObjPtr->Submeshes = Submeshes;
 
-	ShaderDataBuffer::Create(Obj.Get()->ShaderDataBuffer, sizeof(MeshShaderData));
+	ShaderDataBuffer::Create(&ObjPtr->ShaderDataBuffer, sizeof(MeshShaderData));
 }
 
 XMMATRIX ConvertToXMMATRIX(const glm::mat4& matrix)
@@ -23,20 +24,25 @@ XMMATRIX ConvertToXMMATRIX(const glm::mat4& matrix)
 	return XMLoadFloat4x4(&xnaMatrix);
 }
 
-void Mesh::Render(Scope<Material> Mat,glm::vec3 Position, glm::quat Orientation, glm::vec3 Scale)
+void Mesh::Render(Material* Mat,glm::vec3 Position, glm::quat Orientation, glm::vec3 Scale)
 {
-	for (Submesh submesh : Submeshes) {
+	for (Submesh* submesh : Submeshes) {
+		Material* MatFinal = Mat;
+		if (submesh->Material != nullptr) {
+			MatFinal = std::any_cast<Material*>(submesh->Material->GetHandle());
+		}
+
 		Pipeline pipeline;
-		pipeline.Count = submesh.IndexBuffer.Get()->Size;
+		pipeline.Count = submesh->IndexBuffer->Size;
 		pipeline.ShaderDataBuffer = ShaderDataBuffer;
 		pipeline.Indexed = true;
-		pipeline.Shader = Mat.Get()->Shader;
-		pipeline.VertexBuffer = submesh.VertexBuffer;
-		pipeline.IndexBuffer = submesh.IndexBuffer;
+		pipeline.Shader = MatFinal->Shader;
+		pipeline.VertexBuffer = submesh->VertexBuffer;
+		pipeline.IndexBuffer = submesh->IndexBuffer;
 		pipeline.Textures = {};
 
-		if (Mat.Get()->Diffuse.UseTexture) {
-			pipeline.Textures.push_back(Mat.Get()->Diffuse.ColorTexture);
+		if (MatFinal->Diffuse.UseTexture) {
+			pipeline.Textures.push_back(MatFinal->Diffuse.ColorTexture);
 		}
 
 		glm::mat4 wvp = glm::mat4(1.0f);
@@ -47,18 +53,18 @@ void Mesh::Render(Scope<Material> Mat,glm::vec3 Position, glm::quat Orientation,
 		wvp = glm::scale(wvp, Scale);
 
 		MeshShaderData data;
-		data.Stage = Core::CurrentRenderStage;
 		data.WVP = XMMatrixTranspose(ConvertToXMMATRIX(wvp));
-		data.DiffuseUseTexture = false;
-		data.Diffuse = XMFLOAT4(Mat.Get()->Diffuse.Color.x, Mat.Get()->Diffuse.Color.y, Mat.Get()->Diffuse.Color.z, Mat.Get()->Diffuse.Color.w);
+		data.DiffuseUseTexture = MatFinal->Diffuse.UseTexture;
+		data.Diffuse = XMFLOAT4(MatFinal->Diffuse.Color.x, MatFinal->Diffuse.Color.y, MatFinal->Diffuse.Color.z, MatFinal->Diffuse.Color.w);
 
-		ShaderDataBuffer.Get()->Update(&data);
-		Core::s_Context.Get()->Draw(pipeline);
+
+		ShaderDataBuffer->Update(&data);
+		Core::s_Context->Draw(pipeline);
 	}
 }
 
 void Submesh::Init(std::vector<Vertex> Vertices, std::vector<uint32_t> Indices)
 {
-	VertexBuffer::Create(this->VertexBuffer, Vertices);
-	IndexBuffer::Create(this->IndexBuffer, Indices);
+	VertexBuffer::Create(&this->VertexBuffer, Vertices);
+	IndexBuffer::Create(&this->IndexBuffer, Indices);
 }

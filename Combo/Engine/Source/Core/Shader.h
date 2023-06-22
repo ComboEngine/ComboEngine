@@ -5,7 +5,7 @@
 
 class Shader {
 public:
-	static void Create(Scope<Shader>& shader, std::string VertexSource, std::string PixelSource);
+	static void Create(Shader** shader, std::string VertexSource, std::string PixelSource);
 
 	//API Functions
 	virtual void Init(std::string VertexSource, std::string PixelSource) = 0;

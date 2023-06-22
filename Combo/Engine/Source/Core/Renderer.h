@@ -11,8 +11,8 @@ public:
 	//End Editor side
 
 	Asset* mesh;
-	Scope<Material> material;
-	virtual void Update(Scope<Actor> actor);
-	virtual void Draw(Scope<Actor> actor);
+	Asset* material;
+	virtual void Update(Actor* actor);
+	virtual void Draw(Actor* actor);
 	virtual std::string GetName() { return "Renderer"; }
 };

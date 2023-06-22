@@ -5,7 +5,7 @@
 
 class ShaderDataBuffer {
 public:
-	static void Create(Scope<ShaderDataBuffer>& shaderDataBuffer,size_t Size);
+	static void Create(ShaderDataBuffer** shaderDataBuffer,size_t Size);
 
 	//API Functions
 	virtual void Init(size_t Size) = 0;
