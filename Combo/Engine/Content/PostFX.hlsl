@@ -42,7 +42,15 @@ SamplerState linear_sample
 };
 float4 PSMain(PSInput input) : SV_Target
 {
-    float4 Position = PositionTexture.Sample(SamplerPosition, float2(input.TexCoord.x, -input.TexCoord.y));
+    int3 sampleIndices = int3(input.Position.xy, 0);
+    float3 Normal = NormalTexture.Load(sampleIndices).xyz;
+    float3 Position = PositionTexture.Load(sampleIndices).xyz;
+    float3 Diffuse = DiffuseTexture.Load(sampleIndices).xyz;
+    
+    float3 L = -float3(10.0f, -10.0f, 0.0f);
+
+    float lightAmountDL = saturate(dot(Normal, L));
+    float3 color = float3(1, 1, 1) * lightAmountDL * Diffuse;
    
-    return Position;
+    return float4(color, 1.0f);
 }

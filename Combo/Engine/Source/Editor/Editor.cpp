@@ -13,10 +13,7 @@
 #include "Color.h"
 
 bool Editor::MouseHooked;
-std::string Editor::ToImportPathBuffer;
-std::string Editor::AssetPathBuffer;
-bool Editor::ShowImport = false;
-bool Editor::ShowImportExisting = false;
+
 EditorViewMode Editor::ViewMode = EditorViewMode::FinalBuffer;
 
 void DrawVec3Control(const std::string& label, glm::vec3& values, float resetValue = 0.0f, float columnWidth = 100.0f)
@@ -119,14 +116,6 @@ void Editor::Init()
 				{
 					SceneSerializer::CreateProject("test");
 				}
-				if (ImGui::MenuItem("Import"))
-				{
-					ShowImport = true;
-				}
-				if (ImGui::MenuItem("Import Existing"))
-				{
-					ShowImportExisting = true;
-				}
 				ImGui::EndMenu();
 			}
 
@@ -226,49 +215,7 @@ void Editor::Init()
 		ImGui::End();
 
 		ImGui::Begin("Graphics Settings");
-		//ImGui::InputFloat4("Light Pos", glm::value_ptr(Core::LightPos));
-		//ImGui::InputFloat("Light Range", &Core::LightRange);
-		//ImGui::InputFloat4("Light Atteunation", glm::value_ptr(Core::LightAttenuation));
 		ImGui::End();
-
-		if (ShowImport) {
-			ImGui::Begin("Import");
-
-			ImGui::Text("To Import Path");
-			ImGui::SameLine();
-			ImGui::InputText("##ToImportPath", &ToImportPathBuffer);
-			ImGui::Separator();
-
-			ImGui::Text("Asset Path");
-			ImGui::SameLine();
-			ImGui::InputText("##AssetPath", &AssetPathBuffer);
-			ImGui::Separator();
-
-			if (ImGui::Button("Import")) {
-				ImportAsset();
-				ShowImport = false;
-				ToImportPathBuffer = "";
-				AssetPathBuffer = "";
-			}
-			ImGui::End();
-		}
-
-		if (ShowImportExisting) {
-			ImGui::Begin("Import Existing");
-
-			ImGui::Text("Asset Path");
-			ImGui::SameLine();
-			ImGui::InputText("##AssetPath", &AssetPathBuffer);
-			ImGui::Separator();
-
-			if (ImGui::Button("Import")) {
-				ImportExistingAsset();
-				ShowImportExisting = false;
-				ToImportPathBuffer = "";
-				AssetPathBuffer = "";
-			}
-			ImGui::End();
-		}
 
 		ImGui::End();
 	});
@@ -345,20 +292,6 @@ void Editor::RenderComponent(std::string name,Component* component) {
 		}
 	}
 	ImGui::Separator();
-}
-
-void Editor::ImportAsset()
-{
-	Asset* Obj;
-	std::string fileExtension = std::filesystem::u8path(ToImportPathBuffer).extension().string();
-	if (fileExtension == ".fbx" || fileExtension == ".obj") {
-		Asset::Import(&Obj, ToImportPathBuffer, AssetPathBuffer, NULL);
-	}
-}
-
-void Editor::ImportExistingAsset()
-{
-	Asset::Create(nullptr, AssetPathBuffer);
 }
 
 void Editor::OnDrop(std::vector<std::string> paths)
