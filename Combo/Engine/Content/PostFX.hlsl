@@ -47,10 +47,32 @@ float4 PSMain(PSInput input) : SV_Target
     float3 Position = PositionTexture.Load(sampleIndices).xyz;
     float3 Diffuse = DiffuseTexture.Load(sampleIndices).xyz;
     
-    float3 L = -float3(10.0f, -10.0f, 0.0f);
+    //float3 L = -float3(-10.0f, -10.0f, 0.0f);
 
-    float lightAmountDL = saturate(dot(Normal, L));
-    float3 color = float3(1, 1, 1) * lightAmountDL * Diffuse;
+    //float lightAmountDL = saturate(dot(Normal, L));
+    //float3 color = float3(1, 1, 1) * lightAmountDL * Diffuse;
    
-    return float4(color, 1.0f);
+    //return float4(color, 1.0f);
+    
+    float4 color = float4(0,0,0,1);
+    if (length(Normal) > 0.0f)
+    {
+        float3 lightDir = normalize(float3(1, 1, 1));
+        float3 lambertian = max(dot(lightDir, Normal), 0.0f);
+        float specular = 0.0f;
+        
+        [flatten]
+        if (length(lambertian) > 0.0f)
+        {
+            float3 viewDir = normalize(-Position);
+            float3 halfDir = normalize(lightDir + viewDir);
+            float specAngle = max(dot(halfDir, Normal), 0.0f);
+            specular = pow(specAngle, 100.0f);
+        }
+        
+        float3 colorLinear = lambertian * Diffuse + specular * float3(1.0f, 1.0f, 1.0f);
+        color = float4(pow(colorLinear, float3(1.0f / 2.2f, 1.0f / 2.2f, 1.0f / 2.2f)), 1.0f);
+
+    }
+    return color;
 }

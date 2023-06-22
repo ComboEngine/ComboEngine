@@ -16,8 +16,8 @@ void ShaderDX11::Init(std::string VertexSource, std::string PixelSource)
 	D3DCompileFromFile(vertex_source.c_str(), NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "VSMain", "vs_5_0", NULL, NULL, &VertexBlob, &blobVertex);
 	D3DCompileFromFile(pixel_source.c_str(), NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "PSMain", "ps_5_0", NULL, NULL, &PixelBlob, &blob);
 
-	//std::cout << (char*)blob->GetBufferPointer() << std::endl;
-//	std::cout << (char*)blobVertex->GetBufferPointer() << std::endl;
+	std::cout << (char*)blob->GetBufferPointer() << std::endl;
+	//std::cout << (char*)blobVertex->GetBufferPointer() << std::endl;
 
 	CB_ASSERT(VertexBlob != nullptr, "Failed to compile Vertex Shader!");
 	CB_ASSERT(PixelBlob != nullptr, "Failed to compile Pixel Shader!");
