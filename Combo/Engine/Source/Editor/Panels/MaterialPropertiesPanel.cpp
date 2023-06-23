@@ -35,4 +35,8 @@ void MaterialPropertiesPanel::Draw()
 		ImGui::ColorEdit4("##DiffuseColor", glm::value_ptr(materialHandle->Diffuse.Color));
 		ImGui::Separator();
 	}
+	ImGui::Separator();
+	if (ImGui::Button("Save")) {
+		this->material->Save();
+	}
 }

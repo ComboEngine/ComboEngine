@@ -30,6 +30,7 @@ void ProjectSerializer::LoadProject(std::string path)
 	for (nlohmann::json assetJson : j["Assets"]) {
 		Asset* asset;
 		Asset::ImportFromCb(&asset, Core::s_Project.ProjectSpaceDirectory + (std::string)assetJson["ProjectPath"],"");
+		asset->Name = assetJson["Name"];
 		Core::s_Project.Assets[asset->UUID] = asset;
  	}
 

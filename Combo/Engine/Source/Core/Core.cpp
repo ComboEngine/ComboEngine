@@ -6,6 +6,7 @@
 #include "Camera.h"
 #include "Render2D.h"
 #include "Mesh.h"
+#include "Assets/ProjectSerializer.h"
 #ifdef COMBO_EDITOR
 #include <Editor/Editor.h>
 #endif
@@ -76,6 +77,11 @@ int Core::Init()
 		s_Context->BeginDraw();
 		ImGuiAdapter::StartFrame();
 		ImGuiDrawEvent.Invoke();
+		#ifndef COMBO_EDITOR
+		Camera::Drone();
+		Render2D::RenderTexturedRect(0, 0, s_Window->GetWidth(), s_Window->GetHeight(), PostFX.Frame->GetImage());
+		s_Window->LockCursor(true);
+		#endif
 		Render2D::RenderImGui();
 		ImGuiAdapter::EndFrame();
 	});
@@ -90,7 +96,7 @@ int Core::Init()
 #ifdef COMBO_EDITOR
 	Editor::Init();
 #else
-	ProjectSerializer::Load("test.cbscene");
+	ProjectSerializer::LoadProject("D:\\ComboEngine\\Sandbox\\Sandbox.cbproject");
 #endif
 
 	DrawEvent.Hook([&] {

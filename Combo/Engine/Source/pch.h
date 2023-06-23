@@ -19,7 +19,6 @@
 #include <gtx/quaternion.hpp>
 
 
-
 //Enable editor
 #define COMBO_EDITOR
 

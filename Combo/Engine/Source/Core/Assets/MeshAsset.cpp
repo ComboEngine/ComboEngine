@@ -156,3 +156,7 @@ std::any MeshAsset::GetHandle()
 {
 	return this->Handle;
 }
+
+void MeshAsset::Save()
+{
+}

@@ -12,22 +12,7 @@ void MaterialAsset::CreateEmpty()
 	this->Handle = new Material();
 	this->Handle->Shader = GlobalShaders::GetShader(Render3D);
 	this->Handle->Diffuse.Color = glm::vec4(1, 1, 1, 1);
-
-	nlohmann::json j;
-	j["Name"] = this->Name;
-	j["UUID"] = this->UUID;
-
-	nlohmann::json diffuseVec;
-	diffuseVec["R"] = this->Handle->Diffuse.Color.x;
-	diffuseVec["G"] = this->Handle->Diffuse.Color.y;
-	diffuseVec["B"] = this->Handle->Diffuse.Color.z;
-	diffuseVec["A"] = this->Handle->Diffuse.Color.w;
-
-	j["Diffuse"] = diffuseVec;
-
-	std::ofstream file(OSPath);
-	file << j.dump(4);
-	file.close();
+	this->Save();
 }
 
 void MaterialAsset::ImportFromEngineType()
@@ -55,4 +40,23 @@ std::string MaterialAsset::GetType()
 std::any MaterialAsset::GetHandle()
 {
 	return this->Handle;
+}
+
+void MaterialAsset::Save()
+{
+	nlohmann::json j;
+	j["Name"] = this->Name;
+	j["UUID"] = this->UUID;
+
+	nlohmann::json diffuseVec;
+	diffuseVec["R"] = this->Handle->Diffuse.Color.x;
+	diffuseVec["G"] = this->Handle->Diffuse.Color.y;
+	diffuseVec["B"] = this->Handle->Diffuse.Color.z;
+	diffuseVec["A"] = this->Handle->Diffuse.Color.w;
+
+	j["Diffuse"] = diffuseVec;
+
+	std::ofstream file(OSPath);
+	file << j.dump(4);
+	file.close();
 }
