@@ -8,9 +8,16 @@ enum EditorViewMode {
 	FinalBuffer
 };
 
+enum GizmoType {
+	POSITION,
+	ROTATION,
+	SCALE,
+	ALL
+};
+
 class ViewportPanel : public Panel {
 public:
-	int CurrentActorTypeCreateActorPopup = 0;
+	GizmoType GizmoType;
 	EditorViewMode ViewMode = EditorViewMode::FinalBuffer;
 	bool MouseHooked;
 	virtual std::string GetName();

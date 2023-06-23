@@ -13,19 +13,19 @@
             "UUID": "a0ea39c3-7407-47e4-bfb1-67916f037624"
         },
         {
-            "Name": "Test2",
-            "ProjectPath": "D:\\ComboEngine\\Combo\\Engine\\mat2.cbmaterial",
-            "Type": "Material",
-            "UUID": "a0ea39c3-7407-47e4-bfb1-67916f037625"
-        },
-        {
             "Name": "untitled.cbmesh",
             "ProjectPath": "D:\\ComboEngine\\Combo\\Engine\\untitled.cbmesh",
             "Type": "Mesh",
             "UUID": "aaa2fc24-cc78-46ac-85ba-9c4d22d48a26"
+        },
+        {
+            "Name": "Test2",
+            "ProjectPath": "D:\\ComboEngine\\Combo\\Engine\\mat2.cbmaterial",
+            "Type": "Material",
+            "UUID": "a0ea39c3-7407-47e4-bfb1-67916f037625"
         }
     ],
-    "MainScene": "63ef60a9-1af6-42a4-9f82-f59ab2f8cdf5",
+    "MainScene": "2e6c805f-08e0-49a1-8bdf-890b5a7d34a4",
     "Name": "TwoSpheres",
     "Scenes": [
         {
@@ -44,13 +44,13 @@
                     "Name": "Actor",
                     "Orientation": {
                         "X": 0.0,
-                        "Y": -1.0,
+                        "Y": -1.5,
                         "Z": 0.0
                     },
                     "Position": {
-                        "X": 27.5,
-                        "Y": -4.099999904632568,
-                        "Z": 2.299999952316284
+                        "X": 8.0,
+                        "Y": 1.5,
+                        "Z": 2.4000000953674316
                     },
                     "Scale": {
                         "X": 1.0,
@@ -88,8 +88,8 @@
                         "Z": 0.0
                     },
                     "Position": {
-                        "X": 19.399999618530273,
-                        "Y": -5.300000190734863,
+                        "X": 0.0,
+                        "Y": 0.0,
                         "Z": 0.0
                     },
                     "Scale": {
@@ -101,12 +101,12 @@
                 }
             ],
             "EditorCameraPosition": {
-                "X": 33.65831756591797,
-                "Y": 0.30714112520217896,
-                "Z": 0.030321240425109863
+                "X": 17.161367416381836,
+                "Y": 7.986893653869629,
+                "Z": 3.3794467449188232
             },
             "Name": "Main",
-            "UUID": "63ef60a9-1af6-42a4-9f82-f59ab2f8cdf5"
+            "UUID": "2e6c805f-08e0-49a1-8bdf-890b5a7d34a4"
         }
     ]
 }

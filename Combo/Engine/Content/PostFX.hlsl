@@ -67,5 +67,12 @@ float4 PSMain(PSInput input) : SV_Target
     float3 diffuse = max(dot(Normal, lightDir), 0.0) * Diffuse * float3(1, 1, 1);
     lighting += diffuse;
     
-    return float4(lighting, 1);
+    
+    float alpha = 1;
+    if (length(lighting) <= 0.0f)
+    {
+        alpha = 0;
+    }
+   
+    return float4(lighting, alpha);
 }

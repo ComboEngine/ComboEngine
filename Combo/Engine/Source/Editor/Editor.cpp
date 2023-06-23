@@ -13,6 +13,7 @@
 #include "Panels/ViewportPanel.h"
 #include "Panels/ContentPanel.h"
 #include "Panels/ActorPropertiesPanel.h"
+#include "Panels/ScenePanel.h"
 #include "Panels/MaterialPropertiesPanel.h"
 
 std::vector<Panel*> Editor::Panels;
@@ -30,6 +31,7 @@ void Editor::Init()
 	Panels.push_back(new ActorPropertiesPanel());
 	Panels.push_back(new ContentPanel());
 	Panels.push_back(new MaterialPropertiesPanel());
+	Panels.push_back(new ScenePanel());
 	Panels[3]->Show = false;
 
 	ImGui::GetIO().Fonts->AddFontFromFileTTF("./Content/Roboto.ttf", 15.0f);
@@ -70,6 +72,10 @@ void Editor::Init()
 				if (ImGui::MenuItem("Normal")) { reinterpret_cast<ViewportPanel*>(Panels[0])->ViewMode = Normal; }
 				if (ImGui::MenuItem("Diffuse")) { reinterpret_cast<ViewportPanel*>(Panels[0])->ViewMode = Diffuse; }
 				if (ImGui::MenuItem("GBuffer")) { reinterpret_cast<ViewportPanel*>(Panels[0])->ViewMode = FinalBuffer; }
+				if (ImGui::MenuItem("Position Gizmo")) { reinterpret_cast<ViewportPanel*>(Panels[0])->GizmoType = POSITION; }
+				if (ImGui::MenuItem("Rotation Gizmo")) { reinterpret_cast<ViewportPanel*>(Panels[0])->GizmoType = ROTATION; }
+				if (ImGui::MenuItem("Scale Gizmo")) { reinterpret_cast<ViewportPanel*>(Panels[0])->GizmoType = SCALE; }
+				if (ImGui::MenuItem("All Gizmos")) { reinterpret_cast<ViewportPanel*>(Panels[0])->GizmoType = ALL; }
 				ImGui::End();
 			}
 
