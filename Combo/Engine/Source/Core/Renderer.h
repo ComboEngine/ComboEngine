@@ -2,7 +2,6 @@
 #include "Actor.h"
 #include "Mesh.h"
 #include "Material.h"
-#include "Assets/MeshAsset.h"
 
 class Renderer : public Component {
 public:

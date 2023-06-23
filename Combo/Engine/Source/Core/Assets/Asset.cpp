@@ -1,38 +1,54 @@
 #include "pch.h"
 #include "Asset.h"
-#include "MeshAsset.h"
 #include "MaterialAsset.h"
-#include "../Core.h"
-void Asset::Create(Asset** Obj, std::string path)
+#include "MeshAsset.h"
+#include <Core/Core.h>
+
+void Asset::New(Asset** Obj, AssetType type, std::string ProjectPath)
 {
-	std::string extension = std::filesystem::u8path(path).extension().string();
-
-	if (extension == ".cbmesh") {
-		*Obj = new MeshAsset();
+	switch (type) {
+	case AssetType::MaterialAssetType: *Obj = new MaterialAsset(); break;
 	}
 
-	if (extension == ".cbmaterial") {
-		*Obj = new MaterialAsset();
+	if (*Obj != nullptr) {
+		Asset* Ptr = *Obj;
+		Ptr->UUID = uuid::generate_uuid_v4();
+		Ptr->OSPath = GenerateOSPath(ProjectPath);
+		Ptr->Name = std::filesystem::u8path(Ptr->OSPath).filename().string().substr(0, std::filesystem::u8path(Ptr->OSPath).filename().string().find_last_of("."));
+		Ptr->ProjectPath = ProjectPath;
+		Ptr->CreateEmpty();
+		Core::s_Project.Assets[Ptr->UUID] = Ptr;
 	}
-
-	Asset* ObjPtr = *Obj;
-	ObjPtr->ReadFromFile(path);
-	Core::s_Project.Assets[ObjPtr->uuid] = ObjPtr;
-	ObjPtr->pathInProject = path;
 }
 
-void Asset::Import(Asset** Obj, std::string filePath, std::string assetPath, std::any ImportSettings)
+void Asset::ImportFromCb(Asset** Obj, std::string OSCbPath, std::string CurrentEditorFolder)
 {
-	std::string extension = std::filesystem::u8path(filePath).extension().string();
+	std::string Extension = std::filesystem::u8path(OSCbPath).extension().string();
+	if (Extension == ".cbmaterial") { *Obj = new MaterialAsset(); }
+	if (Extension == ".cbmesh") { *Obj = new MeshAsset(); }
 
-	if (extension == ".fbx" || extension == ".obj") {
-		*Obj = new MeshAsset();
-	}
+	Asset* Ptr = *Obj;
+	Ptr->OSPath = OSCbPath;
+	Ptr->ProjectPath = CurrentEditorFolder + std::filesystem::u8path(OSCbPath).filename().string();
+	Ptr->ImportFromEngineType();
+	Core::s_Project.Assets[Ptr->UUID] = Ptr;
+}
 
-	Asset* ObjPtr = *Obj;
-	ObjPtr->uuid = uuid::generate_uuid_v4();
+void Asset::ImportFromBinary(Asset** Obj, std::string BinaryPath, std::string ProjectSpacePath, std::string CurrentEditorFolder)
+{
+	std::string Extension = std::filesystem::u8path(BinaryPath).extension().string();
+	if (Extension == ".fbx" || Extension == ".obj") { *Obj = new MeshAsset(); }
 
-	ObjPtr->ImportToFile(filePath,assetPath,ImportSettings);
-	Core::s_Project.Assets[ObjPtr->uuid] = ObjPtr;
-	ObjPtr->pathInProject = assetPath;
+	Asset* Ptr = *Obj;
+	Ptr->UUID = uuid::generate_uuid_v4();
+	Ptr->OSPath = GenerateOSPath(ProjectSpacePath);
+	Ptr->Name = std::filesystem::u8path(Ptr->OSPath).filename().string().substr(0, std::filesystem::u8path(Ptr->OSPath).filename().string().find_last_of("."));
+	Ptr->ProjectPath = ProjectSpacePath;
+	Ptr->ImportFromOriginal(BinaryPath);
+	Core::s_Project.Assets[Ptr->UUID] = Ptr;
+}
+
+std::string Asset::GenerateOSPath(std::string ProjectPath)
+{
+	return Core::s_Project.ProjectSpaceDirectory + ProjectPath;
 }

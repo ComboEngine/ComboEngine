@@ -53,13 +53,6 @@ float4 PSMain(PSInput input) : SV_Target
     float3 Position = PositionTexture.Load(sampleIndices).xyz;
     float3 Diffuse = DiffuseTexture.Load(sampleIndices).xyz;
     
-    //float3 L = -float3(-10.0f, -10.0f, 0.0f);
-
-    //float lightAmountDL = saturate(dot(Normal, L));
-    //float3 color = float3(1, 1, 1) * lightAmountDL * Diffuse;
-   
-    //return float4(color, 1.0f);
-    
     float3 lighting = Diffuse * 0.1;
     float3 viewDir = normalize(CameraPos - Position);
     
@@ -69,7 +62,7 @@ float4 PSMain(PSInput input) : SV_Target
     
     
     float alpha = 1;
-    if (length(lighting) <= 0.0f)
+    if (length(Position) <= 0)
     {
         alpha = 0;
     }

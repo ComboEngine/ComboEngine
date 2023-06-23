@@ -16,7 +16,7 @@ void ContentPanel::Draw()
 	for (const auto& asset : Core::s_Project.Assets) {
 		if (asset.second != nullptr) {
 			ImGui::SameLine();
-			ImGui::Button((asset.second->GetName() + "##" + std::to_string(index)).c_str(), ImVec2(128, 128));
+			ImGui::Button((asset.second->Name + "##" + std::to_string(index)).c_str(), ImVec2(128, 128));
 
 			if (ImGui::BeginDragDropSource()) {
 				ImGui::SetDragDropPayload(asset.second->GetType().c_str(), asset.first.c_str(), sizeof(asset.first));
@@ -43,7 +43,7 @@ void ContentPanel::Draw()
 		if (ImGui::Button("Create")) {
 			if (elements[CurrentAssetTypeCreateAssetPopup] == "Material") {
 				Asset* asset;
-				Asset::Import(&asset, PathBuffer, "", NULL);
+				Asset::New(&asset, AssetType::MaterialAssetType, PathBuffer);
 			}
 			ImGui::CloseCurrentPopup();
 			PathBuffer = "";

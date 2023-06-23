@@ -5,6 +5,7 @@
 
 class Project {
 public:
+	std::string ProjectSpaceDirectory = "";
 	std::unordered_map<std::string, Asset*> Assets;
 	std::vector<Scene> Scenes;
 	std::vector<Asset*> GetAssetsByType(std::string type);

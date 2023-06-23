@@ -49,6 +49,11 @@ void WindowDX11::Update() {
 	glfwPollEvents();
 }
 
+bool WindowDX11::IsWindowFocused()
+{
+	return glfwGetWindowAttrib(this->glfwWindow, 0x00020001);
+}
+
 void WindowDX11::SetTitle(std::string title)
 {
 	glfwSetWindowTitle(glfwWindow, title.c_str());

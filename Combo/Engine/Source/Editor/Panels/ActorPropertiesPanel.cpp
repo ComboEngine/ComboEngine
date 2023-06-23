@@ -92,7 +92,7 @@ void ActorPropertiesPanel::RenderComponent(std::string name, Component* componen
 			text = "None";
 		}
 		else {
-			text = renderer->mesh->GetName();
+			text = renderer->mesh->Name;
 		}
 		ImGui::InputText("##MeshUUIDBuffer", &text, ImGuiInputTextFlags_ReadOnly);
 
@@ -110,7 +110,7 @@ void ActorPropertiesPanel::RenderComponent(std::string name, Component* componen
 			materialText = "None";
 		}
 		else {
-			materialText = renderer->material->GetName();
+			materialText = renderer->material->Name;
 		}
 		ImGui::SameLine();
 		ImGui::InputText("##GlobalMaterial", &materialText, ImGuiInputTextFlags_ReadOnly);
@@ -128,7 +128,7 @@ void ActorPropertiesPanel::RenderComponent(std::string name, Component* componen
 			for (Submesh* submesh : std::any_cast<Mesh*>(renderer->mesh->GetHandle())->Submeshes) {
 				std::string submeshMaterialName = "None";
 				if (submesh->Material != nullptr) {
-					submeshMaterialName = submesh->Material->GetName();
+					submeshMaterialName = submesh->Material->Name;
 				}
 				ImGui::Text((submesh->Name + " [" + std::to_string(index) + "]").c_str());
 				ImGui::SameLine();

@@ -1,15 +1,13 @@
 #pragma once
 #include "Asset.h"
-#include "../Mesh.h"
+#include <Core/Mesh.h>
 
-class MeshAsset : public Asset{
+class MeshAsset : public Asset {
 public:
 	Mesh* Handle;
-	std::string Name;
-
-	virtual void ReadFromFile(std::string path);
-	virtual void ImportToFile(std::string filePath,std::string assetPath, std::any ImportSettings);
-	virtual std::any GetHandle();
-	virtual std::string GetName();
+	virtual void ImportFromOriginal(std::string BinaryPath);
+	virtual void CreateEmpty();
+	virtual void ImportFromEngineType();
 	virtual std::string GetType();
+	virtual std::any GetHandle();
 };

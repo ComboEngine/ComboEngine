@@ -37,8 +37,6 @@ struct ConstantBufferData {
 
 int Core::Init()
 {
-
-	LOG(uuid::generate_uuid_v4());
 	//Select Renderer API
 #ifdef COMBO_DIRECTX11
 	Core::RendererType = DirectX11;

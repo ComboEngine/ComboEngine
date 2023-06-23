@@ -1,21 +1,35 @@
 #pragma once
-#include "pch.h"
-
 #include "UUID.h"
+
+enum AssetType {
+	MaterialAssetType,
+	MeshAssetType
+};
 
 class Asset {
 public:
-	std::string uuid;
-	std::string osPath;
-	std::string pathInProject;
+	//Asset Universal ID
+	std::string UUID;
+	//Asset Name
+	std::string Name;
+	//Asset OS Path (Path to actual os asset file)
+	std::string OSPath;
+	//Asset Project Path (Path in project space)
+	std::string ProjectPath;
+	//Asset Handle
+	
 
-	static void Create(Asset** Obj,std::string path);
-	static void Import(Asset** Obj, std::string filePath, std::string assetPath, std::any ImportSettings);
+	static void New(Asset** Obj,AssetType type,std::string ProjectPath);
+	static void ImportFromCb(Asset**, std::string OSCbPath, std::string CurrentEditorFolder);
+	static void ImportFromBinary(Asset**, std::string BinaryPath, std::string ProjectSpacePath, std::string CurrentEditorFolder);
 
-	virtual void ReadFromFile(std::string path) = 0;
-	virtual void ImportToFile(std::string filePath, std::string assetPath,std::any ImportSettings) = 0;
+	static std::string GenerateOSPath(std::string ProjectPath);
+	
+
+	//Original = mesh -> fbx,obj, texture -> png, jpg
+	virtual void ImportFromOriginal(std::string BinaryPath) = 0;
+	virtual void CreateEmpty() = 0;
+	virtual void ImportFromEngineType() = 0;
 	virtual std::any GetHandle() = 0;
-	virtual std::string GetName() = 0;
 	virtual std::string GetType() = 0;
-	std::string GetUUID() { return uuid; }
 };

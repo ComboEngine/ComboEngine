@@ -16,6 +16,7 @@ public:
 	//API Functions
 	virtual void Init() = 0;
 	virtual void Update() = 0;
+	virtual bool IsWindowFocused() = 0;
 	virtual int GetWidth() = 0;
 	virtual void SetTitle(std::string title) = 0;
 	virtual int GetHeight() = 0;

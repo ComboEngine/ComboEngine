@@ -1,30 +1,21 @@
 #include "pch.h"
 #include "MaterialAsset.h"
-#include "../GlobalShaders.h"
+#include <Core/Material.h>
+#include <Core/GlobalShaders.h>
 
-void MaterialAsset::ReadFromFile(std::string path)
+void MaterialAsset::ImportFromOriginal(std::string BinaryPath)
 {
-	std::ifstream t(path.c_str());
-	std::string str((std::istreambuf_iterator<char>(t)),
-		std::istreambuf_iterator<char>());
-	nlohmann::json j = nlohmann::json::parse(str);
-
-	this->Name = j["Name"];
-	this->uuid = j["UUID"];
-
-	glm::vec4 diffuse = glm::vec4(j["Diffuse"]["R"], j["Diffuse"]["G"], j["Diffuse"]["B"], j["Diffuse"]["A"]);
-
-	Material::Create(&Handle);
-	Handle->Shader = GlobalShaders::GetShader(GlobalShader::Render3D);
-	Handle->Diffuse = MaterialColor::FromColor(diffuse);
 }
 
-void MaterialAsset::ImportToFile(std::string filePath, std::string assetPath, std::any ImportSettings)
+void MaterialAsset::CreateEmpty()
 {
 	this->Handle = new Material();
+	this->Handle->Shader = GlobalShaders::GetShader(Render3D);
+	this->Handle->Diffuse.Color = glm::vec4(1, 1, 1, 1);
+
 	nlohmann::json j;
 	j["Name"] = this->Name;
-	j["UUID"] = this->uuid;
+	j["UUID"] = this->UUID;
 
 	nlohmann::json diffuseVec;
 	diffuseVec["R"] = this->Handle->Diffuse.Color.x;
@@ -34,22 +25,34 @@ void MaterialAsset::ImportToFile(std::string filePath, std::string assetPath, st
 
 	j["Diffuse"] = diffuseVec;
 
-	std::ofstream file(filePath);
+	std::ofstream file(OSPath);
 	file << j.dump(4);
 	file.close();
 }
 
-std::any MaterialAsset::GetHandle()
+void MaterialAsset::ImportFromEngineType()
 {
-	return Handle;
-}
+	std::ifstream t(OSPath.c_str());
+	std::string str((std::istreambuf_iterator<char>(t)),
+		std::istreambuf_iterator<char>());
+	nlohmann::json j = nlohmann::json::parse(str);
 
-std::string MaterialAsset::GetName()
-{
-	return Name;
+	this->Name = j["Name"];
+	this->UUID = j["UUID"];
+
+	glm::vec4 diffuse = glm::vec4(j["Diffuse"]["R"], j["Diffuse"]["G"], j["Diffuse"]["B"], j["Diffuse"]["A"]);
+
+	Material::Create(&Handle);
+	Handle->Shader = GlobalShaders::GetShader(GlobalShader::Render3D);
+	Handle->Diffuse = MaterialColor::FromColor(diffuse);
 }
 
 std::string MaterialAsset::GetType()
 {
 	return "Material";
+}
+
+std::any MaterialAsset::GetHandle()
+{
+	return this->Handle;
 }

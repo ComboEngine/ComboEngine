@@ -6,7 +6,6 @@
 #include <Core/Input.h>
 #include <Core/Script.h>
 #include <Core/Camera.h>
-#include <Core/Assets/MeshAsset.h>
 #include <Core/Assets/ProjectSerializer.h>
 #include "Color.h"
 
@@ -119,17 +118,17 @@ void Editor::OnDrop(std::vector<std::string> paths)
 		}
 
 		if (fileExtension == ".cbmesh") {
-			Asset::Create(&Obj, path);
+			Asset::ImportFromCb(&Obj, path,"");
 		}
 		else {
 			if (fileExtension == ".fbx" || fileExtension == ".obj") {
 				std::string name = std::filesystem::u8path(path).filename().string();
-				Asset::Import(&Obj, path, std::string("./") + name.substr(0, name.find_last_of(".")) + ".cbmesh", NULL);
+				Asset::ImportFromBinary(&Obj, path, name.substr(0, name.find_last_of(".")) + ".cbmesh","");
 			}
 		}
 
 		if (fileExtension == ".cbmaterial") {
-			Asset::Create(&Obj, path);
+			Asset::ImportFromCb(&Obj, path,"");
 		}
 	}
 }

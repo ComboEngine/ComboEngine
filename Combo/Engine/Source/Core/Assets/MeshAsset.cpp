@@ -1,72 +1,19 @@
 #include "pch.h"
 #include "MeshAsset.h"
+#include <Core/Material.h>
+#include <Core/GlobalShaders.h>
 
-void MeshAsset::ReadFromFile(std::string path)
+void MeshAsset::ImportFromOriginal(std::string BinaryPath)
 {
-	Name = std::filesystem::u8path(path).filename().string();
-
-	std::ifstream infile;
-	infile.open(path.c_str(), std::ios::binary);
-
-	infile.seekg(0);
-
-	uint32_t uuidSize;
-	infile.read((char*)&uuidSize, sizeof(uint32_t));
-	std::string uuid;
-	uuid.resize(uuidSize);
-	infile.read(uuid.data(), uuidSize);
-	
-
-	this->uuid = uuid;
-
-	uint32_t size;
-	infile.read((char*)&size, sizeof(uint32_t));
-
-	std::vector<Submesh*> submeshesList;
-
-	for (int i = 0; i < size; i++) {
-		std::vector<Vertex> vertices;
-		std::vector<uint32_t> indices;
-
-		std::string jsonStr;
-		uint32_t jsonSize;
-		infile.read((char*)&jsonSize, sizeof(uint32_t));
-		jsonStr.resize(jsonSize);
-		infile.read(jsonStr.data(), jsonSize);
-		nlohmann::json json = nlohmann::json::parse(jsonStr);
-
-		for (int j = 0; j < json["VerticesSize"]; j++) {
-			Vertex v;
-			infile.read((char*)&v, sizeof(Vertex));
-			vertices.push_back(v);
-		}
-
-		for (int j = 0; j < json["IndicesSize"]; j++) {
-			uint32_t d;
-			infile.read((char*)&d, sizeof(uint32_t));
-			indices.push_back(d);
-		}
-		Submesh* submesh = new Submesh();
-		submesh->Init(vertices, indices);
-		submesh->Name = json["Name"];
-		submeshesList.push_back(submesh);
-	}
-
-	Mesh::Create(&Handle, submeshesList);
-}
-
-void MeshAsset::ImportToFile(std::string filePath, std::string assetPath, std::any ImportSettings)
-{
-	Name = std::filesystem::u8path(assetPath).filename().string();
 	Assimp::Importer importer;
-	const aiScene* scene = importer.ReadFile(filePath.c_str(), aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_JoinIdenticalVertices);
+	const aiScene* scene = importer.ReadFile(BinaryPath.c_str(), aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_JoinIdenticalVertices);
 
 	std::vector<Submesh*> submeshesList;
 
 	std::ofstream file;
-	file.open(assetPath, std::ios::binary | std::ios::out);
+	file.open(OSPath.c_str(), std::ios::binary | std::ios::out);
 
-	std::string uuid = this->uuid;
+	std::string uuid = this->UUID;
 	uint32_t uuidSize = uuid.size();
 	file.write((const char*)&uuidSize, sizeof(uint32_t));
 	file.write(uuid.data(), uuidSize);
@@ -143,17 +90,69 @@ void MeshAsset::ImportToFile(std::string filePath, std::string assetPath, std::a
 	Mesh::Create(&Handle, submeshesList);
 }
 
-std::any MeshAsset::GetHandle()
+void MeshAsset::CreateEmpty()
 {
-	return Handle;
+	
 }
 
-std::string MeshAsset::GetName()
+void MeshAsset::ImportFromEngineType()
 {
-	return Name;
+	std::ifstream infile;
+	infile.open(OSPath.c_str(), std::ios::binary);
+
+	infile.seekg(0);
+
+	uint32_t uuidSize;
+	infile.read((char*)&uuidSize, sizeof(uint32_t));
+	std::string uuid;
+	uuid.resize(uuidSize);
+	infile.read(uuid.data(), uuidSize);
+
+
+	this->UUID = uuid;
+
+	uint32_t size;
+	infile.read((char*)&size, sizeof(uint32_t));
+
+	std::vector<Submesh*> submeshesList;
+
+	for (int i = 0; i < size; i++) {
+		std::vector<Vertex> vertices;
+		std::vector<uint32_t> indices;
+
+		std::string jsonStr;
+		uint32_t jsonSize;
+		infile.read((char*)&jsonSize, sizeof(uint32_t));
+		jsonStr.resize(jsonSize);
+		infile.read(jsonStr.data(), jsonSize);
+		nlohmann::json json = nlohmann::json::parse(jsonStr);
+
+		for (int j = 0; j < json["VerticesSize"]; j++) {
+			Vertex v;
+			infile.read((char*)&v, sizeof(Vertex));
+			vertices.push_back(v);
+		}
+
+		for (int j = 0; j < json["IndicesSize"]; j++) {
+			uint32_t d;
+			infile.read((char*)&d, sizeof(uint32_t));
+			indices.push_back(d);
+		}
+		Submesh* submesh = new Submesh();
+		submesh->Init(vertices, indices);
+		submesh->Name = json["Name"];
+		submeshesList.push_back(submesh);
+	}
+
+	Mesh::Create(&Handle, submeshesList);
 }
 
 std::string MeshAsset::GetType()
 {
 	return "Mesh";
+}
+
+std::any MeshAsset::GetHandle()
+{
+	return this->Handle;
 }

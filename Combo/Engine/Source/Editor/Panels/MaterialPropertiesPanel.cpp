@@ -17,7 +17,7 @@ void MaterialPropertiesPanel::Draw()
 	ImGui::SameLine();
 	std::string text = "None";
 	if (material != nullptr) {
-		text = material->GetName();
+		text = material->Name;
 	}
 	ImGui::InputText("##GlobalMaterial", &text, ImGuiInputTextFlags_ReadOnly);
 	if (ImGui::BeginDragDropTarget()) {

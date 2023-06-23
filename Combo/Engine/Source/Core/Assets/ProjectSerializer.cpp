@@ -18,6 +18,8 @@ glm::vec3 DemarshalVector3(nlohmann::json j) {
 
 void ProjectSerializer::LoadProject(std::string path)
 {
+	Core::s_Project.ProjectSpaceDirectory = std::filesystem::path(path).parent_path().string() + "\\";
+
 	Core::s_Project.Assets.clear();
 	Core::Scene.Actors.clear();
 	std::ifstream t(path.c_str());
@@ -27,8 +29,8 @@ void ProjectSerializer::LoadProject(std::string path)
 
 	for (nlohmann::json assetJson : j["Assets"]) {
 		Asset* asset;
-		Asset::Create(&asset, assetJson["ProjectPath"]);
-		Core::s_Project.Assets[asset->uuid] = asset;
+		Asset::ImportFromCb(&asset, Core::s_Project.ProjectSpaceDirectory + (std::string)assetJson["ProjectPath"],"");
+		Core::s_Project.Assets[asset->UUID] = asset;
  	}
 
 	for (nlohmann::json sceneJson : j["Scenes"]) {
@@ -77,8 +79,8 @@ void ProjectSerializer::CreateProject(std::string path)
 			nlohmann::json asset;
 			asset["UUID"] = a.first;
 			asset["Type"] = a.second->GetType();
-			asset["ProjectPath"] = a.second->pathInProject;
-			asset["Name"] = a.second->GetName();
+			asset["ProjectPath"] = a.second->ProjectPath;
+			asset["Name"] = a.second->Name;
 
 			assets.push_back(asset);
 		}
@@ -103,14 +105,14 @@ void ProjectSerializer::CreateProject(std::string path)
 			if (component->GetName() == "Renderer") {
 				Renderer* renderer = reinterpret_cast<Renderer*>(component);
 				if (renderer->mesh != nullptr) {
-					componentJson["Mesh"] = renderer->mesh->uuid;
+					componentJson["Mesh"] = renderer->mesh->UUID;
 				}
 				else {
 					componentJson["Mesh"] = "0";
 				}
 
 				if (renderer->material != nullptr) {
-					componentJson["Material"] = renderer->material->uuid;
+					componentJson["Material"] = renderer->material->UUID;
 				}
 				else {
 					componentJson["Material"] = "0";
@@ -121,7 +123,7 @@ void ProjectSerializer::CreateProject(std::string path)
 					int index = 0;
 					for (Submesh* submesh : std::any_cast<Mesh*>(renderer->mesh->GetHandle())->Submeshes) {
 						if (submesh->Material != nullptr) {
-							perSubmesh[std::to_string(index)] = submesh->Material->GetUUID();
+							perSubmesh[std::to_string(index)] = submesh->Material->UUID;
 						}
 						else {
 							perSubmesh[std::to_string(index)] = "0";
@@ -154,4 +156,6 @@ void ProjectSerializer::CreateProject(std::string path)
 	std::ofstream file(path);
 	file << j.dump(4);
 	file.close();
+
+	Core::s_Project.ProjectSpaceDirectory = std::filesystem::path(path).parent_path().string() + "\\";
 }
