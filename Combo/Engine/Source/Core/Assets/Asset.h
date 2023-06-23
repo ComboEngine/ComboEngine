@@ -1,12 +1,13 @@
 #pragma once
 #include "pch.h"
-#include <Core/Scope.h>
+
 #include "UUID.h"
 
 class Asset {
 public:
 	std::string uuid;
-	std::string path;
+	std::string osPath;
+	std::string pathInProject;
 
 	static void Create(Asset** Obj,std::string path);
 	static void Import(Asset** Obj, std::string filePath, std::string assetPath, std::any ImportSettings);

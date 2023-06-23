@@ -1,6 +1,6 @@
 #pragma once
 #include "pch.h"
-#include "Scope.h"
+
 
 struct WindowSpecification {
 	std::string Title = "Combo";
@@ -17,6 +17,7 @@ public:
 	virtual void Init() = 0;
 	virtual void Update() = 0;
 	virtual int GetWidth() = 0;
+	virtual void SetTitle(std::string title) = 0;
 	virtual int GetHeight() = 0;
 	virtual const void* GetPlainWindow() = 0;
 	virtual void LockCursor(bool lock) = 0;

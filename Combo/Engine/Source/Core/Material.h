@@ -1,5 +1,5 @@
 #pragma once
-#include "Scope.h"
+
 #include "Texture.h"
 #include "Shader.h"
 

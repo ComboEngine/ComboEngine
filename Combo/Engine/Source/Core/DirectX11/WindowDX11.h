@@ -7,6 +7,7 @@ public:
 	GLFWwindow* glfwWindow;
 	virtual void Init();
 	virtual void Update();
+	virtual void SetTitle(std::string title);
 	virtual int GetWidth();
 	virtual int GetHeight();
 	virtual const void* GetPlainWindow();

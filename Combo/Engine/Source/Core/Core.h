@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Scope.h"
 #include "Window.h"
 #include "Platform.h"
 #include "Context.h"
@@ -11,6 +10,8 @@
 #include "RenderStages.h"
 #include "Project.h"
 #include "GBuffer.h"
+#include "Scene.h"
+#include "PostFX.h"
 
 enum RendererAPI {
 	Null,
@@ -25,7 +26,6 @@ public:
 	static Context* s_Context;
 	static GBuffer* s_GBuffer;
 	static Scripting* s_Scripting;
-	static Framebuffer* s_Final;
 	static Project s_Project;
 
 	static Event BeginPlayEvent;
@@ -34,7 +34,8 @@ public:
 	static Event ExitEvent;
 	static Event ImGuiDrawEvent;
 
-	static std::vector<Actor*> Actors;
+	static Scene Scene;
+	static PostFXRenderer PostFX;
 
 	static bool ShouldExit;
 

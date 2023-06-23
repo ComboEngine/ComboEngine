@@ -1,6 +1,7 @@
 cbuffer ConstantBuffer
 {
     float4x4 WVP;
+    float4x4 Model;
     float4 Diffuse;
     int DiffuseUseTexture;
 };
@@ -8,7 +9,7 @@ cbuffer ConstantBuffer
 struct PSInput
 {
     float4 Position : SV_Position;
-    float4 PositionWithoutMVP : POSITION;
+    float3 PositionWithModel : POSITION;
     float2 TexCoord : TEXCOORD;
     float4 Normal : NORMAL;
 };
@@ -32,7 +33,7 @@ PSInput VSMain(VSInput input)
     PSInput output;
     
     output.Position = mul(input.Position, WVP);
-    output.PositionWithoutMVP = input.Position;
+    output.PositionWithModel = float3(mul(Model, input.Position).xyz);
     output.TexCoord = input.TexCoord;
     output.Normal = input.Normal;
     
@@ -64,7 +65,7 @@ PSOutput PSMain(PSInput input) : SV_Target
     
    // MaterialDiffuse = float4(input.TexCoord, 1, 1);
         
-    output.Position = input.PositionWithoutMVP;
+    output.Position = float4(input.PositionWithModel,1);
     output.Diffuse = MaterialDiffuse;
     output.Normal = input.Normal;
    

@@ -1,11 +1,7 @@
 #pragma once
 #include "pch.h"
+#include "Scene.h"
 #include "Assets/Asset.h"
-
-class Scene {
-public:
-
-};
 
 class Project {
 public:

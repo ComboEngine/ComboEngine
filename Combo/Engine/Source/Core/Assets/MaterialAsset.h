@@ -1,6 +1,5 @@
 #pragma once
 #include "Asset.h"
-#include "../Scope.h"
 #include "../Mesh.h"
 
 class MaterialAsset : public Asset {

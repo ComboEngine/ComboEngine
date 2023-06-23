@@ -1,0 +1,60 @@
+{
+    "Assets": [
+        {
+            "Name": "sphere.cbmesh",
+            "ProjectPath": "./sphere.cbmesh",
+            "Type": "Mesh",
+            "UUID": "333242ec-932d-43c7-a29b-fe977bf91bbd"
+        },
+        {
+            "Name": "Test",
+            "ProjectPath": "D:\\ComboEngine\\Combo\\Engine\\mat.cbmaterial",
+            "Type": "Material",
+            "UUID": "a0ea39c3-7407-47e4-bfb1-67916f037624"
+        }
+    ],
+    "MainScene": "ab821e48-a99e-4bfe-a746-c0abbcfa7ca5",
+    "Name": "Sandbox",
+    "Scenes": [
+        {
+            "Actors": [
+                {
+                    "Components": [
+                        {
+                            "Material": "a0ea39c3-7407-47e4-bfb1-67916f037624",
+                            "MaterialsPerSubmesh": {
+                                "0": "0"
+                            },
+                            "Mesh": "333242ec-932d-43c7-a29b-fe977bf91bbd",
+                            "Name": "Renderer"
+                        }
+                    ],
+                    "Name": "Actor",
+                    "Orientation": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Position": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
+                    },
+                    "UUID": "8770845a-4560-4443-8d19-5d89fca1414c"
+                }
+            ],
+            "EditorCameraPosition": {
+                "X": 0.0,
+                "Y": 0.0,
+                "Z": 3.0
+            },
+            "Name": "Main",
+            "UUID": "ab821e48-a99e-4bfe-a746-c0abbcfa7ca5"
+        }
+    ]
+}

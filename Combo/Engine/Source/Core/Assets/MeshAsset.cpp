@@ -1,7 +1,5 @@
 #include "pch.h"
 #include "MeshAsset.h"
-#include <fstream>
-#include <nlohmann.h>
 
 void MeshAsset::ReadFromFile(std::string path)
 {
@@ -68,7 +66,7 @@ void MeshAsset::ImportToFile(std::string filePath, std::string assetPath, std::a
 	std::ofstream file;
 	file.open(assetPath, std::ios::binary | std::ios::out);
 
-	std::string uuid = uuid::generate_uuid_v4();
+	std::string uuid = this->uuid;
 	uint32_t uuidSize = uuid.size();
 	file.write((const char*)&uuidSize, sizeof(uint32_t));
 	file.write(uuid.data(), uuidSize);

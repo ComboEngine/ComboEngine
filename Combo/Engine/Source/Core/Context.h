@@ -1,6 +1,6 @@
 #pragma once
 #include "pch.h"
-#include "Scope.h"
+
 #include "Framebuffer.h"
 #include "Pipeline.h"
 

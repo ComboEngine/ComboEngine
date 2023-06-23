@@ -49,6 +49,11 @@ void WindowDX11::Update() {
 	glfwPollEvents();
 }
 
+void WindowDX11::SetTitle(std::string title)
+{
+	glfwSetWindowTitle(glfwWindow, title.c_str());
+}
+
 int WindowDX11::GetWidth()
 {
 	int width;

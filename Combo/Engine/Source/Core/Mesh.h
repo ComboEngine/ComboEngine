@@ -10,6 +10,7 @@
 
 struct MeshShaderData {
 	XMMATRIX WVP;
+	XMMATRIX Model;
 	XMFLOAT4 Diffuse;
 	int DiffuseUseTexture;
 };

@@ -1,7 +1,5 @@
 #include "pch.h"
 #include "MaterialAsset.h"
-#include <nlohmann.h>
-#include <fstream>
 #include "../GlobalShaders.h"
 
 void MaterialAsset::ReadFromFile(std::string path)
@@ -23,6 +21,22 @@ void MaterialAsset::ReadFromFile(std::string path)
 
 void MaterialAsset::ImportToFile(std::string filePath, std::string assetPath, std::any ImportSettings)
 {
+	this->Handle = new Material();
+	nlohmann::json j;
+	j["Name"] = this->Name;
+	j["UUID"] = this->uuid;
+
+	nlohmann::json diffuseVec;
+	diffuseVec["R"] = this->Handle->Diffuse.Color.x;
+	diffuseVec["G"] = this->Handle->Diffuse.Color.y;
+	diffuseVec["B"] = this->Handle->Diffuse.Color.z;
+	diffuseVec["A"] = this->Handle->Diffuse.Color.w;
+
+	j["Diffuse"] = diffuseVec;
+
+	std::ofstream file(filePath);
+	file << j.dump(4);
+	file.close();
 }
 
 std::any MaterialAsset::GetHandle()

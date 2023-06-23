@@ -1,5 +1,5 @@
 #pragma once
-#include "Scope.h"
+
 #include "pch.h"
 #include "Framebuffer.h"
 

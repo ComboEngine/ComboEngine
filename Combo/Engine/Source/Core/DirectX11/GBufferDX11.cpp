@@ -51,7 +51,7 @@ void GBufferDX11::Bind()
         position->RenderTargetView,diffuse->RenderTargetView,normal->RenderTargetView
     };
 
-    context->Context->OMSetRenderTargets(3, renderTargetViews,NULL);
+    context->Context->OMSetRenderTargets(3, renderTargetViews,context->DepthStencilView);
 
     context->Context->ClearRenderTargetView(position->RenderTargetView, context->ClearColor);
     context->Context->ClearRenderTargetView(diffuse->RenderTargetView, context->ClearColor);

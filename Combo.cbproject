@@ -1,0 +1,17 @@
+{
+    "Assets": [],
+    "MainScene": "3210a87e-7a36-48ff-bd53-6e1ea58d5e22",
+    "Name": "a",
+    "Scenes": [
+        {
+            "Actors": [],
+            "EditorCameraPosition": {
+                "X": 0.0,
+                "Y": 0.0,
+                "Z": 3.0
+            },
+            "Name": "Main",
+            "UUID": "3210a87e-7a36-48ff-bd53-6e1ea58d5e22"
+        }
+    ]
+}

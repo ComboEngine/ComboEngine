@@ -17,7 +17,6 @@ RendererAPI Core::RendererType = Null;
 Context* Core::s_Context;
 Scripting* Core::s_Scripting;
 Project Core::s_Project;
-Framebuffer* Core::s_Final;
 
 GBuffer* Core::s_GBuffer;
 
@@ -27,7 +26,8 @@ Event Core::BeginPlayEvent;
 Event Core::ExitEvent;
 Event Core::ImGuiDrawEvent;
 
-std::vector<Actor*> Core::Actors;
+Scene Core::Scene;
+PostFXRenderer Core::PostFX;
 
 bool Core::ShouldExit = false;
 
@@ -63,46 +63,16 @@ int Core::Init()
 
 	Core::s_Project.Assets["0"] = nullptr;
 
-	std::vector<Vertex> vertices = {
-		{1.0f,1.0f,0.0f,	1.0f,1.0f,	0.0f,0.0f,0.0f,0.0f},
-		{1.0f,-1.0f,0.0f,	1.0f,0.0f,	0.0f,0.0f,0.0f,0.0f},
-		{-1.0f,-1.0f,0.0f,	0.0f,0.0f,	0.0f,0.0f,0.0f,0.0f},
-		{-1.0f,1.0f,0.0f,	0.0f,1.0f,	0.0f,0.0f,0.0f,0.0f}
-	};
-
-	std::vector<uint32_t> indices = {
-		0,1,3,1,2,3
-	};
-
-	VertexBuffer* VertexBuffer;
-	IndexBuffer* IndexBuffer;
-	VertexBuffer::Create(&VertexBuffer, vertices);
-	IndexBuffer::Create(&IndexBuffer, indices);
+	PostFX.Init();
 
 	UpdateEvent.Hook([&] {
-		/*s_Final->Bind(true);
-		s_Context->BeginDraw();
-		DrawEvent.Invoke();
-		s_Final->Unbind();*/
- 
 		s_GBuffer->Bind();
 		OPTICK_EVENT("Rendering GBuffer");
 		s_Context->BeginDraw();
 		DrawEvent.Invoke();
 		s_GBuffer->Unbind();
 
-		s_Final->Bind(false);
-		s_Context->BeginDraw();
-		Pipeline pipeline;
-		pipeline.Shader = GlobalShaders::GetShader(GlobalShader::PostFX);
-		pipeline.Count = 6;
-		pipeline.IndexBuffer = IndexBuffer;
-		pipeline.VertexBuffer = VertexBuffer;
-		pipeline.Indexed = true;
-		pipeline.ShaderDataBuffer = nullptr;
-		pipeline.Textures = s_GBuffer->GetTextureArray();
-		s_Context->Draw(pipeline);
-		s_Final->Unbind();
+		PostFX.Draw();
 
 		OPTICK_EVENT("Begin ImGui Draw");
 		s_Context->BeginDraw();
@@ -114,7 +84,6 @@ int Core::Init()
 
 	GlobalShaders::Init();
 
-	Framebuffer::Create(&s_Final, s_Window->GetWidth(), s_Window->GetHeight(), FramebufferTarget::Color);
 	GBuffer::Create(&s_GBuffer);
 
 	Camera::ProjectionWidth = s_Window->GetWidth();
@@ -123,12 +92,12 @@ int Core::Init()
 #ifdef COMBO_EDITOR
 	Editor::Init();
 #else
-	SceneSerializer::Load("test.cbscene");
+	ProjectSerializer::Load("test.cbscene");
 #endif
 
 	DrawEvent.Hook([&] {
 		s_Context->SetClearColor(glm::vec3(0, 0, 0));
-		for (Actor* actor : Actors) {
+		for (Actor* actor : Scene.Actors) {
 			for (Component* component : actor->Components) {
 				component->Draw(actor);
 			}
@@ -136,7 +105,7 @@ int Core::Init()
 	});
 
 	UpdateEvent.Hook([&] {
-		for (Actor* actor : Actors) {
+		for (Actor* actor : Scene.Actors) {
 			for (Component* component : actor->Components) {
 				component->Update(actor);
 			}

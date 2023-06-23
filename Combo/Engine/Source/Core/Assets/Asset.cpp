@@ -18,7 +18,7 @@ void Asset::Create(Asset** Obj, std::string path)
 	Asset* ObjPtr = *Obj;
 	ObjPtr->ReadFromFile(path);
 	Core::s_Project.Assets[ObjPtr->uuid] = ObjPtr;
-	ObjPtr->path = path;
+	ObjPtr->pathInProject = path;
 }
 
 void Asset::Import(Asset** Obj, std::string filePath, std::string assetPath, std::any ImportSettings)
@@ -34,5 +34,5 @@ void Asset::Import(Asset** Obj, std::string filePath, std::string assetPath, std
 
 	ObjPtr->ImportToFile(filePath,assetPath,ImportSettings);
 	Core::s_Project.Assets[ObjPtr->uuid] = ObjPtr;
-	ObjPtr->path = assetPath;
+	ObjPtr->pathInProject = assetPath;
 }

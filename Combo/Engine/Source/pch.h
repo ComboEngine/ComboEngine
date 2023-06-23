@@ -5,6 +5,7 @@
 #include <string>
 #include <filesystem>
 #include <any>
+#include <fstream>
 
 #include <glm.hpp>
 #include <gtc/type_ptr.hpp>
@@ -168,6 +169,11 @@ extern "C" {
 }
 #pragma comment(lib,"lua54.lib")
 
+#include <nlohmann.h>
+
+#include <tinyfiledialogs.h>
+#pragma comment(lib,"tinyfiledialogs64.lib")
+
 #include <Importer.hpp>
 #include <postprocessAi.h>
 #include <scene.h>
@@ -190,6 +196,7 @@ extern "C" {
 #include <imgui_impl_dx11.h>
 #include <imgui_impl_win32.h>
 #include <imgui_impl_glfw.h>
+#include <ImGuizmo.h>
 #pragma comment(lib,"ImGui.lib")
 
 using namespace DirectX::SimpleMath;

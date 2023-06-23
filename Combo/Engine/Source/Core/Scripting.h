@@ -1,6 +1,6 @@
 #pragma once
 #include "pch.h"
-#include "Scope.h"
+
 #include "Event.h"
 
 class Scripting {

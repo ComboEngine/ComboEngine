@@ -5,6 +5,7 @@
 #include "Input.h"
 #include "Camera.h"
 #include "Texture.h"
+#include <Editor/Editor.h>
 
 void Mesh::Create(Mesh** Obj, std::vector<Submesh*> Submeshes)
 {
@@ -48,11 +49,16 @@ void Mesh::Render(Material* Mat,glm::vec3 Position, glm::quat Orientation, glm::
 		glm::mat4 wvp = glm::mat4(1.0f);
 		wvp = Camera::CalculateProjectionMatrix();
 		wvp = wvp * Camera::CalculateViewMatrix();
-		wvp = glm::translate(wvp, Position);
-		wvp = wvp * glm::mat4_cast(Orientation);
-		wvp = glm::scale(wvp, Scale);
+
+		glm::mat4 Model = glm::mat4(1.0f);
+		Model = glm::translate(Model, Position);
+		Model = Model * glm::mat4_cast(Orientation);
+		Model = glm::scale(Model, Scale);
+		
+		wvp = wvp * Model;
 
 		MeshShaderData data;
+		data.Model = XMMatrixTranspose(ConvertToXMMATRIX(Model));
 		data.WVP = XMMatrixTranspose(ConvertToXMMATRIX(wvp));
 		data.DiffuseUseTexture = MatFinal->Diffuse.UseTexture;
 		data.Diffuse = XMFLOAT4(MatFinal->Diffuse.Color.x, MatFinal->Diffuse.Color.y, MatFinal->Diffuse.Color.z, MatFinal->Diffuse.Color.w);
