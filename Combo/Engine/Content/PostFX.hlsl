@@ -78,7 +78,7 @@ float4 PSMain(PSInput input) : SV_Target
             
             float3 halfwayDir = normalize(lightDir + viewDir);
             float spec = pow(max(dot(Normal, halfwayDir), 0.0), 16.0);
-            float3 specular = light.LightRadiusAndColor.yzw * spec * 0;
+            float3 specular = light.LightRadiusAndColor.yzw * spec * 1;
             
             diffuse *= attenuation;
             specular *= attenuation;

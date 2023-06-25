@@ -9,6 +9,7 @@ public:
 	virtual void Update(Actor* actor) = 0;
 	virtual void Draw(Actor* actor) = 0;
 	virtual std::string GetName() = 0;
+	virtual Component* Clone() = 0;
 };
 
 class Actor {
@@ -21,5 +22,6 @@ public:
 	glm::vec3 Orientation = glm::vec3(0, 0, 0);
 	glm::vec3 Scale = glm::vec3(1,1,1);
 	static void Create(Actor** Obj);
+	Actor* Clone();
 	void AddComponent(Component* component);
 };

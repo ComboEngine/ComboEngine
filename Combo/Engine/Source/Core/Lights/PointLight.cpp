@@ -16,3 +16,8 @@ void PointLight::Draw(Actor* actor)
 	LightData.Direction = actor->Position;
 	Core::Scene.LightingData.push_back(LightData);
 }
+
+Component* PointLight::Clone()
+{
+	return new PointLight(*this);
+}

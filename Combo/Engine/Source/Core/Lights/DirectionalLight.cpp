@@ -16,3 +16,8 @@ void DirectionalLight::Draw(Actor* actor)
 	LightData.Direction = actor->Position;
 	Core::Scene.LightingData.push_back(LightData);
 }
+
+Component* DirectionalLight::Clone()
+{
+	return new DirectionalLight(*this);
+}

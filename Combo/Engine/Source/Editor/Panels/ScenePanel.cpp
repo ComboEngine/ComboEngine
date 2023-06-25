@@ -31,10 +31,7 @@ void ScenePanel::Draw()
 					Core::Scene.RemoveActor(actor);
 				}
 				if (ImGui::MenuItem("Duplicate")) {
-					Actor* actorDuplicated = new Actor(*actor);
-					actorDuplicated->UUID = uuid::generate_uuid_v4();
-					actorDuplicated->Name = actor->Name + " Copy";
-					Core::Scene.Actors.push_back(actorDuplicated);
+					actor->Clone();
 				}
 				ImGui::EndPopup();
 			}

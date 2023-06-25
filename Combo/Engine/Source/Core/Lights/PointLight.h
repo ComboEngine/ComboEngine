@@ -8,5 +8,6 @@ public:
 	glm::vec3 Color = glm::vec3(1, 1, 1);
 	virtual void Update(Actor* actor);
 	virtual void Draw(Actor* actor);
+	virtual Component* Clone();
 	virtual std::string GetName() { return "Point Light"; }
 };

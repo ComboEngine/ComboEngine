@@ -13,5 +13,6 @@ public:
 	Asset* material;
 	virtual void Update(Actor* actor);
 	virtual void Draw(Actor* actor);
+	virtual Component* Clone();
 	virtual std::string GetName() { return "Renderer"; }
 };
