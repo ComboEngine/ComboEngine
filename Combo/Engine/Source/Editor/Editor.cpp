@@ -15,6 +15,9 @@
 #include "Panels/ScenePanel.h"
 #include "Panels/MaterialPropertiesPanel.h"
 
+#include <discord_rpc.h>
+#pragma comment(lib,"DiscordRPC.lib")
+
 std::vector<Panel*> Editor::Panels;
 glm::vec3 Editor::LightDir;
 
@@ -25,6 +28,20 @@ void Editor::Init()
 	const char* selection = tinyfd_openFileDialog("Select project", "./",1,filters, NULL, 0);
 	ProjectSerializer::LoadProject(selection);
 	Core::s_Window->SetTitle("Combo Editor 0.1 <" + Core::s_Context->GetApiName() + "> " + selection);
+
+	DiscordEventHandlers Handle;
+	memset(&Handle, 0, sizeof(Handle));
+	Discord_Initialize("1122095911850479667", &Handle, 1, NULL);
+
+	DiscordRichPresence discordPresence;
+	memset(&discordPresence, 0, sizeof(discordPresence));
+	discordPresence.state = selection;
+	discordPresence.details = "Editor 0.1";
+	discordPresence.startTimestamp = 0;
+	discordPresence.largeImageKey = "icon";
+	discordPresence.largeImageText = "Combo Editor 0.1";
+	discordPresence.smallImageKey = "icon";
+	Discord_UpdatePresence(&discordPresence);
 
 	Panels.push_back(new ViewportPanel());
 	Panels.push_back(new ActorPropertiesPanel());
@@ -121,7 +138,7 @@ void Editor::OnDrop(std::vector<std::string> paths)
 			Asset::ImportFromCb(&Obj, path,"");
 		}
 		else {
-			if (fileExtension == ".fbx" || fileExtension == ".obj") {
+			if (fileExtension == ".fbx" || fileExtension == ".obj" || fileExtension == ".dae") {
 				std::string name = std::filesystem::u8path(path).filename().string();
 				Asset::ImportFromBinary(&Obj, path, name.substr(0, name.find_last_of(".")) + ".cbmesh","");
 			}

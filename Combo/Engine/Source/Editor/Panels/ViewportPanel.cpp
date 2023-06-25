@@ -120,7 +120,7 @@ void ViewportPanel::Draw()
 	if (actor != nullptr) {
 		glm::mat4 Model = glm::mat4(1.0f);
 		Model = glm::translate(Model, actor->Position);
-		Model = Model * glm::mat4_cast(glm::quat(glm::vec3(actor->Orientation.x, actor->Orientation.y, actor->Orientation.z)));
+		Model = Model * glm::mat4_cast(glm::quat(glm::vec3(actor->Orientation.x,actor->Orientation.y,actor->Orientation.z)));
 		Model = glm::scale(Model, actor->Scale);
 
 		int Operation;
@@ -137,7 +137,7 @@ void ViewportPanel::Draw()
 			DecomposeTransform(Model, position, orientation, scale);
 
 			actor->Position = position;
-			//actor->Orientation = glm::vec3();
+			//actor->Orientation = h;
 			actor->Scale = scale;
 		}
 	}

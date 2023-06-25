@@ -37,7 +37,7 @@ void Asset::ImportFromCb(Asset** Obj, std::string OSCbPath, std::string CurrentE
 void Asset::ImportFromBinary(Asset** Obj, std::string BinaryPath, std::string ProjectSpacePath, std::string CurrentEditorFolder)
 {
 	std::string Extension = std::filesystem::u8path(BinaryPath).extension().string();
-	if (Extension == ".fbx" || Extension == ".obj") { *Obj = new MeshAsset(); }
+	if (Extension == ".fbx" || Extension == ".obj" || Extension == ".dae") { *Obj = new MeshAsset(); }
 
 	Asset* Ptr = *Obj;
 	Ptr->UUID = uuid::generate_uuid_v4();

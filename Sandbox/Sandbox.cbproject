@@ -7,13 +7,31 @@
             "UUID": "ad7bc86f-78fe-427e-b3c9-604f99385132"
         },
         {
+            "Name": "model",
+            "ProjectPath": "model.cbmesh",
+            "Type": "Mesh",
+            "UUID": "a8eb7a42-3c69-4ff0-bbc3-df779efb2711"
+        },
+        {
             "Name": "sphereMat",
             "ProjectPath": "sphereMat.cbmaterial",
             "Type": "Material",
             "UUID": "70ef6c98-9909-4294-912b-7ef57c1d3cbd"
+        },
+        {
+            "Name": "cube",
+            "ProjectPath": "cube.cbmesh",
+            "Type": "Mesh",
+            "UUID": "0424d970-f0ea-408b-b507-9ff8843f44e6"
+        },
+        {
+            "Name": "White",
+            "ProjectPath": "White.cbmaterial",
+            "Type": "Material",
+            "UUID": "7ec29ede-6e18-43aa-baa6-256ae7cd8da2"
         }
     ],
-    "MainScene": "0368bc0e-ff93-4144-a18f-6131817cb52e",
+    "MainScene": "d7c24e37-f018-4a01-8aca-678ca29418f2",
     "Name": "Sandbox",
     "Scenes": [
         {
@@ -29,6 +47,210 @@
                             "Name": "Renderer"
                         }
                     ],
+                    "Name": "Sphere",
+                    "Orientation": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Position": {
+                        "X": 8.049306869506836,
+                        "Y": 1.7359941005706787,
+                        "Z": -4.3849663734436035
+                    },
+                    "Scale": {
+                        "X": 1.2800004482269287,
+                        "Y": 1.2800003290176392,
+                        "Z": 1.2800004482269287
+                    },
+                    "UUID": "99ef93c0-9edc-42a3-9134-82699c7a1c10"
+                },
+                {
+                    "Components": [
+                        {
+                            "Material": "7ec29ede-6e18-43aa-baa6-256ae7cd8da2",
+                            "MaterialsPerSubmesh": {
+                                "0": "0"
+                            },
+                            "Mesh": "0424d970-f0ea-408b-b507-9ff8843f44e6",
+                            "Name": "Renderer"
+                        }
+                    ],
+                    "Name": "Floor",
+                    "Orientation": {
+                        "X": 0.0,
+                        "Y": 89.9000015258789,
+                        "Z": 0.0
+                    },
+                    "Position": {
+                        "X": 8.053836822509766,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Scale": {
+                        "X": 7.9228949546813965,
+                        "Y": 0.23117709159851074,
+                        "Z": 39.94197463989258
+                    },
+                    "UUID": "17770f46-cc7f-4ab6-9313-b5d67e171f17"
+                },
+                {
+                    "Components": [
+                        {
+                            "Material": "7ec29ede-6e18-43aa-baa6-256ae7cd8da2",
+                            "MaterialsPerSubmesh": {
+                                "0": "0"
+                            },
+                            "Mesh": "0424d970-f0ea-408b-b507-9ff8843f44e6",
+                            "Name": "Renderer"
+                        }
+                    ],
+                    "Name": "Wall",
+                    "Orientation": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Position": {
+                        "X": 9.073328971862793,
+                        "Y": 3.2347822189331055,
+                        "Z": -7.95656156539917
+                    },
+                    "Scale": {
+                        "X": 40.91163635253906,
+                        "Y": 2.9676895141601563,
+                        "Z": 0.19669349491596222
+                    },
+                    "UUID": "bc5325b8-4e11-4da6-99ef-93e7848cc762"
+                },
+                {
+                    "Components": [
+                        {
+                            "Material": "7ec29ede-6e18-43aa-baa6-256ae7cd8da2",
+                            "MaterialsPerSubmesh": {
+                                "0": "0"
+                            },
+                            "Mesh": "0424d970-f0ea-408b-b507-9ff8843f44e6",
+                            "Name": "Renderer"
+                        }
+                    ],
+                    "Name": "Wall Copy",
+                    "Orientation": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Position": {
+                        "X": 9.073328971862793,
+                        "Y": 3.2347822189331055,
+                        "Z": 7.744194984436035
+                    },
+                    "Scale": {
+                        "X": 40.91163635253906,
+                        "Y": 2.9676895141601563,
+                        "Z": 0.19669349491596222
+                    },
+                    "UUID": "4e823c72-6e9c-4526-bbf7-285a64cb849c"
+                },
+                {
+                    "Components": [
+                        {
+                            "Material": "70ef6c98-9909-4294-912b-7ef57c1d3cbd",
+                            "MaterialsPerSubmesh": {
+                                "0": "0"
+                            },
+                            "Mesh": "ad7bc86f-78fe-427e-b3c9-604f99385132",
+                            "Name": "Renderer"
+                        }
+                    ],
+                    "Name": "Sphere 1",
+                    "Orientation": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Position": {
+                        "X": 8.032145500183105,
+                        "Y": 1.7359941005706787,
+                        "Z": -2.176448106765747
+                    },
+                    "Scale": {
+                        "X": 1.2800004482269287,
+                        "Y": 1.2800003290176392,
+                        "Z": 1.2800004482269287
+                    },
+                    "UUID": "c947e447-90ba-45f0-9c33-4ba5806498df"
+                },
+                {
+                    "Components": [
+                        {
+                            "Material": "70ef6c98-9909-4294-912b-7ef57c1d3cbd",
+                            "MaterialsPerSubmesh": {
+                                "0": "0"
+                            },
+                            "Mesh": "ad7bc86f-78fe-427e-b3c9-604f99385132",
+                            "Name": "Renderer"
+                        }
+                    ],
+                    "Name": "Sphere 2",
+                    "Orientation": {
+                        "X": 0.0,
+                        "Y": 0.0,
+                        "Z": 0.0
+                    },
+                    "Position": {
+                        "X": 8.049306869506836,
+                        "Y": 3.6303350925445557,
+                        "Z": -3.348695993423462
+                    },
+                    "Scale": {
+                        "X": 1.2800004482269287,
+                        "Y": 1.2800003290176392,
+                        "Z": 1.2800004482269287
+                    },
+                    "UUID": "91b5bb32-edc7-4697-8174-5c8f41b10126"
+                },
+                {
+                    "Components": [
+                        {
+                            "Material": "70ef6c98-9909-4294-912b-7ef57c1d3cbd",
+                            "MaterialsPerSubmesh": {
+                                "0": "0"
+                            },
+                            "Mesh": "a8eb7a42-3c69-4ff0-bbc3-df779efb2711",
+                            "Name": "Renderer"
+                        }
+                    ],
+                    "Name": "Stanford Dragon",
+                    "Orientation": {
+                        "X": 0.0,
+                        "Y": -5.400000095367432,
+                        "Z": 0.0
+                    },
+                    "Position": {
+                        "X": 0.8010534048080444,
+                        "Y": 0.27019691467285156,
+                        "Z": 0.7980406284332275
+                    },
+                    "Scale": {
+                        "X": 0.053400054574012756,
+                        "Y": 0.053400054574012756,
+                        "Z": 0.053400054574012756
+                    },
+                    "UUID": "d8fbd9b4-bd0b-46bb-9aae-1fef821555b0"
+                },
+                {
+                    "Components": [
+                        {
+                            "Color": {
+                                "X": 1.0,
+                                "Y": 1.0,
+                                "Z": 1.0
+                            },
+                            "Intensity": 1.0,
+                            "Name": "Directional Light"
+                        }
+                    ],
                     "Name": "Actor",
                     "Orientation": {
                         "X": 0.0,
@@ -36,25 +258,25 @@
                         "Z": 0.0
                     },
                     "Position": {
-                        "X": 0.22296142578125,
-                        "Y": -0.164398193359375,
-                        "Z": -0.3817596435546875
+                        "X": 1.0,
+                        "Y": 0.30000001192092896,
+                        "Z": 0.5
                     },
                     "Scale": {
-                        "X": 6.400000095367432,
-                        "Y": 6.400000095367432,
-                        "Z": 6.400000095367432
+                        "X": 1.0,
+                        "Y": 1.0,
+                        "Z": 1.0
                     },
-                    "UUID": "99ef93c0-9edc-42a3-9134-82699c7a1c10"
+                    "UUID": "fcf01828-0f94-49a0-ab4c-3889f719a271"
                 }
             ],
             "EditorCameraPosition": {
-                "X": 15.004680633544922,
-                "Y": 7.270749568939209,
-                "Z": 11.054197311401367
+                "X": -3.824754476547241,
+                "Y": 9.350576400756836,
+                "Z": 6.0262370109558105
             },
             "Name": "Main",
-            "UUID": "0368bc0e-ff93-4144-a18f-6131817cb52e"
+            "UUID": "d7c24e37-f018-4a01-8aca-678ca29418f2"
         }
     ]
 }

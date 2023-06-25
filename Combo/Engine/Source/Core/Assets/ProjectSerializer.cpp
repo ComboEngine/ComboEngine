@@ -3,6 +3,7 @@
 #include "ProjectSerializer.h"
 #include "../Camera.h"
 #include "../Renderer.h"
+#include "../Lights/DirectionalLight.h"
 
 nlohmann::json MarshalVector3(glm::vec3 vec) {
 	nlohmann::json j;
@@ -61,6 +62,12 @@ void ProjectSerializer::LoadProject(std::string path)
 				}
 				else if (componentJson["Name"] == "Script") {
 
+				}
+				else if (componentJson["Name"] == "Directional Light") {
+					DirectionalLight* light = new DirectionalLight();
+					light->Intensity = componentJson["Intensity"];
+					light->Color = DemarshalVector3(componentJson["Color"]);
+					actor->AddComponent(light);
 				}
 			}
 		}
@@ -136,6 +143,11 @@ void ProjectSerializer::CreateProject(std::string path)
 			}
 			if (component->GetName() == "Script") {
 
+			}
+			if (component->GetName() == "Directional Light") {
+				DirectionalLight* light = reinterpret_cast<DirectionalLight*>(component);
+				componentJson["Intensity"] = light->Intensity;
+				componentJson["Color"] = MarshalVector3(light->Color);
 			}
 			components.push_back(componentJson);
 		}

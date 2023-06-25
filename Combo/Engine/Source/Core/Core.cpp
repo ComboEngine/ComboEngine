@@ -59,7 +59,6 @@ int Core::Init()
 	Scripting::Create(&s_Scripting);
 
 	ImGuiAdapter::Init();
-
 	Core::s_Project.Assets["0"] = nullptr;
 
 	PostFX.Init();
@@ -122,6 +121,7 @@ int Core::Init()
 		UpdateEvent.Invoke();
 		OPTICK_EVENT("Presenting");
 		s_Context->EndDraw();
+		Core::Scene.EndScene();
 		Input::LastMousePosition = Input::CurrentMousePosition;
 	}
 	ExitEvent.Invoke();

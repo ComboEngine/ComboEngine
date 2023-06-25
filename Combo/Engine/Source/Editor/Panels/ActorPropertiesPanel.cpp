@@ -6,6 +6,8 @@
 #include <Core/Script.h>
 #include <Core/Renderer.h>
 #include <imgui_stdlib.h>
+#include <Core/Lights/DirectionalLight.h>
+#include <Core/Lights/PointLight.h>
 
 std::string ActorPropertiesPanel::GetName()
 {
@@ -146,6 +148,29 @@ void ActorPropertiesPanel::RenderComponent(std::string name, Component* componen
 				index++;
 			}
 		}
+	}
+	if (name == "Directional Light") {
+		DirectionalLight* light = reinterpret_cast<DirectionalLight*>(component);
+		ImGui::Text("Intensity");
+		ImGui::SameLine();
+		ImGui::InputFloat("##DirectionalLightIntensity", &light->Intensity);
+		ImGui::Separator();
+		ImGui::Text("Color");
+		ImGui::SameLine();
+		ImGui::ColorEdit3("##DirectionalLightColor", glm::value_ptr(light->Color));
+		ImGui::Separator();
+	}
+
+	if (name == "Point Light") {
+		PointLight* light = reinterpret_cast<PointLight*>(component);
+		ImGui::Text("Intensity");
+		ImGui::SameLine();
+		ImGui::InputFloat("##PointLightIntensity", &light->Intensity);
+		ImGui::Separator();
+		ImGui::Text("Color");
+		ImGui::SameLine();
+		ImGui::ColorEdit3("##PointLightColor", glm::value_ptr(light->Color));
+		ImGui::Separator();
 	}
 	ImGui::Separator();
 }

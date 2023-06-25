@@ -54,13 +54,12 @@ void Mesh::Render(Material* Mat,glm::vec3 Position, glm::quat Orientation, glm::
 		Model = glm::translate(Model, Position);
 		Model = Model * glm::mat4_cast(Orientation);
 		Model = glm::scale(Model, Scale);
-		
-		wvp = wvp * Model;
+
 
 		MeshShaderData data;
 		data.Model = XMMatrixTranspose(ConvertToXMMATRIX(Model));
 		data.WVP = XMMatrixTranspose(ConvertToXMMATRIX(wvp));
-		data.DiffuseUseTexture = MatFinal->Diffuse.UseTexture;
+		data.DiffuseUseTexture = XMFLOAT4(MatFinal->Diffuse.UseTexture,0,0,0);
 		data.Diffuse = XMFLOAT4(MatFinal->Diffuse.Color.x, MatFinal->Diffuse.Color.y, MatFinal->Diffuse.Color.z, MatFinal->Diffuse.Color.w);
 
 

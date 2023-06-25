@@ -37,8 +37,28 @@ void PostFXRenderer::Draw()
 	pipeline.ShaderDataBuffer = LightingBuffer;
 	pipeline.Textures = Core::s_GBuffer->GetTextureArray();
 
-	LightingBufferPass lighting;
-	lighting.CameraPos = XMFLOAT3(Camera::Position.x, Camera::Position.y, Camera::Position.z);
+	LightingBufferPass lighting{};
+	lighting.LightCountAndCameraPos = XMFLOAT4(Core::Scene.LightingData.size(),Camera::Position.x, Camera::Position.y, Camera::Position.z);
+
+
+	for (int i = 0; i < Core::Scene.LightingData.size(); i++) {
+		Light light = Core::Scene.LightingData[i];
+		LightBufferPass pass{};
+		pass.LightTypeAndPos = XMFLOAT4(light.Type, light.Direction.x, light.Direction.y, light.Direction.z);
+		pass.LightRadiusAndColor = XMFLOAT4(0, light.Color.x, light.Color.y, light.Color.z);
+
+		if (light.Type == Point) {
+			float constant = 1.0;
+			float linear = 0.7;
+			float quadratic = 1.8;
+			float lightMax = std::fmaxf(std::fmaxf(light.Color.x, light.Color.y), light.Color.z);
+			float radius =
+				(-linear + std::sqrtf(linear * linear - 4 * quadratic * (constant - (256.0 / 5.0) * lightMax)))
+				/ (2 * quadratic);
+			pass.LightRadiusAndColor.x = radius;
+		}
+		lighting.lights[i] = pass;
+	}
 
 	LightingBuffer->Update(&lighting);
 	Core::s_Context->Draw(pipeline);

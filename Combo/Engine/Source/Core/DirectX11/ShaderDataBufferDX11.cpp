@@ -11,7 +11,7 @@ void ShaderDataBufferDX11::Init(size_t Size)
 	D3D11_BUFFER_DESC BufferDesc;
 	ZeroMemory(&BufferDesc, sizeof(BufferDesc));
 	BufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	BufferDesc.ByteWidth = Size*16;
+	BufferDesc.ByteWidth = ((Size + 15) & ~15);
 	BufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	BufferDesc.CPUAccessFlags = 0;
 

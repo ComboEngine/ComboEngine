@@ -8,6 +8,7 @@ struct ContextSpecification {
 	
 };
 
+
 class Context {
 public:
 	ContextSpecification Specification;

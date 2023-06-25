@@ -42,6 +42,7 @@ public class ComboEngine : BuildTarget {
         this.AddModule("assimp");
         this.AddModule("glm");
         this.AddModule("ImGui");
+        this.AddModule("Discord");
         this.AddModule("SmallLibraries");
     }
 }

@@ -110,6 +110,7 @@ void MeshAsset::ImportFromEngineType()
 
 
 	this->UUID = uuid;
+	this->Name = std::filesystem::u8path(OSPath).filename().string().substr(0, std::filesystem::u8path(OSPath).filename().string().find_last_of("."));
 
 	uint32_t size;
 	infile.read((char*)&size, sizeof(uint32_t));

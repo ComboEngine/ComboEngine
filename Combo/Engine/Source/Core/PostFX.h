@@ -3,9 +3,16 @@
 #include "IndexBuffer.h"
 #include "Framebuffer.h"
 #include "ShaderDataBuffer.h"
+struct LightBufferPass
+{
+	XMFLOAT4 LightTypeAndPos;
+	XMFLOAT4 LightRadiusAndColor;
+};
 
-struct LightingBufferPass {
-	XMFLOAT3 CameraPos;
+struct LightingBufferPass
+{
+	XMFLOAT4 LightCountAndCameraPos;
+	LightBufferPass lights[1000];
 };
 
 class PostFXRenderer {

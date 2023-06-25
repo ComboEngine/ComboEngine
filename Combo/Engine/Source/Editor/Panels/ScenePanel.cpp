@@ -3,6 +3,8 @@
 #include "../Editor.h"
 #include <Core/Camera.h>
 #include <Core/Renderer.h>
+#include <Core/Lights/DirectionalLight.h>
+#include <Core/Lights/PointLight.h>
 #include <Core/Core.h>
 
 std::string ScenePanel::GetName()
@@ -24,6 +26,18 @@ void ScenePanel::Draw()
 			ImGui::TableNextColumn();
 			ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 4);
 			ImGui::Selectable((std::string(actor->Name.c_str()) + "##" + std::to_string(i)).c_str(), &actor->ActorSelected, ImGuiSelectableFlags_SpanAllColumns);
+			if (ImGui::BeginPopupContextItem(nullptr, ImGuiPopupFlags_MouseButtonRight | ImGuiPopupFlags_NoOpenOverItems)) {
+				if (ImGui::MenuItem("Remove")) {
+					Core::Scene.RemoveActor(actor);
+				}
+				if (ImGui::MenuItem("Duplicate")) {
+					Actor* actorDuplicated = new Actor(*actor);
+					actorDuplicated->UUID = uuid::generate_uuid_v4();
+					actorDuplicated->Name = actor->Name + " Copy";
+					Core::Scene.Actors.push_back(actorDuplicated);
+				}
+				ImGui::EndPopup();
+			}
 		}
 
 		if (ImGui::BeginPopupContextWindow(nullptr, ImGuiPopupFlags_MouseButtonRight | ImGuiPopupFlags_NoOpenOverItems)) {
@@ -33,9 +47,11 @@ void ScenePanel::Draw()
 			ImGui::SameLine();
 			const char* elements[] = {
 				"Empty",
-				"Mesh"
+				"Mesh",
+				"Directional Light",
+				"Point Light"
 			};
-			ImGui::Combo("##CreateActorType", &CurrentActorTypeCreateActorPopup, elements, 2);
+			ImGui::Combo("##CreateActorType", &CurrentActorTypeCreateActorPopup, elements, 4);
 			ImGui::Separator();
 			if (ImGui::Button("Create")) {
 				//TODO finish this
@@ -45,6 +61,14 @@ void ScenePanel::Draw()
 				if (elements[CurrentActorTypeCreateActorPopup] == "Mesh") {
 					Renderer* renderer = new Renderer();
 					actor->AddComponent(renderer);
+				}
+				if (elements[CurrentActorTypeCreateActorPopup] == "Directional Light") {
+					DirectionalLight* light = new DirectionalLight();
+					actor->AddComponent(light);
+				}
+				if (elements[CurrentActorTypeCreateActorPopup] == "Point Light") {
+					PointLight* light = new PointLight();
+					actor->AddComponent(light);
 				}
 				ImGui::CloseCurrentPopup();
 				CurrentActorTypeCreateActorPopup = 0;
