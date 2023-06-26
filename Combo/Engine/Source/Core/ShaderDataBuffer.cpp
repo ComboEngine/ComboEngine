@@ -3,6 +3,9 @@
 #ifdef COMBO_DIRECTX11
 #include <Core/DirectX11/ShaderDataBufferDX11.h>
 #endif
+#ifdef COMBO_VULKAN
+#include <Core/Vulkan/ShaderDataBufferVulkan.h>
+#endif
 
 void ShaderDataBuffer::Create(ShaderDataBuffer** shaderDataBuffer, size_t Size)
 {
@@ -10,6 +13,9 @@ void ShaderDataBuffer::Create(ShaderDataBuffer** shaderDataBuffer, size_t Size)
 
 #ifdef COMBO_DIRECTX11
 	*shaderDataBuffer = new ShaderDataBufferDX11();
+#endif
+#ifdef COMBO_VULKAN
+	*shaderDataBuffer = new ShaderDataBufferVulkan();
 #endif
 
 	//Call API Window

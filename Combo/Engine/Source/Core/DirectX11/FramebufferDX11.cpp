@@ -4,10 +4,13 @@
 #include "ContextDX11.h"
 #include "../Core.h"
 
+
 void FramebufferDX11::Bind(bool depth)
 {
     ContextDX11* context = reinterpret_cast<ContextDX11*>(Core::s_Context);
-    context->Context->OMSetRenderTargets(1, &RenderTargetView,depth ? DepthStencilView : NULL);
+
+    context->Context->OMSetRenderTargets(1, &RenderTargetView, depth ? DepthStencilView : NULL);
+
     context->Context->ClearRenderTargetView(RenderTargetView, context->ClearColor);
     if (depth) {
         context->Context->ClearDepthStencilView(DepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);

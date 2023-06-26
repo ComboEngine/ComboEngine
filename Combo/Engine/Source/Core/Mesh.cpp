@@ -17,13 +17,13 @@ void Mesh::Create(Mesh** Obj, std::vector<Submesh*> Submeshes)
 	ShaderDataBuffer::Create(&ObjPtr->ShaderDataBuffer, sizeof(MeshShaderData));
 }
 
-XMMATRIX ConvertToXMMATRIX(const glm::mat4& matrix)
+/*XMMATRIX ConvertToXMMATRIX(const glm::mat4& matrix)
 {
 	const float* glmMatrixData = glm::value_ptr(matrix);
 	XMFLOAT4X4 xnaMatrix;
 	XMStoreFloat4x4(&xnaMatrix, XMLoadFloat4x4(reinterpret_cast<const XMFLOAT4X4*>(glmMatrixData)));
 	return XMLoadFloat4x4(&xnaMatrix);
-}
+}*/
 
 void Mesh::Render(Material* Mat,glm::vec3 Position, glm::quat Orientation, glm::vec3 Scale)
 {
@@ -57,10 +57,11 @@ void Mesh::Render(Material* Mat,glm::vec3 Position, glm::quat Orientation, glm::
 
 
 		MeshShaderData data;
-		data.Model = XMMatrixTranspose(ConvertToXMMATRIX(Model));
-		data.WVP = XMMatrixTranspose(ConvertToXMMATRIX(wvp));
-		data.DiffuseUseTexture = XMFLOAT4(MatFinal->Diffuse.UseTexture,0,0,0);
-		data.Diffuse = XMFLOAT4(MatFinal->Diffuse.Color.x, MatFinal->Diffuse.Color.y, MatFinal->Diffuse.Color.z, MatFinal->Diffuse.Color.w);
+		data.Model = glm::transpose(Model);
+		data.WVP = glm::transpose(wvp);
+		data.RotationMatrix = glm::mat4_cast(Orientation);
+		data.DiffuseUseTexture = glm::vec4(MatFinal->Diffuse.UseTexture, 0, 0, 0);
+		data.Diffuse = glm::vec4(MatFinal->Diffuse.Color.x, MatFinal->Diffuse.Color.y, MatFinal->Diffuse.Color.z, MatFinal->Diffuse.Color.w);
 
 
 		ShaderDataBuffer->Update(&data);

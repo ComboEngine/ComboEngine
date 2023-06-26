@@ -10,6 +10,7 @@ class GlobalShaders {
 private:
 	static Shader* Render3D;
 	static Shader* PostFX;
+	static std::string GetShaderPathByApi(std::string name,bool pixel);
 public:
 	static void Init();
 	static Shader* GetShader(GlobalShader shader);

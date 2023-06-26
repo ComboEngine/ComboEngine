@@ -15,7 +15,8 @@
 
 enum RendererAPI {
 	Null,
-	DirectX11
+	DirectX11,
+	Vulkan
 };
 
 class Core {

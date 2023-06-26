@@ -9,10 +9,11 @@
 #include "RenderStages.h"
 
 struct MeshShaderData {
-	XMMATRIX WVP;
-	XMMATRIX Model;
-	XMFLOAT4 Diffuse;
-	XMFLOAT4 DiffuseUseTexture;
+	glm::mat4 WVP;
+	glm::mat4 Model;
+	glm::mat4 RotationMatrix;
+	glm::vec4 Diffuse;
+	glm::vec4 DiffuseUseTexture;
 };
 
 class Submesh {

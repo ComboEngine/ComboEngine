@@ -32,15 +32,14 @@ PostFXRenderer Core::PostFX;
 
 bool Core::ShouldExit = false;
 
-struct ConstantBufferData {
-	XMMATRIX WVP;
-};
-
-int Core::Init()
+/*int Core::Init()
 {
 	//Select Renderer API
 #ifdef COMBO_DIRECTX11
 	Core::RendererType = DirectX11;
+#endif
+#ifdef COMBO_VULKAN
+	Core::RendererType = Vulkan;
 #endif
 
 	CB_ASSERT(Core::RendererType != Null, "Renderer API cannot be null!");
@@ -51,7 +50,7 @@ int Core::Init()
 
 	UpdateEvent.Hook([&] {
 		s_Window->Update();
-	});
+		});
 
 	ContextSpecification ContextSpec;
 	Context::Create(&s_Context, ContextSpec);
@@ -76,14 +75,14 @@ int Core::Init()
 		s_Context->BeginDraw();
 		ImGuiAdapter::StartFrame();
 		ImGuiDrawEvent.Invoke();
-		#ifndef COMBO_EDITOR
+#ifndef COMBO_EDITOR
 		Camera::Drone();
 		Render2D::RenderTexturedRect(0, 0, s_Window->GetWidth(), s_Window->GetHeight(), PostFX.Frame->GetImage());
 		s_Window->LockCursor(true);
-		#endif
+#endif
 		Render2D::RenderImGui();
 		ImGuiAdapter::EndFrame();
-	});
+		});
 
 	GlobalShaders::Init();
 
@@ -100,6 +99,116 @@ int Core::Init()
 
 	DrawEvent.Hook([&] {
 		s_Context->SetClearColor(glm::vec3(0, 0, 0));
+		for (Actor* actor : Scene.Actors) {
+			for (Component* component : actor->Components) {
+				component->Draw(actor);
+			}
+		}
+		});
+
+	UpdateEvent.Hook([&] {
+		for (Actor* actor : Scene.Actors) {
+			for (Component* component : actor->Components) {
+				component->Update(actor);
+			}
+		}
+		});
+
+	BeginPlayEvent.Invoke();
+	while (!ShouldExit) {
+		OPTICK_FRAME("Update");
+		UpdateEvent.Invoke();
+		OPTICK_EVENT("Presenting");
+		s_Context->EndDraw();
+		Core::Scene.EndScene();
+		Input::LastMousePosition = Input::CurrentMousePosition;
+	}
+	ExitEvent.Invoke();
+	return 0;
+}*/
+
+
+//Before vulkan tests
+int Core::Init()
+{
+	//Select Renderer API
+#ifdef COMBO_DIRECTX11
+	Core::RendererType = DirectX11;
+#endif
+#ifdef COMBO_VULKAN
+	Core::RendererType = Vulkan;
+#endif
+
+	CB_ASSERT(Core::RendererType != Null, "Renderer API cannot be null!");
+
+	WindowSpecification WindowSpec;
+	WindowSpec.Title = "Core";
+	Window::Create(&s_Window, WindowSpec);
+
+	UpdateEvent.Hook([&] {
+		s_Window->Update();
+	});
+
+	ContextSpecification ContextSpec;
+	Context::Create(&s_Context, ContextSpec);
+
+	Scripting::Create(&s_Scripting);
+
+	//ImGuiAdapter::Init();
+	Core::s_Project.Assets["0"] = nullptr;
+
+	//PostFX.Init();
+
+	UpdateEvent.Hook([&] {
+		s_Context->BeginDraw();
+		DrawEvent.Invoke();
+	});
+
+	GlobalShaders::Init();
+
+	//GBuffer::Create(&s_GBuffer);
+
+	Camera::ProjectionWidth = s_Window->GetWidth();
+	Camera::ProjectionHeight = s_Window->GetHeight();
+
+#ifdef COMBO_EDITOR
+	//Editor::Init();
+#else
+	ProjectSerializer::LoadProject("D:\\ComboEngine\\Sandbox\\Sandbox.cbproject");
+#endif
+
+	Mesh* mesh;
+
+	Asset* asset;
+	Asset::ImportFromCb(&asset, "D:\\ComboEngine\\Sandbox\\cube.cbmesh", "");
+	mesh = std::any_cast<Mesh*>(asset->GetHandle());
+
+	//std::vector<Vertex> vertices = {
+	//	{-1.0f,-1.0f, 0,		0.0f, 1.0f,		0.0f,0.0f,0.0f,0.0f},
+	//	{1.0f, -1.0f, 0,		1.0f, 0.0f,		0.0f,0.0f,0.0f,0.0f},
+	//	{1.0f,  1.0f, 0,		0.0f, 1.0f,		0.0f,0.0f,0.0f,0.0f},
+	//	{-1.0f, 1.0f, 0,		1.0f, 0.0f,		0.0f,0.0f,0.0f,0.0f}
+	//};
+	//std::vector<uint32_t> indices = {
+	//	0, 1, 2, 2, 3, 0
+	//};
+	//Submesh* submesh = new Submesh();
+	//submesh->Init(vertices, indices);
+	//mesh = new Mesh();
+	//mesh->Submeshes.push_back(submesh);
+
+	DrawEvent.Hook([&] {
+		s_Context->SetClearColor(glm::vec3(0, 0, 0));
+
+		Pipeline a;
+		a.VertexBuffer = mesh->Submeshes[0]->VertexBuffer;
+		a.IndexBuffer = mesh->Submeshes[0]->IndexBuffer;
+		a.Shader = GlobalShaders::GetShader(GlobalShader::Render3D);
+		a.Indexed = true;
+		a.ShaderDataBuffer = mesh->ShaderDataBuffer;
+
+		s_Context->Draw(a);
+
 		for (Actor* actor : Scene.Actors) {
 			for (Component* component : actor->Components) {
 				component->Draw(actor);

@@ -14,6 +14,10 @@ public:
 	ContextSpecification Specification;
 	static void Create(Context** Obj, ContextSpecification Specification);
 
+	std::vector<Framebuffer*> RenderTargets;
+
+	void AddRenderTarget(Framebuffer* framebuffer);
+
 	//API Functions
 	virtual void Init() = 0;
 	virtual void BeginDraw() = 0;

@@ -26,6 +26,12 @@ public class ComboEngine : BuildTarget {
             AddDefinition("COMBO_DIRECTX11");
         }
 
+        if(json.GraphicsAPI == "Vulkan") {
+            this.AddModule("Vulkan");
+            this.AddModule("glfw");
+            AddDefinition("COMBO_VULKAN");
+        }
+
 
         if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {

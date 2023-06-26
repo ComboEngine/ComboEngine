@@ -38,14 +38,14 @@ void PostFXRenderer::Draw()
 	pipeline.Textures = Core::s_GBuffer->GetTextureArray();
 
 	LightingBufferPass lighting{};
-	lighting.LightCountAndCameraPos = XMFLOAT4(Core::Scene.LightingData.size(),Camera::Position.x, Camera::Position.y, Camera::Position.z);
+	lighting.LightCountAndCameraPos = glm::vec4(Core::Scene.LightingData.size(),Camera::Position.x, Camera::Position.y, Camera::Position.z);
 
 
 	for (int i = 0; i < Core::Scene.LightingData.size(); i++) {
 		Light light = Core::Scene.LightingData[i];
 		LightBufferPass pass{};
-		pass.LightTypeAndPos = XMFLOAT4(light.Type, light.Direction.x, light.Direction.y, light.Direction.z);
-		pass.LightRadiusAndColor = XMFLOAT4(0, light.Color.x, light.Color.y, light.Color.z);
+		pass.LightTypeAndPos = glm::vec4(light.Type, light.Direction.x, light.Direction.y, light.Direction.z);
+		pass.LightRadiusAndColor = glm::vec4(0, light.Color.x, light.Color.y, light.Color.z);
 
 		if (light.Type == Point) {
 			float constant = 1.0;

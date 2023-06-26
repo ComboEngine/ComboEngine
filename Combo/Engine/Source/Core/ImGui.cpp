@@ -39,5 +39,7 @@ void ImGuiAdapter::StartFrame()
 void ImGuiAdapter::EndFrame()
 {
     ImGui::Render();
+#ifdef COMBO_DIRECTX11
     ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+#endif
 }

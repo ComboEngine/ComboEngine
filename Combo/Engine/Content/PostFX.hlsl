@@ -45,7 +45,7 @@ Texture2D NormalTexture : register(t2);
 SamplerState SamplerNormal : register(s2);
 
 float4 PSMain(PSInput input) : SV_Target
-{
+{    
     int3 sampleIndices = int3(input.Position.xy, 0);
     float3 Normal = NormalTexture.Load(sampleIndices).xyz;
     float3 Position = PositionTexture.Load(sampleIndices).xyz;

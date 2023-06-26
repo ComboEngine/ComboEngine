@@ -5,13 +5,13 @@
 #include "ShaderDataBuffer.h"
 struct LightBufferPass
 {
-	XMFLOAT4 LightTypeAndPos;
-	XMFLOAT4 LightRadiusAndColor;
+	glm::vec4 LightTypeAndPos;
+	glm::vec4 LightRadiusAndColor;
 };
 
 struct LightingBufferPass
 {
-	XMFLOAT4 LightCountAndCameraPos;
+	glm::vec4 LightCountAndCameraPos;
 	LightBufferPass lights[1000];
 };
 

@@ -29,28 +29,18 @@ void MeshAsset::ImportFromOriginal(std::string BinaryPath)
 		for (int i = 0; i < mesh->mNumVertices; i++) {
 			int indice = i;
 			Vertex vertex;
-			vertex.X = mesh->mVertices[indice].x;
-			vertex.Y = mesh->mVertices[indice].y;
-			vertex.Z = mesh->mVertices[indice].z;
+			vertex.Position = glm::vec3(mesh->mVertices[indice].x, mesh->mVertices[indice].y, mesh->mVertices[indice].z);
 			if (mesh->HasTextureCoords(0)) {
-				vertex.texCoordX = mesh->mTextureCoords[0][indice].x;
-				vertex.texCoordY = 1.0f - mesh->mTextureCoords[0][indice].y;
+				vertex.TexCoord = glm::vec2(mesh->mTextureCoords[0][indice].x, 1.0f - mesh->mTextureCoords[0][indice].y);
 			}
 			else {
-				vertex.texCoordX = 0.0f;
-				vertex.texCoordY = 0.0f;
+				vertex.TexCoord = glm::vec2(0, 0);
 			}
 			if (mesh->HasNormals()) {
-				vertex.normalX = mesh->mNormals[indice].x;
-				vertex.normalY = mesh->mNormals[indice].y;
-				vertex.normalZ = mesh->mNormals[indice].z;
-				vertex.normalW = 0;
+				vertex.Normal = glm::vec4(mesh->mNormals[indice].x, mesh->mNormals[indice].y, mesh->mNormals[indice].z, 0);
 			}
 			else {
-				vertex.normalX = 0;
-				vertex.normalY = 0;
-				vertex.normalZ = 0;
-				vertex.normalW = 0;
+				vertex.Normal = glm::vec4(0, 0, 0,0);
 			}
 
 			vertices.push_back(vertex);

@@ -2,6 +2,7 @@ cbuffer ConstantBuffer
 {
     float4x4 WVP;
     float4x4 Model;
+    float4x4 RotationMatrix;
     float4 Diffuse;
     float4 DiffuseUseTexture;
 };
@@ -35,7 +36,7 @@ PSInput VSMain(VSInput input)
     output.Position = mul(input.Position, mul(Model, WVP));
     output.PositionWithModel = mul(input.Position,Model);
     output.TexCoord = input.TexCoord;
-    output.Normal = input.Normal;
+    output.Normal = mul(input.Normal, RotationMatrix);
     
     return output;
 }

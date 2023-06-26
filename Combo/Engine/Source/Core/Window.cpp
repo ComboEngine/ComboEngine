@@ -4,6 +4,9 @@
 #ifdef COMBO_DIRECTX11
 #include <Core/DirectX11/WindowDX11.h>
 #endif
+#ifdef COMBO_VULKAN
+#include <Core/Vulkan/WindowVulkan.h>
+#endif
 
 void Window::Create(Window** window, WindowSpecification Specification)
 {
@@ -11,6 +14,9 @@ void Window::Create(Window** window, WindowSpecification Specification)
 
 #ifdef COMBO_DIRECTX11
 	*window = new WindowDX11();
+#endif
+#ifdef COMBO_VULKAN
+	* window = new WindowVulkan();
 #endif
 
 	Window* windowPtr = *window;

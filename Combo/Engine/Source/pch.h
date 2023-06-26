@@ -181,22 +181,38 @@ extern "C" {
 #include <optick.h>
 #pragma comment(lib,"OptickCore.lib")
 
+#include <imgui_impl_glfw.h>
+#include <ImGuizmo.h>
+#include <glfw3.h>
+#include <imgui.h>
+#include <imgui_internal.h>
+#pragma comment(lib,"ImGui.lib")
+
+#ifdef COMBO_VULKAN
+#define CB_CHECKHR(...) if(__VA_ARGS__ == VK_SUCCESS) {} else { LOG("Vulkan Operation Failed") __debugbreak(); }
+
+#pragma comment(lib,"vulkan-1.lib")
+
+#define VK_USE_PLATFORM_WIN32_KHR
+#include <vulkan/vulkan.h>
+#include <glfw3.h>
+#define GLFW_EXPOSE_NATIVE_WIN32
+#include <glfw3native.h>
+#pragma comment(lib,"glfw3.lib")
+
+#endif
+
 #ifdef COMBO_DIRECTX11
 #define CB_CHECKHR(...) if(__VA_ARGS__ == 0) {} else { LOG("DX Operation Failed: " + std::system_category().message(__VA_ARGS__)) __debugbreak(); }
 #include <d3d11.h>
 #include <SimpleMath.h>
 #include <d3dcompiler.h>
+#include <imgui_impl_dx11.h>
 #include <glfw3.h>
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <glfw3native.h>
 #pragma comment(lib,"glfw3.lib")
-#include <imgui.h>
-#include <imgui_internal.h>
-#include <imgui_impl_dx11.h>
 #include <imgui_impl_win32.h>
-#include <imgui_impl_glfw.h>
-#include <ImGuizmo.h>
-#pragma comment(lib,"ImGui.lib")
 
 using namespace DirectX::SimpleMath;
 using namespace DirectX;

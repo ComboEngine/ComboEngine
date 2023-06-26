@@ -4,6 +4,7 @@
 
 class FramebufferDX11 : public Framebuffer {
 public:
+	bool BoundWithDepth = false;
 	ID3D11Texture2D* RenderTargetTexture;
 	ID3D11RenderTargetView* RenderTargetView;
 	ID3D11ShaderResourceView* ShaderResourceView;
