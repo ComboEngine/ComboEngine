@@ -14,4 +14,5 @@ struct Pipeline {
 	IndexBuffer* IndexBuffer;
 	ShaderDataBuffer* ShaderDataBuffer;
 	std::vector<Texture*> Textures;
+	const void* VulkanPushConstant;
 };

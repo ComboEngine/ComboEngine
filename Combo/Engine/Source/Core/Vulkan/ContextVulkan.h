@@ -21,6 +21,7 @@ public:
 	bool ValidationLayers = false;
 
 	VkInstance Instance;
+	VkDebugUtilsMessengerEXT DebugMessenger;
 	VkPhysicalDevice PhysicalDevice = VK_NULL_HANDLE;
 	VkDevice Device = VK_NULL_HANDLE;
 

@@ -9,6 +9,7 @@
 #include "ShaderVulkan.h"
 #include "VertexBufferVulkan.h"
 #include "IndexBufferVulkan.h"
+#include "../Mesh.h"
 /*
 #include "WindowVulkan.h"
 #include "ShaderVulkan.h"
@@ -34,6 +35,27 @@ RenderCommandBufferVulkan* ContextVulkan::GetRenderCmdBuffer()
     return &RenderCommandBuffer;
 }
 
+static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(
+    VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
+    VkDebugUtilsMessageTypeFlagsEXT messageType,
+    const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
+    void* pUserData) {
+
+    LOG("Validation layer: " + std::string(pCallbackData->pMessage))
+
+    return VK_FALSE;
+}
+
+VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger) {
+    auto func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
+    if (func != nullptr) {
+        return func(instance, pCreateInfo, pAllocator, pDebugMessenger);
+    }
+    else {
+        return VK_ERROR_EXTENSION_NOT_PRESENT;
+    }
+}
+
 void ContextVulkan::CreateInstance()
 {
     VkApplicationInfo appInfo{};
@@ -44,14 +66,38 @@ void ContextVulkan::CreateInstance()
     appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
     appInfo.apiVersion = VK_API_VERSION_1_0;
 
+    VkDebugUtilsMessengerCreateInfoEXT createInfoMessenger{};
+    createInfoMessenger.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
+    createInfoMessenger.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
+    createInfoMessenger.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
+    createInfoMessenger.pfnUserCallback = debugCallback;
+    createInfoMessenger.pUserData = nullptr; // Optional
+
     VkInstanceCreateInfo createInfo{};
     createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
     createInfo.pApplicationInfo = &appInfo;
+
     std::vector<const char*> Extensions = GetRequiredExtensions();
     createInfo.enabledExtensionCount = Extensions.size();
     createInfo.ppEnabledExtensionNames = Extensions.data();
 
+    if (ValidationLayers) {
+        createInfo.enabledLayerCount = 1;
+        const char* const ext[] = {
+            "VK_LAYER_KHRONOS_validation"
+        };
+        createInfo.ppEnabledLayerNames = ext;
+
+        createInfo.pNext = (VkDebugUtilsMessengerCreateInfoEXT*)&createInfoMessenger;
+    }
+    else {
+        createInfo.enabledLayerCount = 0;
+        createInfo.pNext = nullptr;
+    }
+
     CB_CHECKHR(vkCreateInstance(&createInfo, nullptr, &this->Instance));
+
+    CB_CHECKHR(CreateDebugUtilsMessengerEXT(Instance, &createInfoMessenger, nullptr, &this->DebugMessenger));
 }
 
 void ContextVulkan::CreatePhysicalDevice()
@@ -246,6 +292,7 @@ uint32_t ContextVulkan::FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlag
     return 0;
 }
 
+
 std::vector<const char*> ContextVulkan::GetRequiredExtensions()
 {
     uint32_t glfwExtensionCount = 0;
@@ -262,7 +309,7 @@ std::vector<const char*> ContextVulkan::GetRequiredExtensions()
     std::vector<VkLayerProperties> availableLayers(layerCount);
     vkEnumerateInstanceLayerProperties(&layerCount, availableLayers.data());
 
-    bool ValidationLayersFound = false;
+    bool ValidationLayersFound = true;
     for (const auto& layer : availableLayers) {
         if (layer.layerName == "VK_LAYER_KHRONOS_validation") {
             ValidationLayersFound = true;
@@ -338,6 +385,8 @@ void ContextVulkan::Draw(Pipeline pipeline)
     scissor.offset = { 0, 0 };
     scissor.extent = SwapChain.SwapChainExtent;
     vkCmdSetScissor(RenderCommandBuffer.GetCommandBuffer(), 0, 1, &scissor);
+
+    vkCmdPushConstants(RenderCommandBuffer.GetCommandBuffer(), shader->PipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(MeshShaderData), pipeline.VulkanPushConstant);
 
     if (pipeline.Indexed) {
         vkCmdDrawIndexed(RenderCommandBuffer.GetCommandBuffer(), reinterpret_cast<IndexBufferVulkan*>(pipeline.IndexBuffer)->Size, 1, 0, 0, 0);

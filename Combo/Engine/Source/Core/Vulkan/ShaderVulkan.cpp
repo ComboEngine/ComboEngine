@@ -3,6 +3,7 @@
 #include "ShaderVulkan.h"
 #include "ContextVulkan.h"
 #include <Core/Core.h>
+#include "../Mesh.h"
 
 static std::vector<char> readFile(const std::string& filename) {
     std::ifstream file(filename, std::ios::ate | std::ios::binary);
@@ -138,12 +139,17 @@ void ShaderVulkan::Init(std::string VertexSource, std::string PixelSource)
     colorBlending.blendConstants[2] = 0.0f; // Optional
     colorBlending.blendConstants[3] = 0.0f; // Optional
 
+    VkPushConstantRange push_constant;
+    push_constant.offset = 0;
+    push_constant.size = sizeof(MeshShaderData);
+    push_constant.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+
     VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
     pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
     pipelineLayoutInfo.setLayoutCount = 0; // Optional
     pipelineLayoutInfo.pSetLayouts = nullptr; // Optional
-    pipelineLayoutInfo.pushConstantRangeCount = 0; // Optional
-    pipelineLayoutInfo.pPushConstantRanges = nullptr; // Optional
+    pipelineLayoutInfo.pushConstantRangeCount = 1; // Optional
+    pipelineLayoutInfo.pPushConstantRanges = &push_constant; // Optional
 
     CB_CHECKHR(vkCreatePipelineLayout(context->Device, &pipelineLayoutInfo, nullptr, &PipelineLayout));
 

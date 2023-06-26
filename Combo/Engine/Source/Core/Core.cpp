@@ -7,6 +7,7 @@
 #include "Render2D.h"
 #include "Mesh.h"
 #include "Assets/ProjectSerializer.h"
+#include "Mesh.h"
 #ifdef COMBO_EDITOR
 #include <Editor/Editor.h>
 #endif
@@ -32,7 +33,7 @@ PostFXRenderer Core::PostFX;
 
 bool Core::ShouldExit = false;
 
-/*int Core::Init()
+int Core::Init()
 {
 	//Select Renderer API
 #ifdef COMBO_DIRECTX11
@@ -125,11 +126,11 @@ bool Core::ShouldExit = false;
 	}
 	ExitEvent.Invoke();
 	return 0;
-}*/
+}
 
 
 //Before vulkan tests
-int Core::Init()
+/*int Core::Init()
 {
 	//Select Renderer API
 #ifdef COMBO_DIRECTX11
@@ -180,22 +181,22 @@ int Core::Init()
 	Mesh* mesh;
 
 	Asset* asset;
-	Asset::ImportFromCb(&asset, "D:\\ComboEngine\\Sandbox\\cube.cbmesh", "");
+	Asset::ImportFromCb(&asset, "D:\\ComboEngine\\Sandbox\\sphere.cbmesh", "");
 	mesh = std::any_cast<Mesh*>(asset->GetHandle());
 
-	//std::vector<Vertex> vertices = {
-	//	{-1.0f,-1.0f, 0,		0.0f, 1.0f,		0.0f,0.0f,0.0f,0.0f},
-	//	{1.0f, -1.0f, 0,		1.0f, 0.0f,		0.0f,0.0f,0.0f,0.0f},
-	//	{1.0f,  1.0f, 0,		0.0f, 1.0f,		0.0f,0.0f,0.0f,0.0f},
-	//	{-1.0f, 1.0f, 0,		1.0f, 0.0f,		0.0f,0.0f,0.0f,0.0f}
-	//};
-	//std::vector<uint32_t> indices = {
-	//	0, 1, 2, 2, 3, 0
-	//};
-	//Submesh* submesh = new Submesh();
-	//submesh->Init(vertices, indices);
-	//mesh = new Mesh();
-	//mesh->Submeshes.push_back(submesh);
+//	std::vector<Vertex> vertices = {
+//		{-1.0f,-1.0f, 0,		0.0f, 1.0f,		0.0f,0.0f,0.0f,0.0f},
+//		{1.0f, -1.0f, 0,		1.0f, 0.0f,		0.0f,0.0f,0.0f,0.0f},
+//		{1.0f,  1.0f, 0,		0.0f, 1.0f,		0.0f,0.0f,0.0f,0.0f},
+//		{-1.0f, 1.0f, 0,		1.0f, 0.0f,		0.0f,0.0f,0.0f,0.0f}
+//	};
+//	std::vector<uint32_t> indices = {
+//		0, 1, 2, 2, 3, 0
+//	};
+//	Submesh* submesh = new Submesh();
+//	submesh->Init(vertices, indices);
+//	mesh = new Mesh();
+//	mesh->Submeshes.push_back(submesh);
 
 	DrawEvent.Hook([&] {
 		s_Context->SetClearColor(glm::vec3(0, 0, 0));
@@ -206,6 +207,28 @@ int Core::Init()
 		a.Shader = GlobalShaders::GetShader(GlobalShader::Render3D);
 		a.Indexed = true;
 		a.ShaderDataBuffer = mesh->ShaderDataBuffer;
+		MeshShaderData data;
+
+
+		glm::mat4 wvp = glm::mat4(1.0f);
+		wvp = Camera::CalculateProjectionMatrix();
+		wvp = wvp * Camera::CalculateViewMatrix();
+
+		glm::mat4 Model = glm::mat4(1.0f);
+		Model = glm::translate(Model, glm::vec3(0,0,0));
+		Model = Model * glm::mat4_cast(glm::quat(glm::vec3(0,0,0)));
+		Model = glm::scale(Model, glm::vec3(100,100,100));
+
+
+		Core::s_Window->LockCursor(true);
+		data.WVP = glm::transpose(wvp);
+		data.Model = glm::transpose(Model);
+		data.RotationMatrix = glm::mat4(1.0f);
+		data.Diffuse = glm::vec4(0, 0, 0, 0);
+		data.DiffuseUseTexture = glm::vec4(0, 0, 0, 0);
+		Camera::Drone();
+
+		a.VulkanPushConstant = &data;
 
 		s_Context->Draw(a);
 
@@ -235,7 +258,7 @@ int Core::Init()
 	}
 	ExitEvent.Invoke();
 	return 0;
-}
+}*/
 
 void Core::RequestExit()
 {
