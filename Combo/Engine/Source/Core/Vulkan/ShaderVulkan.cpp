@@ -118,26 +118,74 @@ void ShaderVulkan::Init(std::string VertexSource, std::string PixelSource)
     multisampling.alphaToCoverageEnable = VK_FALSE; // Optional
     multisampling.alphaToOneEnable = VK_FALSE; // Optional
 
-    VkPipelineColorBlendAttachmentState colorBlendAttachment{};
-    colorBlendAttachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
-    colorBlendAttachment.blendEnable = VK_FALSE;
-    colorBlendAttachment.srcColorBlendFactor = VK_BLEND_FACTOR_ONE; // Optional
-    colorBlendAttachment.dstColorBlendFactor = VK_BLEND_FACTOR_ZERO; // Optional
-    colorBlendAttachment.colorBlendOp = VK_BLEND_OP_ADD; // Optional
-    colorBlendAttachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE; // Optional
-    colorBlendAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO; // Optional
-    colorBlendAttachment.alphaBlendOp = VK_BLEND_OP_ADD; // Optional
+    VkPipelineColorBlendAttachmentState colorBlendPositionAttachment{};
+    colorBlendPositionAttachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
+    colorBlendPositionAttachment.blendEnable = VK_FALSE;
+    colorBlendPositionAttachment.srcColorBlendFactor = VK_BLEND_FACTOR_ONE;
+    colorBlendPositionAttachment.dstColorBlendFactor = VK_BLEND_FACTOR_ZERO;
+    colorBlendPositionAttachment.colorBlendOp = VK_BLEND_OP_ADD;
+    colorBlendPositionAttachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
+    colorBlendPositionAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
+    colorBlendPositionAttachment.alphaBlendOp = VK_BLEND_OP_ADD;
+
+    VkPipelineColorBlendAttachmentState colorBlendDiffuseAttachment{};
+    colorBlendDiffuseAttachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
+    colorBlendDiffuseAttachment.blendEnable = VK_FALSE;
+    colorBlendDiffuseAttachment.srcColorBlendFactor = VK_BLEND_FACTOR_ONE;
+    colorBlendDiffuseAttachment.dstColorBlendFactor = VK_BLEND_FACTOR_ZERO;
+    colorBlendDiffuseAttachment.colorBlendOp = VK_BLEND_OP_ADD;
+    colorBlendDiffuseAttachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
+    colorBlendDiffuseAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
+    colorBlendDiffuseAttachment.alphaBlendOp = VK_BLEND_OP_ADD;
+
+    VkPipelineColorBlendAttachmentState colorBlendNormalAttachment{};
+    colorBlendNormalAttachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
+    colorBlendNormalAttachment.blendEnable = VK_FALSE;
+    colorBlendNormalAttachment.srcColorBlendFactor = VK_BLEND_FACTOR_ONE;
+    colorBlendNormalAttachment.dstColorBlendFactor = VK_BLEND_FACTOR_ZERO;
+    colorBlendNormalAttachment.colorBlendOp = VK_BLEND_OP_ADD;
+    colorBlendNormalAttachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
+    colorBlendNormalAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
+    colorBlendNormalAttachment.alphaBlendOp = VK_BLEND_OP_ADD;
+
+    std::array<VkPipelineColorBlendAttachmentState, 3> blendAttachments;
+    blendAttachments[0] = colorBlendPositionAttachment;
+    blendAttachments[1] = colorBlendDiffuseAttachment;
+    blendAttachments[2] = colorBlendNormalAttachment;
 
     VkPipelineColorBlendStateCreateInfo colorBlending{};
     colorBlending.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
     colorBlending.logicOpEnable = VK_FALSE;
     colorBlending.logicOp = VK_LOGIC_OP_COPY; // Optional
-    colorBlending.attachmentCount = 1;
-    colorBlending.pAttachments = &colorBlendAttachment;
+    colorBlending.attachmentCount = blendAttachments.size();
+    colorBlending.pAttachments = blendAttachments.data();
     colorBlending.blendConstants[0] = 0.0f; // Optional
     colorBlending.blendConstants[1] = 0.0f; // Optional
     colorBlending.blendConstants[2] = 0.0f; // Optional
     colorBlending.blendConstants[3] = 0.0f; // Optional
+
+    VkPipelineDepthStencilStateCreateInfo depthStencil{};
+    depthStencil.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
+    depthStencil.depthTestEnable = VK_TRUE;
+    depthStencil.depthWriteEnable = VK_TRUE;
+    depthStencil.depthCompareOp = VK_COMPARE_OP_LESS;
+    depthStencil.depthBoundsTestEnable = VK_FALSE;
+    depthStencil.minDepthBounds = 0.0f; // Optional
+    depthStencil.maxDepthBounds = 1.0f; // Optional
+    depthStencil.stencilTestEnable = VK_FALSE;
+    depthStencil.front = {}; // Optional
+    depthStencil.back = {}; // Optional
+
+    std::array<VkFormat, 3> Formats;
+    Formats[0] = VK_FORMAT_R16G16B16A16_SFLOAT;
+    Formats[1] = VK_FORMAT_R16G16B16A16_SFLOAT;
+    Formats[2] = VK_FORMAT_R8G8B8A8_UNORM;
+
+    VkPipelineRenderingCreateInfoKHR rendering{};
+    rendering.sType = VK_STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO_KHR;
+    rendering.colorAttachmentCount = Formats.size();
+    rendering.pColorAttachmentFormats = Formats.data();
+    rendering.depthAttachmentFormat = context->GetSwapChain()->DepthFormat;
 
     VkPushConstantRange push_constant;
     push_constant.offset = 0;
@@ -154,6 +202,7 @@ void ShaderVulkan::Init(std::string VertexSource, std::string PixelSource)
     CB_CHECKHR(vkCreatePipelineLayout(context->Device, &pipelineLayoutInfo, nullptr, &PipelineLayout));
 
     VkGraphicsPipelineCreateInfo pipelineInfo{};
+    pipelineInfo.pNext = &rendering;
     pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
     pipelineInfo.stageCount = 2;
     pipelineInfo.pStages = shaderStages;
@@ -162,11 +211,10 @@ void ShaderVulkan::Init(std::string VertexSource, std::string PixelSource)
     pipelineInfo.pViewportState = &viewportState;
     pipelineInfo.pRasterizationState = &rasterizer;
     pipelineInfo.pMultisampleState = &multisampling;
-    pipelineInfo.pDepthStencilState = nullptr; // Optional
+    pipelineInfo.pDepthStencilState = &depthStencil;
     pipelineInfo.pColorBlendState = &colorBlending;
     pipelineInfo.pDynamicState = &dynamicState;
     pipelineInfo.layout = PipelineLayout;
-    pipelineInfo.renderPass = context->GetSwapChain()->RenderPass;
     pipelineInfo.subpass = 0;
     pipelineInfo.basePipelineHandle = VK_NULL_HANDLE; // Optional
     pipelineInfo.basePipelineIndex = -1; // Optional

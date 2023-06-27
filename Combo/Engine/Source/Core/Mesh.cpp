@@ -63,6 +63,7 @@ void Mesh::Render(Material* Mat,glm::vec3 Position, glm::quat Orientation, glm::
 		data.DiffuseUseTexture = glm::vec4(MatFinal->Diffuse.UseTexture, 0, 0, 0);
 		data.Diffuse = glm::vec4(MatFinal->Diffuse.Color.x, MatFinal->Diffuse.Color.y, MatFinal->Diffuse.Color.z, MatFinal->Diffuse.Color.w);
 
+		pipeline.VulkanPushConstant = &data;
 
 		ShaderDataBuffer->Update(&data);
 		Core::s_Context->Draw(pipeline);

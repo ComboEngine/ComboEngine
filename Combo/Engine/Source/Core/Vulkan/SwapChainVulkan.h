@@ -2,6 +2,8 @@
 #pragma once
 #include "pch.h"
 
+#include <vk_mem_alloc.h>
+
 struct SwapChainSupportDetails {
 	VkSurfaceCapabilitiesKHR capabilities;
 	std::vector<VkSurfaceFormatKHR> formats;
@@ -22,10 +24,16 @@ public:
 	std::vector<VkFramebuffer> SwapChainFramebuffers;
 	VkSurfaceKHR Surface;
 
+	VkImage DepthImage;
+	VmaAllocation DepthImageAllocation;
+	VkFormat DepthFormat;
+	VkImageView DepthImageView;
+
 	
 	uint32_t GetImageIndex();
 	uint32_t GetCurrentFrame();
 	void InitSurface();
+	void InitDepthBuffer();
 	void InitFramebuffers();
 	void Init();
 	void Begin();

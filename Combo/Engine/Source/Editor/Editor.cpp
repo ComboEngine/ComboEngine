@@ -50,7 +50,6 @@ void Editor::Init()
 	Panels.push_back(new ScenePanel());
 	Panels[3]->Show = false;
 
-	ImGui::GetIO().Fonts->AddFontFromFileTTF("./Content/Roboto.ttf", 15.0f);
 	Colours::Set();
 
 	Core::DrawEvent.Hook([&] {

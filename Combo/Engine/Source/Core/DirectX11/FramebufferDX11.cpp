@@ -79,6 +79,10 @@ void* FramebufferDX11::GetImage()
 {
     return this->ShaderResourceView;
 }
+void* FramebufferDX11::GetImGuiImage()
+{
+    return this->ShaderResourceView;
+}
 std::string FramebufferDX11::GetApiName()
 {
 	return "DX11";

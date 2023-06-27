@@ -14,6 +14,7 @@ public:
 
 	VkCommandBuffer GetCommandBuffer();
 	void Init();
+	void BeginDefaultRenderPass();
 	void Begin();
 	void End();
 };

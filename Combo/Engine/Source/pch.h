@@ -190,15 +190,18 @@ extern "C" {
 
 #ifdef COMBO_VULKAN
 #define CB_CHECKHR(...) if(__VA_ARGS__ == VK_SUCCESS) {} else { LOG("Vulkan Operation Failed") __debugbreak(); }
-
+#include <imgui_impl_vulkan.h>
 #pragma comment(lib,"vulkan-1.lib")
-
 #define VK_USE_PLATFORM_WIN32_KHR
 #include <vulkan/vulkan.h>
 #include <glfw3.h>
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <glfw3native.h>
 #pragma comment(lib,"glfw3.lib")
+
+#ifdef COMBO_BUILD_WINAPI
+#include <vulkan/vulkan_win32.h>
+#endif
 
 #endif
 

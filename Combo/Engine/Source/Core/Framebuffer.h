@@ -19,5 +19,6 @@ public:
 	virtual void Unbind() = 0;
 	virtual void Init() = 0;
 	virtual void* GetImage() = 0;
+	virtual void* GetImGuiImage() = 0;
 	virtual std::string GetApiName() = 0;
 };

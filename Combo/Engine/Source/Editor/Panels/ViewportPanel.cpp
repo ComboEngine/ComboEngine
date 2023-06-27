@@ -36,11 +36,11 @@ bool DecomposeTransform(const glm::mat4& transform, glm::vec3& translation, glm:
 		for (length_t j = 0; j < 3; ++j)
 			Row[i][j] = LocalMatrix[i][j];
 
-	
+
 	scale.x = length(Row[0]);
 	Row[0] = Scale(Row[0], static_cast<T>(1));
 
-	
+
 	scale.y = length(Row[1]);
 	Row[1] = Scale(Row[1], static_cast<T>(1));
 
@@ -51,7 +51,7 @@ bool DecomposeTransform(const glm::mat4& transform, glm::vec3& translation, glm:
 	vec3 Pdum3 = cross(Row[1], Row[2]);
 	dot(Row[0], Pdum3) >= static_cast<T>(0);
 #endif
-	
+
 	int i, j, k = 0;
 	T root, trace = Row[0].x + Row[1].y + Row[2].z;
 	if (trace > static_cast<T>(0))
@@ -91,14 +91,15 @@ void ViewportPanel::Draw()
 	void* image;
 	switch (ViewMode) {
 	case Position:
-		image = Core::s_GBuffer->Position->GetImage(); break;
+		image = Core::s_GBuffer->Position->GetImGuiImage(); break;
 	case Normal:
-		image = Core::s_GBuffer->Normal->GetImage(); break;
+		image = Core::s_GBuffer->Normal->GetImGuiImage(); break;
 	case Diffuse:
-		image = Core::s_GBuffer->Diffuse->GetImage(); break;
+		image = Core::s_GBuffer->Diffuse->GetImGuiImage(); break;
 	case FinalBuffer:
-		image = Core::PostFX.Frame->GetImage(); break;
+		image = Core::PostFX.Frame->GetImGuiImage(); break;
 	}
+	//image = Core::s_GBuffer->Position->GetImGuiImage();
 	ImGuizmo::SetOrthographic(false);
 	ImGuizmo::SetDrawlist();
 	ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, ImGui::GetWindowWidth(), ImGui::GetWindowHeight());
@@ -120,7 +121,7 @@ void ViewportPanel::Draw()
 	if (actor != nullptr) {
 		glm::mat4 Model = glm::mat4(1.0f);
 		Model = glm::translate(Model, actor->Position);
-		Model = Model * glm::mat4_cast(glm::quat(glm::vec3(actor->Orientation.x,actor->Orientation.y,actor->Orientation.z)));
+		Model = Model * glm::mat4_cast(glm::quat(glm::vec3(actor->Orientation.x, actor->Orientation.y, actor->Orientation.z)));
 		Model = glm::scale(Model, actor->Scale);
 
 		int Operation;
