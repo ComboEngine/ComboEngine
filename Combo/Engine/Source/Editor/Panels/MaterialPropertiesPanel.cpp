@@ -11,6 +11,40 @@ std::string MaterialPropertiesPanel::GetName()
 	return "Material Properties";
 }
 
+void RenderMaterialProperty(MaterialColor* color,std::string name,Asset** Handle) {
+	void* image = nullptr;
+	Asset* ptr = *Handle;
+	if (ptr != nullptr) {
+		image = std::any_cast<Texture*>(ptr->GetHandle())->GetImGuiImage();
+		color->UseTexture = true;
+		color->ColorTexture = ptr;
+		ImGui::ImageButton(image, ImVec2(64, 64));
+	}
+	else {
+		ImGui::Button("Empty", ImVec2(64, 64));
+	}
+
+	if (ImGui::BeginDragDropTarget()) {
+		const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Texture");
+		if (payload != nullptr) {
+			*Handle = Core::s_Project.Assets[(const char*)payload->Data];
+		}
+		ImGui::EndDragDropTarget();
+	}
+
+	ImGui::SameLine();
+	ImGui::Text("Diffuse");
+	ImGui::SameLine();
+	ImGui::ColorEdit4("##DiffuseColor", glm::value_ptr(color->Color));
+	ImGui::SameLine();
+	if (ImGui::Button("Clear Texture")) {
+		*Handle = nullptr;
+		color->ColorTexture = nullptr;
+		color->UseTexture = false;
+	}
+	ImGui::Separator();
+}
+
 void MaterialPropertiesPanel::Draw()
 {
 	ImGui::Text("Edited material");
@@ -30,12 +64,9 @@ void MaterialPropertiesPanel::Draw()
 	ImGui::Separator();
 	if (material != nullptr) {
 		Material* materialHandle = std::any_cast<Material*>(material->GetHandle());
-		ImGui::Text("Diffuse");
-		ImGui::SameLine();
-		ImGui::ColorEdit4("##DiffuseColor", glm::value_ptr(materialHandle->Diffuse.Color));
-		ImGui::Separator();
+		RenderMaterialProperty(&materialHandle->Diffuse, "Diffuse", &diffuseTexture);
+		
 	}
-	ImGui::Separator();
 	if (ImGui::Button("Save")) {
 		this->material->Save();
 	}

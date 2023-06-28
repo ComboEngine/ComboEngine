@@ -8,6 +8,8 @@ enum AssetType {
 
 class Asset {
 public:
+	bool EditorSelected;
+
 	//Asset Universal ID
 	std::string UUID;
 	//Asset Name

@@ -146,5 +146,15 @@ void Editor::OnDrop(std::vector<std::string> paths)
 		if (fileExtension == ".cbmaterial") {
 			Asset::ImportFromCb(&Obj, path,"");
 		}
+
+		if (fileExtension == ".cbtexture") {
+			Asset::ImportFromCb(&Obj, path, "");
+		}
+		else {
+			if (fileExtension == ".png" || fileExtension == ".jpg") {
+				std::string name = std::filesystem::u8path(path).filename().string();
+				Asset::ImportFromBinary(&Obj, path, name.substr(0, name.find_last_of(".")) + ".cbtexture", "");
+			}
+		}
 	}
 }

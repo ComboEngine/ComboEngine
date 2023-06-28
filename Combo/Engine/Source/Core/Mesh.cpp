@@ -43,7 +43,7 @@ void Mesh::Render(Material* Mat,glm::vec3 Position, glm::quat Orientation, glm::
 		pipeline.Textures = {};
 
 		if (MatFinal->Diffuse.UseTexture) {
-			pipeline.Textures.push_back(MatFinal->Diffuse.ColorTexture);
+			pipeline.Textures.push_back(std::any_cast<Texture*>(MatFinal->Diffuse.ColorTexture->GetHandle()));
 		}
 
 		glm::mat4 wvp = glm::mat4(1.0f);

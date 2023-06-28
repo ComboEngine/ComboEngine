@@ -8,20 +8,20 @@ layout(location = 0) out vec3 position;
 layout(location = 1) out vec2 texCoord;
 layout(location = 2) out vec4 normal;
 
-layout( push_constant ) uniform constants
+layout(push_constant) uniform UBO
 {
         mat4 WVP;
 	mat4 Model;
 	mat4 RotationMatrix;
 	vec4 Diffuse;
 	vec4 DiffuseUseTexture;
-} PushConstants;
+} ShaderDataBuffer;
 
 
 void main() {
-    gl_Position = vec4(inPosition, 1.0) * PushConstants.Model * PushConstants.WVP;
+    gl_Position = vec4(inPosition, 1.0) * ShaderDataBuffer.Model * ShaderDataBuffer.WVP;
     gl_Position.y = -gl_Position.y;	
-    position = vec3(vec4(inPosition,1.0) * PushConstants.Model);
+    position = vec3(vec4(inPosition,1.0) * ShaderDataBuffer.Model);
     texCoord = inTexCoord;
-    normal = inNormal * PushConstants.RotationMatrix;
+    normal = inNormal * ShaderDataBuffer.RotationMatrix;
 }

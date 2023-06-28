@@ -60,6 +60,8 @@ int Core::Init()
 	ImGuiAdapter::Init();
 	Core::s_Project.Assets["0"] = nullptr;
 
+	GlobalShaders::Init();
+
 	PostFX.Init();
 
 	UpdateEvent.Hook([&] {
@@ -84,7 +86,6 @@ int Core::Init()
 		ImGuiAdapter::EndFrame();
 		});
 
-	GlobalShaders::Init();
 
 	GBuffer::Create(&s_GBuffer);
 

@@ -7,17 +7,6 @@
 #include <any>
 #include <fstream>
 
-#include <glm.hpp>
-#include <gtc/type_ptr.hpp>
-#define GLM_ENABLE_EXPERIMENTAL
-#include <glm.hpp>
-#include <gtc/type_ptr.hpp>
-#include <gtc/matrix_transform.hpp>
-#include <gtc/quaternion.hpp>
-#include <gtc/matrix_inverse.hpp>
-#include <detail/type_quat.hpp>
-#include <gtx/quaternion.hpp>
-
 
 //Enable editor
 #define COMBO_EDITOR
@@ -203,6 +192,9 @@ extern "C" {
 #include <vulkan/vulkan_win32.h>
 #endif
 
+
+#define GLM_FORCE_RADIANS
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #endif
 
 #ifdef COMBO_DIRECTX11
@@ -224,3 +216,15 @@ using namespace DirectX;
 #pragma comment(lib, "DXGI.lib")
 #pragma comment(lib,"d3dcompiler.lib")
 #endif
+
+#include <glm.hpp>
+#include <gtc/type_ptr.hpp>
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm.hpp>
+#include <gtc/type_ptr.hpp>
+#include <gtc/matrix_transform.hpp>
+#include <gtc/quaternion.hpp>
+#include <gtc/matrix_inverse.hpp>
+#include <detail/type_quat.hpp>
+#include <gtx/quaternion.hpp>
+#include <gtx/string_cast.hpp>

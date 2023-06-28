@@ -2,6 +2,7 @@
 #include "MaterialAsset.h"
 #include <Core/Material.h>
 #include <Core/GlobalShaders.h>
+#include <Core/Core.h>
 
 void MaterialAsset::ImportFromOriginal(std::string BinaryPath)
 {
@@ -12,7 +13,43 @@ void MaterialAsset::CreateEmpty()
 	this->Handle = new Material();
 	this->Handle->Shader = GlobalShaders::GetShader(Render3D);
 	this->Handle->Diffuse.Color = glm::vec4(1, 1, 1, 1);
+	this->Handle->Diffuse.UseTexture = false;
+	this->Handle->Diffuse.ColorTexture = nullptr;
 	this->Save();
+}
+
+void ReadMaterialProperty(MaterialColor* color, nlohmann::json j) {
+	std::cout << j["Color"]["R"];
+	color->Color.x = j["Color"]["R"];
+	color->Color.y = j["Color"]["G"];
+	color->Color.z = j["Color"]["B"];
+	color->Color.w = j["Color"]["A"];
+
+	std::string uuid = j["Texture"];
+	color->UseTexture = j["UseTexture"];
+	if (uuid != "") {
+		color->ColorTexture = Core::s_Project.Assets[uuid];
+	}
+	else {
+		color->ColorTexture = nullptr;
+	}
+}
+
+nlohmann::json SaveMaterialProperty(MaterialColor* color) {
+	nlohmann::json j;
+
+	nlohmann::json diffuseVec;
+	diffuseVec["R"] = color->Color.x;
+	diffuseVec["G"] = color->Color.y;
+	diffuseVec["B"] = color->Color.z;
+	diffuseVec["A"] = color->Color.w;
+
+	j["Color"] = diffuseVec;
+	std::string uuid = color->ColorTexture == nullptr ? "" : color->ColorTexture->UUID;
+	j["UseTexture"] = color->UseTexture;
+	j["Texture"] = uuid;
+
+	return j;
 }
 
 void MaterialAsset::ImportFromEngineType()
@@ -25,11 +62,11 @@ void MaterialAsset::ImportFromEngineType()
 	this->Name = j["Name"];
 	this->UUID = j["UUID"];
 
-	glm::vec4 diffuse = glm::vec4(j["Diffuse"]["R"], j["Diffuse"]["G"], j["Diffuse"]["B"], j["Diffuse"]["A"]);
+
 
 	Material::Create(&Handle);
 	Handle->Shader = GlobalShaders::GetShader(GlobalShader::Render3D);
-	Handle->Diffuse = MaterialColor::FromColor(diffuse);
+	ReadMaterialProperty(&Handle->Diffuse, j["Diffuse"]);
 }
 
 std::string MaterialAsset::GetType()
@@ -48,13 +85,7 @@ void MaterialAsset::Save()
 	j["Name"] = this->Name;
 	j["UUID"] = this->UUID;
 
-	nlohmann::json diffuseVec;
-	diffuseVec["R"] = this->Handle->Diffuse.Color.x;
-	diffuseVec["G"] = this->Handle->Diffuse.Color.y;
-	diffuseVec["B"] = this->Handle->Diffuse.Color.z;
-	diffuseVec["A"] = this->Handle->Diffuse.Color.w;
-
-	j["Diffuse"] = diffuseVec;
+	j["Diffuse"] = SaveMaterialProperty(&this->Handle->Diffuse);
 
 	std::ofstream file(OSPath);
 	file << j.dump(4);

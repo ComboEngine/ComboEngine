@@ -10,4 +10,5 @@ public:
 	virtual void Init(void* mipData, int Width, int Height) = 0;
 	virtual void ReadFromFramebuffer(Framebuffer* framebuffer)  = 0;
 	virtual std::string GetApiName() = 0;
+	virtual void* GetImGuiImage() = 0;
 };

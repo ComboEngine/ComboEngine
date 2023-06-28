@@ -1,0 +1,14 @@
+{
+    "Diffuse": {
+        "Color": {
+            "A": 1.0,
+            "B": 1.0,
+            "G": 1.0,
+            "R": 1.0
+        },
+        "Texture": "",
+        "UseTexture": false
+    },
+    "Name": "CubeMaterial",
+    "UUID": "1492c111-535e-4a61-b1b5-7c7b54307e2c"
+}

@@ -2,6 +2,7 @@
 #include "Asset.h"
 #include "MaterialAsset.h"
 #include "MeshAsset.h"
+#include "TextureAsset.h"
 #include <Core/Core.h>
 
 void Asset::New(Asset** Obj, AssetType type, std::string ProjectPath)
@@ -26,6 +27,7 @@ void Asset::ImportFromCb(Asset** Obj, std::string OSCbPath, std::string CurrentE
 	std::string Extension = std::filesystem::u8path(OSCbPath).extension().string();
 	if (Extension == ".cbmaterial") { *Obj = new MaterialAsset(); }
 	if (Extension == ".cbmesh") { *Obj = new MeshAsset(); }
+	if (Extension == ".cbtexture") { *Obj = new TextureAsset(); }
 
 	Asset* Ptr = *Obj;
 	Ptr->OSPath = OSCbPath;
@@ -38,6 +40,7 @@ void Asset::ImportFromBinary(Asset** Obj, std::string BinaryPath, std::string Pr
 {
 	std::string Extension = std::filesystem::u8path(BinaryPath).extension().string();
 	if (Extension == ".fbx" || Extension == ".obj" || Extension == ".dae") { *Obj = new MeshAsset(); }
+	if (Extension == ".png" || Extension == ".jpg") { *Obj = new TextureAsset(); }
 
 	Asset* Ptr = *Obj;
 	Ptr->UUID = uuid::generate_uuid_v4();

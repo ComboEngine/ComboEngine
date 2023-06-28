@@ -4,6 +4,7 @@
 
 class ShaderDataBufferVulkan : public ShaderDataBuffer {
 public:
+	//Using push constants
 	size_t Size;
 	virtual void Init(size_t Size);
 	virtual void Update(const void* Data);

@@ -9,6 +9,7 @@
 #include "ShaderVulkan.h"
 #include "VertexBufferVulkan.h"
 #include "IndexBufferVulkan.h"
+#include "ShaderDataBufferVulkan.h"
 #include "../Mesh.h"
 /*
 #include "WindowVulkan.h"
@@ -524,8 +525,10 @@ void ContextVulkan::Draw(Pipeline pipeline)
     vkCmdSetScissor(RenderCommandBuffer.GetCommandBuffer(), 0, 1, &scissor);
 
     if (pipeline.VulkanPushConstant != nullptr) {
-        vkCmdPushConstants(RenderCommandBuffer.GetCommandBuffer(), shader->PipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(MeshShaderData), pipeline.VulkanPushConstant);
+        vkCmdPushConstants(RenderCommandBuffer.GetCommandBuffer(), shader->PipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(MeshShaderData), pipeline.VulkanPushConstant);
     }
+    
+
 
     if (pipeline.Indexed) {
         vkCmdDrawIndexed(RenderCommandBuffer.GetCommandBuffer(), reinterpret_cast<IndexBufferVulkan*>(pipeline.IndexBuffer)->Size, 1, 0, 0, 0);

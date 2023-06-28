@@ -25,6 +25,7 @@ void ShaderVulkan::Init(std::string VertexSource, std::string PixelSource)
     auto vertShaderCode = readFile(VertexSource);
     auto fragShaderCode = readFile(PixelSource);
 
+
     VkShaderModuleCreateInfo createInfoVertex{};
     createInfoVertex.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
     createInfoVertex.codeSize = vertShaderCode.size();
@@ -190,12 +191,11 @@ void ShaderVulkan::Init(std::string VertexSource, std::string PixelSource)
     VkPushConstantRange push_constant;
     push_constant.offset = 0;
     push_constant.size = sizeof(MeshShaderData);
-    push_constant.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+    push_constant.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
 
     VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
     pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
     pipelineLayoutInfo.setLayoutCount = 0; // Optional
-    pipelineLayoutInfo.pSetLayouts = nullptr; // Optional
     pipelineLayoutInfo.pushConstantRangeCount = 1; // Optional
     pipelineLayoutInfo.pPushConstantRanges = &push_constant; // Optional
 

@@ -2,12 +2,13 @@
 
 #include "Texture.h"
 #include "Shader.h"
+#include "Assets/Asset.h"
 
 struct MaterialColor {
-	Texture* ColorTexture;
+	Asset* ColorTexture;
 	glm::vec4 Color;
 	bool UseTexture = false;
-	static MaterialColor FromTexture(Texture* Texture) {
+	static MaterialColor FromTexture(Asset* Texture) {
 		MaterialColor color;
 		color.ColorTexture = Texture;
 		color.UseTexture = true;

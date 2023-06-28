@@ -59,4 +59,9 @@ std::string TextureDX11::GetApiName()
 	return "DX11";
 }
 
+void* TextureDX11::GetImGuiImage()
+{
+	return ShaderResourceView;
+}
+
 #endif
