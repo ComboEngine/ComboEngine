@@ -19,7 +19,6 @@ void MaterialAsset::CreateEmpty()
 }
 
 void ReadMaterialProperty(MaterialColor* color, nlohmann::json j) {
-	std::cout << j["Color"]["R"];
 	color->Color.x = j["Color"]["R"];
 	color->Color.y = j["Color"]["G"];
 	color->Color.z = j["Color"]["B"];
@@ -77,6 +76,10 @@ std::string MaterialAsset::GetType()
 std::any MaterialAsset::GetHandle()
 {
 	return this->Handle;
+}
+
+void MaterialAsset::WriteEngineFormatToStream(std::ofstream stream, std::string BinaryPath)
+{
 }
 
 void MaterialAsset::Save()

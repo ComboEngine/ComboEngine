@@ -10,5 +10,6 @@ public:
 	virtual void ImportFromEngineType();
 	virtual std::string GetType();
 	virtual std::any GetHandle();
+	virtual void WriteEngineFormatToStream(std::ofstream stream, std::string BinaryPath);
 	virtual void Save();
 };

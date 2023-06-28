@@ -148,6 +148,11 @@ std::any MeshAsset::GetHandle()
 	return this->Handle;
 }
 
+void MeshAsset::WriteEngineFormatToStream(std::ofstream stream, std::string BinaryPath)
+{
+
+}
+
 void MeshAsset::Save()
 {
 }

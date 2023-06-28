@@ -8,6 +8,7 @@
 #include <Core/Camera.h>
 #include <Core/Assets/ProjectSerializer.h>
 #include "Color.h"
+#include <Core/Assets/AssetPack.h>
 
 #include "Panels/ViewportPanel.h"
 #include "Panels/ContentPanel.h"
@@ -79,6 +80,9 @@ void Editor::Init()
 					ProjectSerializer::CreateProject(tinyfd_saveFileDialog("Save Project", "./", 1, filters, NULL));
 				}
 				if(ImGui::MenuItem("Create Actor")) {}
+				if(ImGui::MenuItem("Build AssetPack")) {
+					AssetPack::Save("Pack.combo");
+				}
 				ImGui::EndMenu();
 			}
 
@@ -108,6 +112,10 @@ void Editor::Init()
 
 		for (Panel* panel : Panels) {
 			if (panel->Show) {
+				ImGuiWindowFlags flags = 0;
+				if (panel->GetName() == "Content") {
+					flags |= ImGuiWindowFlags_HorizontalScrollbar;
+				}
 				ImGui::Begin(panel->GetName().c_str());
 				panel->Draw();
 				ImGui::End();

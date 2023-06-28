@@ -29,6 +29,10 @@ std::any ShaderAsset::GetHandle()
 	return this->Handle;
 }
 
+void ShaderAsset::WriteEngineFormatToStream(std::ofstream stream, std::string BinaryPath)
+{
+}
+
 void ShaderAsset::Save()
 {
 }

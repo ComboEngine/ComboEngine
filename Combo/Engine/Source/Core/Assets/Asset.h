@@ -32,6 +32,7 @@ public:
 	virtual void ImportFromOriginal(std::string BinaryPath) = 0;
 	virtual void CreateEmpty() = 0;
 	virtual void ImportFromEngineType() = 0;
+	virtual void WriteEngineFormatToStream(std::ofstream stream,std::string BinaryPath) = 0;
 	virtual void Save() = 0;
 	virtual std::any GetHandle() = 0;
 	virtual std::string GetType() = 0;

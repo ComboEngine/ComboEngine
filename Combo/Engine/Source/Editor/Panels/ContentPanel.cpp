@@ -29,9 +29,8 @@ void ContentPanel::Draw()
 				ImGui::GetWindowDrawList()->AddRectFilled(ImVec2(ImGui::GetWindowPos().x + offset, ImGui::GetWindowPos().y + 130), ImVec2(ImGui::GetWindowPos().x + offset + 126, 200 + ImGui::GetWindowPos().y), IM_COL32(25,25,25,255));
 			}
 			ImGui::GetWindowDrawList()->AddText(ImVec2(ImGui::GetWindowPos().x + offset+10, ImGui::GetWindowPos().y + 140), IM_COL32(200,200,200,255), asset.second->Name.c_str());
-
 			ImGui::SetWindowFontScale(0.945f);
-			ImGui::GetWindowDrawList()->AddText(ImVec2(ImGui::GetWindowPos().x + offset+8, ImGui::GetWindowPos().y + 170), IM_COL32(140,140,140, 255), asset.second->GetType().c_str());
+			ImGui::GetWindowDrawList()->AddText(ImVec2(ImGui::GetWindowPos().x + offset+9, ImGui::GetWindowPos().y + 170), IM_COL32(140,140,140, 255), asset.second->GetType().c_str());
 			ImGui::SetWindowFontScale(1);
 
 			if (ImGui::BeginDragDropSource()) {

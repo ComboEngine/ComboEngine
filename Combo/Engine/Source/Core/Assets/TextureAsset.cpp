@@ -89,6 +89,10 @@ std::string TextureAsset::GetType()
 	return "Texture";
 }
 
+void TextureAsset::WriteEngineFormatToStream(std::ofstream stream, std::string BinaryPath)
+{
+}
+
 std::any TextureAsset::GetHandle()
 {
 	return this->Handle;

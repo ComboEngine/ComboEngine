@@ -46,6 +46,7 @@ int Core::Init()
 
 	WindowSpecification WindowSpec;
 	WindowSpec.Title = "Core";
+	WindowSpec.Height = 1000;
 	Window::Create(&s_Window, WindowSpec);
 
 	UpdateEvent.Hook([&] {

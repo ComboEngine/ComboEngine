@@ -1,0 +1,14 @@
+{
+    "Diffuse": {
+        "Color": {
+            "A": 1.0,
+            "B": 1.0,
+            "G": 1.0,
+            "R": 1.0
+        },
+        "Texture": "",
+        "UseTexture": false
+    },
+    "Name": "l",
+    "UUID": "84187569-1af5-4908-aab4-407aec5e4362"
+}
