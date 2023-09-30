@@ -1,4 +1,6 @@
 @echo off
 
 rem Created by tecnessino
-BuildTools.bat --type projects
+rem BuildTools.bat --type projects
+
+.\Premake\premake5 vs2022
